@@ -1,5 +1,6 @@
-from typing import Any, Dict, List, Optional
-from pydantic import BaseModel, Field
+from typing import Optional
+from pydantic import BaseModel
+
 
 class OwncastStatusResponse(BaseModel):
     online: bool
@@ -10,12 +11,15 @@ class OwncastStatusResponse(BaseModel):
     lastDisconnectTime: Optional[str] = None
     streamTitle: str
 
+
 class ChatMessage(BaseModel):
     author: str
     body: str
 
+
 class SystemMessage(BaseModel):
     body: str
+
 
 class ActionMessage(BaseModel):
     author: str

@@ -1,7 +1,7 @@
-import os
 from typing import Dict, Any, Optional
 import requests
 from agent_utilities.exceptions import AuthError, ApiError
+
 
 class OwncastApi:
     def __init__(self, base_url: str, token: str):
@@ -9,10 +9,12 @@ class OwncastApi:
         self.token = token
         self.headers = {
             "Authorization": f"Bearer {self.token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
-    def _request(self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _request(
+        self, method: str, endpoint: str, data: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         url = f"{self.base_url}{endpoint}"
         try:
             response = requests.request(method, url, headers=self.headers, json=data)
@@ -32,13 +34,21 @@ class OwncastApi:
         return self._request("GET", "/api/config")
 
     def send_chat_message(self, author: str, body: str) -> Dict[str, Any]:
-        return self._request("POST", "/api/integrations/chat/send", data={"author": author, "body": body})
+        return self._request(
+            "POST", "/api/integrations/chat/send", data={"author": author, "body": body}
+        )
 
     def send_system_message(self, body: str) -> Dict[str, Any]:
-        return self._request("POST", "/api/integrations/chat/system", data={"body": body})
+        return self._request(
+            "POST", "/api/integrations/chat/system", data={"body": body}
+        )
 
     def send_action_message(self, author: str, body: str) -> Dict[str, Any]:
-        return self._request("POST", "/api/integrations/chat/action", data={"author": author, "body": body})
+        return self._request(
+            "POST",
+            "/api/integrations/chat/action",
+            data={"author": author, "body": body},
+        )
 
     def get_chat_history(self) -> Dict[str, Any]:
         return self._request("GET", "/api/integrations/chat")

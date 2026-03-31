@@ -3,6 +3,7 @@ from .owncast_api import OwncastApi
 
 _client = None
 
+
 def get_client() -> OwncastApi:
     global _client
     if _client is None:
