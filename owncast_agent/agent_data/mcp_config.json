@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "owncast": {
+      "command": "owncast-mcp",
+      "args": [
+        "--transport",
+        "stdio"
+      ],
+      "env": {
+        "OWNCAST_URL": "${OWNCAST_URL:-http://localhost:8080}",
+        "OWNCAST_TOKEN": "${OWNCAST_TOKEN}",
+        "CHAT_TOOL": "${ CHAT_TOOL:-True }",
+        "EXTERNAL_TOOL": "${ EXTERNAL_TOOL:-True }",
+        "INTERNAL_TOOL": "${ INTERNAL_TOOL:-True }",
+        "OBJECTS_TOOL": "${ OBJECTS_TOOL:-True }"
+      }
+    }
+  }
+}
