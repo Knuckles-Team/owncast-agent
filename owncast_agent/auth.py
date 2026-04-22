@@ -1,4 +1,5 @@
 import os
+
 from .owncast_api import OwncastApi
 
 _client = None

@@ -14,17 +14,19 @@ with warnings.catch_warnings():
 warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
+import logging
 import os
 import sys
-import logging
-from typing import Any, Dict, Optional
-from dotenv import load_dotenv, find_dotenv
+from typing import Any
+
+from dotenv import find_dotenv, load_dotenv
 from fastmcp import FastMCP
 
 __version__ = "0.1.7"
 
 from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import create_mcp_server
+
 from .auth import get_client
 
 logger = logging.getLogger(__name__)
@@ -49,7 +51,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get the status of the server",
         tags={"internal"},
     )
-    def get_status() -> Dict[str, Any]:
+    def get_status() -> dict[str, Any]:
         return get_client().get_status()
 
     @mcp.tool(
@@ -57,7 +59,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get list of custom emojis supported in the chat",
         tags={"internal"},
     )
-    def get_custom_emoji_list() -> Dict[str, Any]:
+    def get_custom_emoji_list() -> dict[str, Any]:
         return get_client().get_custom_emoji_list()
 
     @mcp.tool(
@@ -65,7 +67,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Gets a list of chat messages",
         tags={"internal"},
     )
-    def get_chat_messages(access_token: str) -> Dict[str, Any]:
+    def get_chat_messages(access_token: str) -> dict[str, Any]:
         return get_client().get_chat_messages(access_token)
 
     @mcp.tool(
@@ -74,8 +76,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def register_anonymous_chat_user(
-        x_forwarded_user: Optional[str] = None, display_name: Optional[str] = None
-    ) -> Dict[str, Any]:
+        x_forwarded_user: str | None = None, display_name: str | None = None
+    ) -> dict[str, Any]:
         return get_client().register_anonymous_chat_user(x_forwarded_user, display_name)
 
     @mcp.tool(
@@ -83,7 +85,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update chat message visibility",
         tags={"internal"},
     )
-    def update_message_visibility(access_token: str, body: dict) -> Dict[str, Any]:
+    def update_message_visibility(access_token: str, body: dict) -> dict[str, Any]:
         return get_client().update_message_visibility(access_token, body)
 
     @mcp.tool(
@@ -92,8 +94,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def update_user_enabled(
-        access_token: str, user_id: Optional[str] = None, enabled: Optional[bool] = None
-    ) -> Dict[str, Any]:
+        access_token: str, user_id: str | None = None, enabled: bool | None = None
+    ) -> dict[str, Any]:
         return get_client().update_user_enabled(access_token, user_id, enabled)
 
     @mcp.tool(
@@ -101,7 +103,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get the web config",
         tags={"internal"},
     )
-    def get_web_config() -> Dict[str, Any]:
+    def get_web_config() -> dict[str, Any]:
         return get_client().get_web_config()
 
     @mcp.tool(
@@ -109,7 +111,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get the YP protocol data",
         tags={"internal"},
     )
-    def get_ypresponse() -> Dict[str, Any]:
+    def get_ypresponse() -> dict[str, Any]:
         return get_client().get_ypresponse()
 
     @mcp.tool(
@@ -117,7 +119,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get all social platforms",
         tags={"internal"},
     )
-    def get_all_social_platforms() -> Dict[str, Any]:
+    def get_all_social_platforms() -> dict[str, Any]:
         return get_client().get_all_social_platforms()
 
     @mcp.tool(
@@ -125,7 +127,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a list of video variants available",
         tags={"internal"},
     )
-    def get_video_stream_output_variants() -> Dict[str, Any]:
+    def get_video_stream_output_variants() -> dict[str, Any]:
         return get_client().get_video_stream_output_variants()
 
     @mcp.tool(
@@ -133,7 +135,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Tell the backend you're an active viewer",
         tags={"internal"},
     )
-    def ping() -> Dict[str, Any]:
+    def ping() -> dict[str, Any]:
         return get_client().ping()
 
     @mcp.tool(
@@ -141,7 +143,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Request remote follow",
         tags={"internal"},
     )
-    def remote_follow(account: Optional[str] = None) -> Dict[str, Any]:
+    def remote_follow(account: str | None = None) -> dict[str, Any]:
         return get_client().remote_follow(account)
 
     @mcp.tool(
@@ -150,8 +152,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def get_followers(
-        offset: Optional[int] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+        offset: int | None = None, limit: int | None = None
+    ) -> dict[str, Any]:
         return get_client().get_followers(offset, limit)
 
     @mcp.tool(
@@ -159,7 +161,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Save video playback metrics for future video health recording",
         tags={"internal"},
     )
-    def report_playback_metrics(body: dict) -> Dict[str, Any]:
+    def report_playback_metrics(body: dict) -> dict[str, Any]:
         return get_client().report_playback_metrics(body)
 
     @mcp.tool(
@@ -169,9 +171,9 @@ def register_internal_tools(mcp: FastMCP):
     )
     def register_for_live_notifications(
         access_token: str,
-        channel: Optional[str] = None,
-        destination: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        channel: str | None = None,
+        destination: str | None = None,
+    ) -> dict[str, Any]:
         return get_client().register_for_live_notifications(
             access_token, channel, destination
         )
@@ -181,7 +183,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get current inboard broadcaster",
         tags={"internal"},
     )
-    def status_admin() -> Dict[str, Any]:
+    def status_admin() -> dict[str, Any]:
         return get_client().status_admin()
 
     @mcp.tool(
@@ -189,7 +191,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Disconnect inbound stream",
         tags={"internal"},
     )
-    def disconnect_inbound_connection() -> Dict[str, Any]:
+    def disconnect_inbound_connection() -> dict[str, Any]:
         return get_client().disconnect_inbound_connection()
 
     @mcp.tool(
@@ -197,7 +199,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get the current server config",
         tags={"internal"},
     )
-    def get_server_config() -> Dict[str, Any]:
+    def get_server_config() -> dict[str, Any]:
         return get_client().get_server_config()
 
     @mcp.tool(
@@ -205,7 +207,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get viewer count over time",
         tags={"internal"},
     )
-    def get_viewers_over_time(window_start: Optional[str] = None) -> Dict[str, Any]:
+    def get_viewers_over_time(window_start: str | None = None) -> dict[str, Any]:
         return get_client().get_viewers_over_time(window_start)
 
     @mcp.tool(
@@ -213,7 +215,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get active viewers",
         tags={"internal"},
     )
-    def get_active_viewers() -> Dict[str, Any]:
+    def get_active_viewers() -> dict[str, Any]:
         return get_client().get_active_viewers()
 
     @mcp.tool(
@@ -221,7 +223,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get the current hardware stats",
         tags={"internal"},
     )
-    def get_hardware_stats() -> Dict[str, Any]:
+    def get_hardware_stats() -> dict[str, Any]:
         return get_client().get_hardware_stats()
 
     @mcp.tool(
@@ -229,7 +231,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a detailed list of currently connected chat clients",
         tags={"internal"},
     )
-    def get_connected_chat_clients() -> Dict[str, Any]:
+    def get_connected_chat_clients() -> dict[str, Any]:
         return get_client().get_connected_chat_clients()
 
     @mcp.tool(
@@ -237,7 +239,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get all chat messages for the admin, unfiltered",
         tags={"internal"},
     )
-    def get_chat_messages_admin() -> Dict[str, Any]:
+    def get_chat_messages_admin() -> dict[str, Any]:
         return get_client().get_chat_messages_admin()
 
     @mcp.tool(
@@ -245,7 +247,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update visibility of chat messages",
         tags={"internal"},
     )
-    def update_message_visibility_admin(body: dict) -> Dict[str, Any]:
+    def update_message_visibility_admin(body: dict) -> dict[str, Any]:
         return get_client().update_message_visibility_admin(body)
 
     @mcp.tool(
@@ -254,8 +256,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def update_user_enabled_admin(
-        user_id: Optional[str] = None, enabled: Optional[bool] = None
-    ) -> Dict[str, Any]:
+        user_id: str | None = None, enabled: bool | None = None
+    ) -> dict[str, Any]:
         return get_client().update_user_enabled_admin(user_id, enabled)
 
     @mcp.tool(
@@ -263,7 +265,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a list of disabled users",
         tags={"internal"},
     )
-    def get_disabled_users() -> Dict[str, Any]:
+    def get_disabled_users() -> dict[str, Any]:
         return get_client().get_disabled_users()
 
     @mcp.tool(
@@ -271,7 +273,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Ban an IP address",
         tags={"internal"},
     )
-    def ban_ipaddress(body: dict) -> Dict[str, Any]:
+    def ban_ipaddress(body: dict) -> dict[str, Any]:
         return get_client().ban_ipaddress(body)
 
     @mcp.tool(
@@ -279,7 +281,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Remove an IP ban",
         tags={"internal"},
     )
-    def unban_ipaddress(body: dict) -> Dict[str, Any]:
+    def unban_ipaddress(body: dict) -> dict[str, Any]:
         return get_client().unban_ipaddress(body)
 
     @mcp.tool(
@@ -287,7 +289,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get all banned IP addresses",
         tags={"internal"},
     )
-    def get_ipaddress_bans() -> Dict[str, Any]:
+    def get_ipaddress_bans() -> dict[str, Any]:
         return get_client().get_ipaddress_bans()
 
     @mcp.tool(
@@ -296,8 +298,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def update_user_moderator(
-        user_id: Optional[str] = None, is_moderator: Optional[bool] = None
-    ) -> Dict[str, Any]:
+        user_id: str | None = None, is_moderator: bool | None = None
+    ) -> dict[str, Any]:
         return get_client().update_user_moderator(user_id, is_moderator)
 
     @mcp.tool(
@@ -305,13 +307,13 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a list of moderator users",
         tags={"internal"},
     )
-    def get_moderators() -> Dict[str, Any]:
+    def get_moderators() -> dict[str, Any]:
         return get_client().get_moderators()
 
     @mcp.tool(
         name="owncast-internal-get-logs", description="Get all logs", tags={"internal"}
     )
-    def get_logs() -> Dict[str, Any]:
+    def get_logs() -> dict[str, Any]:
         return get_client().get_logs()
 
     @mcp.tool(
@@ -319,7 +321,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get warning/error logs",
         tags={"internal"},
     )
-    def get_warnings() -> Dict[str, Any]:
+    def get_warnings() -> dict[str, Any]:
         return get_client().get_warnings()
 
     @mcp.tool(
@@ -328,8 +330,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def get_followers_admin(
-        offset: Optional[int] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+        offset: int | None = None, limit: int | None = None
+    ) -> dict[str, Any]:
         return get_client().get_followers_admin(offset, limit)
 
     @mcp.tool(
@@ -337,7 +339,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a list of pending follow requests",
         tags={"internal"},
     )
-    def get_pending_follow_requests() -> Dict[str, Any]:
+    def get_pending_follow_requests() -> dict[str, Any]:
         return get_client().get_pending_follow_requests()
 
     @mcp.tool(
@@ -345,7 +347,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get a list of rejected or blocked follows",
         tags={"internal"},
     )
-    def get_blocked_and_rejected_followers() -> Dict[str, Any]:
+    def get_blocked_and_rejected_followers() -> dict[str, Any]:
         return get_client().get_blocked_and_rejected_followers()
 
     @mcp.tool(
@@ -354,8 +356,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def approve_follower(
-        actor_iri: Optional[str] = None, approved: Optional[bool] = None
-    ) -> Dict[str, Any]:
+        actor_iri: str | None = None, approved: bool | None = None
+    ) -> dict[str, Any]:
         return get_client().approve_follower(actor_iri, approved)
 
     @mcp.tool(
@@ -364,8 +366,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def upload_custom_emoji(
-        name: Optional[str] = None, data: Optional[str] = None
-    ) -> Dict[str, Any]:
+        name: str | None = None, data: str | None = None
+    ) -> dict[str, Any]:
         return get_client().upload_custom_emoji(name, data)
 
     @mcp.tool(
@@ -373,7 +375,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Delete custom emoji",
         tags={"internal"},
     )
-    def delete_custom_emoji(name: Optional[str] = None) -> Dict[str, Any]:
+    def delete_custom_emoji(name: str | None = None) -> dict[str, Any]:
         return get_client().delete_custom_emoji(name)
 
     @mcp.tool(
@@ -381,7 +383,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Change the current admin password",
         tags={"internal"},
     )
-    def set_admin_password(body: dict) -> Dict[str, Any]:
+    def set_admin_password(body: dict) -> dict[str, Any]:
         return get_client().set_admin_password(body)
 
     @mcp.tool(
@@ -389,7 +391,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set an array of valid stream keys",
         tags={"internal"},
     )
-    def set_stream_keys(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_stream_keys(value: list | None = None) -> dict[str, Any]:
         return get_client().set_stream_keys(value)
 
     @mcp.tool(
@@ -397,7 +399,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Change the extra page content in memory",
         tags={"internal"},
     )
-    def set_extra_page_content(body: dict) -> Dict[str, Any]:
+    def set_extra_page_content(body: dict) -> dict[str, Any]:
         return get_client().set_extra_page_content(body)
 
     @mcp.tool(
@@ -405,7 +407,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Change the stream title",
         tags={"internal"},
     )
-    def set_stream_title(body: dict) -> Dict[str, Any]:
+    def set_stream_title(body: dict) -> dict[str, Any]:
         return get_client().set_stream_title(body)
 
     @mcp.tool(
@@ -413,7 +415,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Change the welcome message",
         tags={"internal"},
     )
-    def set_server_welcome_message(body: dict) -> Dict[str, Any]:
+    def set_server_welcome_message(body: dict) -> dict[str, Any]:
         return get_client().set_server_welcome_message(body)
 
     @mcp.tool(
@@ -421,7 +423,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Disable chat",
         tags={"internal"},
     )
-    def set_chat_disabled(body: dict) -> Dict[str, Any]:
+    def set_chat_disabled(body: dict) -> dict[str, Any]:
         return get_client().set_chat_disabled(body)
 
     @mcp.tool(
@@ -429,7 +431,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Enable chat for user join messages",
         tags={"internal"},
     )
-    def set_chat_join_messages_enabled(body: dict) -> Dict[str, Any]:
+    def set_chat_join_messages_enabled(body: dict) -> dict[str, Any]:
         return get_client().set_chat_join_messages_enabled(body)
 
     @mcp.tool(
@@ -437,7 +439,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Enable/disable chat established user mode",
         tags={"internal"},
     )
-    def set_enable_established_chat_user_mode(body: dict) -> Dict[str, Any]:
+    def set_enable_established_chat_user_mode(body: dict) -> dict[str, Any]:
         return get_client().set_enable_established_chat_user_mode(body)
 
     @mcp.tool(
@@ -445,7 +447,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set chat usernames that are not allowed",
         tags={"internal"},
     )
-    def set_forbidden_username_list(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_forbidden_username_list(value: list | None = None) -> dict[str, Any]:
         return get_client().set_forbidden_username_list(value)
 
     @mcp.tool(
@@ -453,7 +455,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set the suggested chat usernames that will be assigned automatically",
         tags={"internal"},
     )
-    def set_suggested_username_list(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_suggested_username_list(value: list | None = None) -> dict[str, Any]:
         return get_client().set_suggested_username_list(value)
 
     @mcp.tool(
@@ -461,7 +463,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set spam protection enabled",
         tags={"internal"},
     )
-    def set_chat_spam_protection_enabled(body: dict) -> Dict[str, Any]:
+    def set_chat_spam_protection_enabled(body: dict) -> dict[str, Any]:
         return get_client().set_chat_spam_protection_enabled(body)
 
     @mcp.tool(
@@ -469,7 +471,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set slur filter enabled",
         tags={"internal"},
     )
-    def set_chat_slur_filter_enabled(body: dict) -> Dict[str, Any]:
+    def set_chat_slur_filter_enabled(body: dict) -> dict[str, Any]:
         return get_client().set_chat_slur_filter_enabled(body)
 
     @mcp.tool(
@@ -477,7 +479,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set require authentication for chat",
         tags={"internal"},
     )
-    def set_chat_require_authentication(body: dict) -> Dict[str, Any]:
+    def set_chat_require_authentication(body: dict) -> dict[str, Any]:
         return get_client().set_chat_require_authentication(body)
 
     @mcp.tool(
@@ -485,7 +487,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set video codec",
         tags={"internal"},
     )
-    def set_video_codec(body: dict) -> Dict[str, Any]:
+    def set_video_codec(body: dict) -> dict[str, Any]:
         return get_client().set_video_codec(body)
 
     @mcp.tool(
@@ -493,7 +495,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set the number of video segments and duration per segment in a playlist",
         tags={"internal"},
     )
-    def set_stream_latency_level(body: dict) -> Dict[str, Any]:
+    def set_stream_latency_level(body: dict) -> dict[str, Any]:
         return get_client().set_stream_latency_level(body)
 
     @mcp.tool(
@@ -501,7 +503,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set an array of video output configurations",
         tags={"internal"},
     )
-    def set_stream_output_variants(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_stream_output_variants(value: list | None = None) -> dict[str, Any]:
         return get_client().set_stream_output_variants(value)
 
     @mcp.tool(
@@ -510,14 +512,14 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def set_custom_color_variable_values(
-        value: Optional[dict] = None,
-    ) -> Dict[str, Any]:
+        value: dict | None = None,
+    ) -> dict[str, Any]:
         return get_client().set_custom_color_variable_values(value)
 
     @mcp.tool(
         name="owncast-internal-set-logo", description="Update logo", tags={"internal"}
     )
-    def set_logo(body: dict) -> Dict[str, Any]:
+    def set_logo(body: dict) -> dict[str, Any]:
         return get_client().set_logo(body)
 
     @mcp.tool(
@@ -525,7 +527,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Upload custom favicon",
         tags={"internal"},
     )
-    def set_favicon() -> Dict[str, Any]:
+    def set_favicon() -> dict[str, Any]:
         return get_client().set_favicon()
 
     @mcp.tool(
@@ -533,7 +535,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Reset favicon to default",
         tags={"internal"},
     )
-    def reset_favicon() -> Dict[str, Any]:
+    def reset_favicon() -> dict[str, Any]:
         return get_client().reset_favicon()
 
     @mcp.tool(
@@ -541,7 +543,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update server tags",
         tags={"internal"},
     )
-    def set_tags(body: dict) -> Dict[str, Any]:
+    def set_tags(body: dict) -> dict[str, Any]:
         return get_client().set_tags(body)
 
     @mcp.tool(
@@ -549,7 +551,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update FFMPEG path",
         tags={"internal"},
     )
-    def set_ffmpeg_path(body: dict) -> Dict[str, Any]:
+    def set_ffmpeg_path(body: dict) -> dict[str, Any]:
         return get_client().set_ffmpeg_path(body)
 
     @mcp.tool(
@@ -557,7 +559,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update server port",
         tags={"internal"},
     )
-    def set_web_server_port(body: dict) -> Dict[str, Any]:
+    def set_web_server_port(body: dict) -> dict[str, Any]:
         return get_client().set_web_server_port(body)
 
     @mcp.tool(
@@ -565,7 +567,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update server IP address",
         tags={"internal"},
     )
-    def set_web_server_ip(body: dict) -> Dict[str, Any]:
+    def set_web_server_ip(body: dict) -> dict[str, Any]:
         return get_client().set_web_server_ip(body)
 
     @mcp.tool(
@@ -573,7 +575,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update RTMP post",
         tags={"internal"},
     )
-    def set_rtmpserver_port(body: dict) -> Dict[str, Any]:
+    def set_rtmpserver_port(body: dict) -> dict[str, Any]:
         return get_client().set_rtmpserver_port(body)
 
     @mcp.tool(
@@ -581,7 +583,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update websocket host override",
         tags={"internal"},
     )
-    def set_socket_host_override(body: dict) -> Dict[str, Any]:
+    def set_socket_host_override(body: dict) -> dict[str, Any]:
         return get_client().set_socket_host_override(body)
 
     @mcp.tool(
@@ -589,7 +591,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update custom video serving endpoint",
         tags={"internal"},
     )
-    def set_video_serving_endpoint(body: dict) -> Dict[str, Any]:
+    def set_video_serving_endpoint(body: dict) -> dict[str, Any]:
         return get_client().set_video_serving_endpoint(body)
 
     @mcp.tool(
@@ -597,7 +599,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update NSFW marking",
         tags={"internal"},
     )
-    def set_nsfw(body: dict) -> Dict[str, Any]:
+    def set_nsfw(body: dict) -> dict[str, Any]:
         return get_client().set_nsfw(body)
 
     @mcp.tool(
@@ -605,7 +607,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update directory enabled",
         tags={"internal"},
     )
-    def set_directory_enabled(body: dict) -> Dict[str, Any]:
+    def set_directory_enabled(body: dict) -> dict[str, Any]:
         return get_client().set_directory_enabled(body)
 
     @mcp.tool(
@@ -613,7 +615,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update social handles",
         tags={"internal"},
     )
-    def set_social_handles(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_social_handles(value: list | None = None) -> dict[str, Any]:
         return get_client().set_social_handles(value)
 
     @mcp.tool(
@@ -621,7 +623,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update S3 configuration",
         tags={"internal"},
     )
-    def set_s3_configuration(value: Optional[Any] = None) -> Dict[str, Any]:
+    def set_s3_configuration(value: Any | None = None) -> dict[str, Any]:
         return get_client().set_s3_configuration(value)
 
     @mcp.tool(
@@ -629,7 +631,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update server url",
         tags={"internal"},
     )
-    def set_server_url(body: dict) -> Dict[str, Any]:
+    def set_server_url(body: dict) -> dict[str, Any]:
         return get_client().set_server_url(body)
 
     @mcp.tool(
@@ -637,7 +639,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update external action links",
         tags={"internal"},
     )
-    def set_external_actions(value: Optional[list] = None) -> Dict[str, Any]:
+    def set_external_actions(value: list | None = None) -> dict[str, Any]:
         return get_client().set_external_actions(value)
 
     @mcp.tool(
@@ -645,7 +647,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update custom styles",
         tags={"internal"},
     )
-    def set_custom_styles(body: dict) -> Dict[str, Any]:
+    def set_custom_styles(body: dict) -> dict[str, Any]:
         return get_client().set_custom_styles(body)
 
     @mcp.tool(
@@ -653,7 +655,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update custom JavaScript",
         tags={"internal"},
     )
-    def set_custom_javascript(body: dict) -> Dict[str, Any]:
+    def set_custom_javascript(body: dict) -> dict[str, Any]:
         return get_client().set_custom_javascript(body)
 
     @mcp.tool(
@@ -661,7 +663,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update hide viewer count",
         tags={"internal"},
     )
-    def set_hide_viewer_count(body: dict) -> Dict[str, Any]:
+    def set_hide_viewer_count(body: dict) -> dict[str, Any]:
         return get_client().set_hide_viewer_count(body)
 
     @mcp.tool(
@@ -669,7 +671,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Update search indexing",
         tags={"internal"},
     )
-    def set_disable_search_indexing(body: dict) -> Dict[str, Any]:
+    def set_disable_search_indexing(body: dict) -> dict[str, Any]:
         return get_client().set_disable_search_indexing(body)
 
     @mcp.tool(
@@ -677,7 +679,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Enable/disable federation features",
         tags={"internal"},
     )
-    def set_federation_enabled(body: dict) -> Dict[str, Any]:
+    def set_federation_enabled(body: dict) -> dict[str, Any]:
         return get_client().set_federation_enabled(body)
 
     @mcp.tool(
@@ -685,7 +687,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set if federation activities are private",
         tags={"internal"},
     )
-    def set_federation_activity_private(body: dict) -> Dict[str, Any]:
+    def set_federation_activity_private(body: dict) -> dict[str, Any]:
         return get_client().set_federation_activity_private(body)
 
     @mcp.tool(
@@ -693,7 +695,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set if fediverse engagement appears in chat",
         tags={"internal"},
     )
-    def set_federation_show_engagement(body: dict) -> Dict[str, Any]:
+    def set_federation_show_engagement(body: dict) -> dict[str, Any]:
         return get_client().set_federation_show_engagement(body)
 
     @mcp.tool(
@@ -701,7 +703,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set local federated username",
         tags={"internal"},
     )
-    def set_federation_username(body: dict) -> Dict[str, Any]:
+    def set_federation_username(body: dict) -> dict[str, Any]:
         return get_client().set_federation_username(body)
 
     @mcp.tool(
@@ -709,7 +711,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set federated go live message",
         tags={"internal"},
     )
-    def set_federation_go_live_message(body: dict) -> Dict[str, Any]:
+    def set_federation_go_live_message(body: dict) -> dict[str, Any]:
         return get_client().set_federation_go_live_message(body)
 
     @mcp.tool(
@@ -717,7 +719,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Set Federation blocked domains",
         tags={"internal"},
     )
-    def set_federation_block_domains(body: dict) -> Dict[str, Any]:
+    def set_federation_block_domains(body: dict) -> dict[str, Any]:
         return get_client().set_federation_block_domains(body)
 
     @mcp.tool(
@@ -726,8 +728,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def set_discord_notification_configuration(
-        value: Optional[Any] = None,
-    ) -> Dict[str, Any]:
+        value: Any | None = None,
+    ) -> dict[str, Any]:
         return get_client().set_discord_notification_configuration(value)
 
     @mcp.tool(
@@ -736,8 +738,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def set_browser_notification_configuration(
-        value: Optional[Any] = None,
-    ) -> Dict[str, Any]:
+        value: Any | None = None,
+    ) -> dict[str, Any]:
         return get_client().set_browser_notification_configuration(value)
 
     @mcp.tool(
@@ -745,7 +747,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get all the webhooks",
         tags={"internal"},
     )
-    def get_webhooks() -> Dict[str, Any]:
+    def get_webhooks() -> dict[str, Any]:
         return get_client().get_webhooks()
 
     @mcp.tool(
@@ -753,7 +755,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Delete a single webhook",
         tags={"internal"},
     )
-    def delete_webhook(id: Optional[int] = None) -> Dict[str, Any]:
+    def delete_webhook(id: int | None = None) -> dict[str, Any]:
         return get_client().delete_webhook(id)
 
     @mcp.tool(
@@ -762,8 +764,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def create_webhook(
-        url: Optional[str] = None, events: Optional[list] = None
-    ) -> Dict[str, Any]:
+        url: str | None = None, events: list | None = None
+    ) -> dict[str, Any]:
         return get_client().create_webhook(url, events)
 
     @mcp.tool(
@@ -771,7 +773,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get all access tokens",
         tags={"internal"},
     )
-    def get_external_apiusers() -> Dict[str, Any]:
+    def get_external_apiusers() -> dict[str, Any]:
         return get_client().get_external_apiusers()
 
     @mcp.tool(
@@ -779,7 +781,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Delete a single external API user",
         tags={"internal"},
     )
-    def delete_external_apiuser(token: Optional[str] = None) -> Dict[str, Any]:
+    def delete_external_apiuser(token: str | None = None) -> dict[str, Any]:
         return get_client().delete_external_apiuser(token)
 
     @mcp.tool(
@@ -788,8 +790,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def create_external_apiuser(
-        name: Optional[str] = None, scopes: Optional[list] = None
-    ) -> Dict[str, Any]:
+        name: str | None = None, scopes: list | None = None
+    ) -> dict[str, Any]:
         return get_client().create_external_apiuser(name, scopes)
 
     @mcp.tool(
@@ -797,7 +799,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Return the auto-update features that are supported for this instance",
         tags={"internal"},
     )
-    def auto_update_options() -> Dict[str, Any]:
+    def auto_update_options() -> dict[str, Any]:
         return get_client().auto_update_options()
 
     @mcp.tool(
@@ -805,7 +807,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Begin the auto-update",
         tags={"internal"},
     )
-    def auto_update_start() -> Dict[str, Any]:
+    def auto_update_start() -> dict[str, Any]:
         return get_client().auto_update_start()
 
     @mcp.tool(
@@ -813,7 +815,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Force quit the server and restart it",
         tags={"internal"},
     )
-    def auto_update_force_quit() -> Dict[str, Any]:
+    def auto_update_force_quit() -> dict[str, Any]:
         return get_client().auto_update_force_quit()
 
     @mcp.tool(
@@ -821,7 +823,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Reset YP configuration",
         tags={"internal"},
     )
-    def reset_ypregistration() -> Dict[str, Any]:
+    def reset_ypregistration() -> dict[str, Any]:
         return get_client().reset_ypregistration()
 
     @mcp.tool(
@@ -829,7 +831,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Get video playback metrics",
         tags={"internal"},
     )
-    def get_video_playback_metrics() -> Dict[str, Any]:
+    def get_video_playback_metrics() -> dict[str, Any]:
         return get_client().get_video_playback_metrics()
 
     @mcp.tool(
@@ -837,7 +839,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Endpoint to interface with Prometheus",
         tags={"internal"},
     )
-    def get_prometheus_api() -> Dict[str, Any]:
+    def get_prometheus_api() -> dict[str, Any]:
         return get_client().get_prometheus_api()
 
     @mcp.tool(
@@ -845,7 +847,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Endpoint to interface with Prometheus",
         tags={"internal"},
     )
-    def post_prometheus_api() -> Dict[str, Any]:
+    def post_prometheus_api() -> dict[str, Any]:
         return get_client().post_prometheus_api()
 
     @mcp.tool(
@@ -853,7 +855,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Endpoint to interface with Prometheus",
         tags={"internal"},
     )
-    def put_prometheus_api() -> Dict[str, Any]:
+    def put_prometheus_api() -> dict[str, Any]:
         return get_client().put_prometheus_api()
 
     @mcp.tool(
@@ -861,7 +863,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Endpoint to interface with Prometheus",
         tags={"internal"},
     )
-    def delete_prometheus_api() -> Dict[str, Any]:
+    def delete_prometheus_api() -> dict[str, Any]:
         return get_client().delete_prometheus_api()
 
     @mcp.tool(
@@ -869,7 +871,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Send a public message to the Fediverse from the server's user",
         tags={"internal"},
     )
-    def send_federated_message(body: dict) -> Dict[str, Any]:
+    def send_federated_message(body: dict) -> dict[str, Any]:
         return get_client().send_federated_message(body)
 
     @mcp.tool(
@@ -878,8 +880,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def get_federated_actions(
-        offset: Optional[int] = None, limit: Optional[int] = None
-    ) -> Dict[str, Any]:
+        offset: int | None = None, limit: int | None = None
+    ) -> dict[str, Any]:
         return get_client().get_federated_actions(offset, limit)
 
     @mcp.tool(
@@ -888,8 +890,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def start_indie_auth_flow(
-        access_token: str, auth_host: Optional[str] = None
-    ) -> Dict[str, Any]:
+        access_token: str, auth_host: str | None = None
+    ) -> dict[str, Any]:
         return get_client().start_indie_auth_flow(access_token, auth_host)
 
     @mcp.tool(
@@ -897,7 +899,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Handle the redirect from an IndieAuth server to continue the auth flow",
         tags={"internal"},
     )
-    def handle_indie_auth_redirect(state: str) -> Dict[str, Any]:
+    def handle_indie_auth_redirect(state: str) -> dict[str, Any]:
         return get_client().handle_indie_auth_redirect(state)
 
     @mcp.tool(
@@ -907,7 +909,7 @@ def register_internal_tools(mcp: FastMCP):
     )
     def handle_indie_auth_endpoint_get(
         client_id: str, redirect_uri: str, code_challenge: str, state: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return get_client().handle_indie_auth_endpoint_get(
             client_id, redirect_uri, code_challenge, state
         )
@@ -917,7 +919,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Handles IndieAuth from form submission",
         tags={"internal"},
     )
-    def handle_indie_auth_endpoint_post() -> Dict[str, Any]:
+    def handle_indie_auth_endpoint_post() -> dict[str, Any]:
         return get_client().handle_indie_auth_endpoint_post()
 
     @mcp.tool(
@@ -926,8 +928,8 @@ def register_internal_tools(mcp: FastMCP):
         tags={"internal"},
     )
     def register_fediverse_otprequest(
-        access_token: str, account: Optional[str] = None
-    ) -> Dict[str, Any]:
+        access_token: str, account: str | None = None
+    ) -> dict[str, Any]:
         return get_client().register_fediverse_otprequest(access_token, account)
 
     @mcp.tool(
@@ -935,7 +937,7 @@ def register_internal_tools(mcp: FastMCP):
         description="Verify Fediverse OTP code",
         tags={"internal"},
     )
-    def verify_fediverse_otprequest(code: Optional[str] = None) -> Dict[str, Any]:
+    def verify_fediverse_otprequest(code: str | None = None) -> dict[str, Any]:
         return get_client().verify_fediverse_otprequest(code)
 
 
@@ -945,7 +947,7 @@ def register_objects_tools(mcp: FastMCP):
         description="Change the server name",
         tags={"objects"},
     )
-    def set_server_name(body: dict) -> Dict[str, Any]:
+    def set_server_name(body: dict) -> dict[str, Any]:
         return get_client().set_server_name(body)
 
     @mcp.tool(
@@ -953,7 +955,7 @@ def register_objects_tools(mcp: FastMCP):
         description="Change the server summary",
         tags={"objects"},
     )
-    def set_server_summary(body: dict) -> Dict[str, Any]:
+    def set_server_summary(body: dict) -> dict[str, Any]:
         return get_client().set_server_summary(body)
 
     @mcp.tool(
@@ -961,7 +963,7 @@ def register_objects_tools(mcp: FastMCP):
         description="Change the offline message",
         tags={"objects"},
     )
-    def set_custom_offline_message(body: dict) -> Dict[str, Any]:
+    def set_custom_offline_message(body: dict) -> dict[str, Any]:
         return get_client().set_custom_offline_message(body)
 
 
@@ -971,7 +973,7 @@ def register_external_tools(mcp: FastMCP):
         description="Send a system message to the chat",
         tags={"external"},
     )
-    def send_system_message(body: dict) -> Dict[str, Any]:
+    def send_system_message(body: dict) -> dict[str, Any]:
         return get_client().send_system_message(body)
 
     @mcp.tool(
@@ -981,7 +983,7 @@ def register_external_tools(mcp: FastMCP):
     )
     def send_system_message_to_connected_client(
         client_id: int, body: dict
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return get_client().send_system_message_to_connected_client(client_id, body)
 
     @mcp.tool(
@@ -989,7 +991,7 @@ def register_external_tools(mcp: FastMCP):
         description="Send a user message to chat",
         tags={"external"},
     )
-    def send_user_message() -> Dict[str, Any]:
+    def send_user_message() -> dict[str, Any]:
         return get_client().send_user_message()
 
     @mcp.tool(
@@ -997,7 +999,7 @@ def register_external_tools(mcp: FastMCP):
         description="Send a message to chat as a specific 3rd party bot/integration based on its access token",
         tags={"external"},
     )
-    def send_integration_chat_message(body: dict) -> Dict[str, Any]:
+    def send_integration_chat_message(body: dict) -> dict[str, Any]:
         return get_client().send_integration_chat_message(body)
 
     @mcp.tool(
@@ -1005,7 +1007,7 @@ def register_external_tools(mcp: FastMCP):
         description="Send a user action to chat",
         tags={"external"},
     )
-    def send_chat_action(body: dict) -> Dict[str, Any]:
+    def send_chat_action(body: dict) -> dict[str, Any]:
         return get_client().send_chat_action(body)
 
     @mcp.tool(
@@ -1013,7 +1015,7 @@ def register_external_tools(mcp: FastMCP):
         description="Hide chat message",
         tags={"external"},
     )
-    def external_update_message_visibility(body: dict) -> Dict[str, Any]:
+    def external_update_message_visibility(body: dict) -> dict[str, Any]:
         return get_client().external_update_message_visibility(body)
 
     @mcp.tool(
@@ -1021,7 +1023,7 @@ def register_external_tools(mcp: FastMCP):
         description="Get the server's status",
         tags={"external"},
     )
-    def external_get_status() -> Dict[str, Any]:
+    def external_get_status() -> dict[str, Any]:
         return get_client().external_get_status()
 
     @mcp.tool(
@@ -1029,7 +1031,7 @@ def register_external_tools(mcp: FastMCP):
         description="Stream title",
         tags={"external"},
     )
-    def external_set_stream_title(body: dict) -> Dict[str, Any]:
+    def external_set_stream_title(body: dict) -> dict[str, Any]:
         return get_client().external_set_stream_title(body)
 
     @mcp.tool(
@@ -1037,7 +1039,7 @@ def register_external_tools(mcp: FastMCP):
         description="Get chat history",
         tags={"external"},
     )
-    def external_get_chat_messages() -> Dict[str, Any]:
+    def external_get_chat_messages() -> dict[str, Any]:
         return get_client().external_get_chat_messages()
 
     @mcp.tool(
@@ -1045,7 +1047,7 @@ def register_external_tools(mcp: FastMCP):
         description="Connected clients",
         tags={"external"},
     )
-    def external_get_connected_chat_clients() -> Dict[str, Any]:
+    def external_get_connected_chat_clients() -> dict[str, Any]:
         return get_client().external_get_connected_chat_clients()
 
     @mcp.tool(
@@ -1053,7 +1055,7 @@ def register_external_tools(mcp: FastMCP):
         description="Get a user's details",
         tags={"external"},
     )
-    def external_get_user_details(user_id: str) -> Dict[str, Any]:
+    def external_get_user_details(user_id: str) -> dict[str, Any]:
         return get_client().external_get_user_details(user_id)
 
 
@@ -1063,7 +1065,7 @@ def register_chat_tools(mcp: FastMCP):
         description="Get a user's details",
         tags={"chat"},
     )
-    def get_user_details(user_id: str, access_token: str) -> Dict[str, Any]:
+    def get_user_details(user_id: str, access_token: str) -> dict[str, Any]:
         return get_client().get_user_details(user_id, access_token)
 
 

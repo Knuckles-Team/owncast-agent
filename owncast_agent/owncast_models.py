@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 
@@ -7,8 +6,8 @@ class OwncastStatusResponse(BaseModel):
     viewerCount: int
     overallMaxViewerCount: int
     sessionMaxViewerCount: int
-    lastConnectTime: Optional[str] = None
-    lastDisconnectTime: Optional[str] = None
+    lastConnectTime: str | None = None
+    lastDisconnectTime: str | None = None
     streamTitle: str
 
 
