@@ -1,6 +1,7 @@
-import pytest
-from owncast_agent.mcp_server import get_mcp_instance
 from fastmcp import FastMCP
+
+from owncast_agent.mcp_server import get_mcp_instance
+
 
 def test_mcp_instance_creation():
     """Test that the MCP instance can be created successfully."""
@@ -11,5 +12,4 @@ def test_mcp_instance_creation():
 
 def test_import_owncast_agent():
     """Test that the package can be imported."""
-    import owncast_agent
     pass

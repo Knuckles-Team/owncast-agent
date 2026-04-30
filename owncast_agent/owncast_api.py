@@ -1,7 +1,7 @@
 from typing import Any
 
 import requests
-from agent_utilities.exceptions import ApiError, AuthError
+from agent_utilities.core.exceptions import ApiError, AuthError
 
 
 class OwncastApi:
@@ -39,7 +39,7 @@ class OwncastApi:
                     return {"status": "success", "text": response.text}
             return {"success": True}
         except requests.exceptions.RequestException as e:
-            raise ApiError(f"API request failed: {e}")
+            raise ApiError(f"API request failed: {e}") from e
 
     def get_status(
         self,
