@@ -21,7 +21,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/owncast-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/owncast-agent)
 
-*Version: 0.5.0*
+*Version: 0.6.0*
 
 ## Overview
 
@@ -138,3 +138,66 @@ uv pip install owncast-agent
 
 ![GitHub followers](https://img.shields.io/github/followers/Knucklessg1)
 ![GitHub User's stars](https://img.shields.io/github/stars/Knucklessg1)
+
+
+## MCP Configuration Examples
+
+### 1. Standard IO (stdio) Deployment
+
+```json
+{
+  "mcpServers": {
+    "owncast-agent": {
+      "command": "uv",
+      "args": [
+        "run",
+        "owncast-mcp"
+      ],
+      "env": {
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "CHAT_TOOL": "True",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "EXTERNAL_TOOL": "True",
+        "INTERNAL_TOOL": "True",
+        "OBJECTS_TOOL": "True",
+        "OWNCAST_TOKEN": "<YOUR_OWNCAST_TOKEN>",
+        "OWNCAST_URL": "<YOUR_OWNCAST_URL>"
+      }
+    }
+  }
+}
+```
+
+### 2. Streamable HTTP (SSE) Deployment
+
+```json
+{
+  "mcpServers": {
+    "owncast-agent": {
+      "command": "uv",
+      "args": [
+        "run",
+        "owncast-mcp",
+        "--transport",
+        "http",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "env": {
+        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
+        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
+        "CHAT_TOOL": "True",
+        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
+        "EXTERNAL_TOOL": "True",
+        "INTERNAL_TOOL": "True",
+        "OBJECTS_TOOL": "True",
+        "OWNCAST_TOKEN": "<YOUR_OWNCAST_TOKEN>",
+        "OWNCAST_URL": "<YOUR_OWNCAST_URL>"
+      }
+    }
+  }
+}
+```
