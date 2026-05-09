@@ -23,7 +23,7 @@ from dotenv import find_dotenv, load_dotenv
 from fastmcp import Context, FastMCP
 from pydantic import Field
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import (
