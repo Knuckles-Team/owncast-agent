@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import warnings
 
 # Filter RequestsDependencyWarning early to prevent log spam
@@ -10,7 +11,6 @@ with warnings.catch_warnings():
     except ImportError:
         pass
 
-# General urllib3/chardet mismatch warnings
 warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
@@ -19,1719 +19,797 @@ import os
 import sys
 from typing import Any
 
+from agent_utilities.base_utilities import to_boolean
+from agent_utilities.mcp_utilities import create_mcp_server
 from dotenv import find_dotenv, load_dotenv
-from fastmcp import Context, FastMCP
+from fastmcp import FastMCP
+from fastmcp.dependencies import Depends
+from fastmcp.utilities.logging import get_logger
 from pydantic import Field
+from starlette.requests import Request
+from starlette.responses import JSONResponse
+
+from owncast_agent.auth import get_client
 
 __version__ = "0.10.0"
 
-from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import (
-    create_mcp_server,
-    ctx_confirm_destructive,
-    ctx_progress,
-)
-
-from .auth import get_client
-
-logger = logging.getLogger(__name__)
+logger = get_logger(name="owncast-agent")
 logger.setLevel(logging.INFO)
 
 
-def register_prompts(mcp: FastMCP):
-    @mcp.prompt(
-        name="owncast-system-summary",
-        description="Get a summary of the Owncast server status",
-    )
-    def owncast_system_summary() -> str:
-        return "Check the current stream status, viewer count, and active configuration for the Owncast instance."
-
-
-### BEGIN GENERATED TOOL REGISTRATION ###
-
-
 def register_internal_tools(mcp: FastMCP):
-    @mcp.tool(
-        name="owncast-internal-get-status",
-        description="Get the status of the server",
-        tags={"internal"},
-    )
-    def get_status(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
+    @mcp.tool(tags={"internal"})
+    async def owncast_internal(
+        action: str = Field(
+            description="Action to perform. Must be one of: 'get_status', 'get_custom_emoji_list', 'get_chat_messages', 'register_anonymous_chat_user', 'update_message_visibility', 'update_user_enabled', 'get_web_config', 'get_ypresponse', 'get_all_social_platforms', 'get_video_stream_output_variants', 'ping', 'remote_follow', 'get_followers', 'report_playback_metrics', 'register_for_live_notifications', 'status_admin', 'disconnect_inbound_connection', 'get_server_config', 'get_viewers_over_time', 'get_active_viewers', 'get_hardware_stats', 'get_connected_chat_clients', 'get_chat_messages_admin', 'update_message_visibility_admin', 'update_user_enabled_admin', 'get_disabled_users', 'ban_ipaddress', 'unban_ipaddress', 'get_ipaddress_bans', 'update_user_moderator', 'get_moderators', 'get_logs', 'get_warnings', 'get_followers_admin', 'get_pending_follow_requests', 'get_blocked_and_rejected_followers', 'approve_follower', 'upload_custom_emoji', 'delete_custom_emoji', 'set_admin_password', 'set_stream_keys', 'set_extra_page_content', 'set_stream_title', 'set_server_welcome_message', 'set_chat_disabled', 'set_chat_join_messages_enabled', 'set_enable_established_chat_user_mode', 'set_forbidden_username_list', 'set_suggested_username_list', 'set_chat_spam_protection_enabled', 'set_chat_slur_filter_enabled', 'set_chat_require_authentication', 'set_video_codec', 'set_stream_latency_level', 'set_stream_output_variants', 'set_custom_color_variable_values', 'set_logo', 'set_favicon', 'reset_favicon', 'set_tags', 'set_ffmpeg_path', 'set_web_server_port', 'set_web_server_ip', 'set_rtmpserver_port', 'set_socket_host_override', 'set_video_serving_endpoint', 'set_nsfw', 'set_directory_enabled', 'set_social_handles', 'set_s3_configuration', 'set_server_url', 'set_external_actions', 'set_custom_styles', 'set_custom_javascript', 'set_hide_viewer_count', 'set_disable_search_indexing', 'set_federation_enabled', 'set_federation_activity_private', 'set_federation_show_engagement', 'set_federation_username', 'set_federation_go_live_message', 'set_federation_block_domains', 'set_discord_notification_configuration', 'set_browser_notification_configuration', 'get_webhooks', 'delete_webhook', 'create_webhook', 'get_external_apiusers', 'delete_external_apiuser', 'create_external_apiuser', 'auto_update_options', 'auto_update_start', 'auto_update_force_quit', 'reset_ypregistration', 'get_video_playback_metrics', 'get_prometheus_api', 'post_prometheus_api', 'put_prometheus_api', 'delete_prometheus_api', 'send_federated_message', 'get_federated_actions', 'start_indie_auth_flow', 'handle_indie_auth_redirect', 'handle_indie_auth_endpoint_get', 'handle_indie_auth_endpoint_post', 'register_fediverse_otprequest', 'verify_fediverse_otprequest'"
         ),
-    ) -> dict[str, Any]:
-        return get_client().get_status()
+        access_token: str | None = Field(default=None, description="access token"),
+        x_forwarded_user: str | None = Field(
+            default=None, description="x forwarded user"
+        ),
+        display_name: str | None = Field(default=None, description="display name"),
+        body: dict | None = Field(default=None, description="body"),
+        user_id: str | None = Field(default=None, description="user id"),
+        enabled: bool | None = Field(default=None, description="enabled"),
+        account: str | None = Field(default=None, description="account"),
+        offset: int | None = Field(default=None, description="offset"),
+        limit: int | None = Field(default=None, description="limit"),
+        channel: str | None = Field(default=None, description="channel"),
+        destination: str | None = Field(default=None, description="destination"),
+        window_start: str | None = Field(default=None, description="window start"),
+        is_moderator: bool | None = Field(default=None, description="is moderator"),
+        actor_iri: str | None = Field(default=None, description="actor iri"),
+        approved: bool | None = Field(default=None, description="approved"),
+        name: str | None = Field(default=None, description="name"),
+        data: str | None = Field(default=None, description="data"),
+        value: Any | None = Field(default=None, description="value"),
+        id: int | None = Field(default=None, description="id"),
+        url: str | None = Field(default=None, description="url"),
+        events: list | None = Field(default=None, description="events"),
+        token: str | None = Field(default=None, description="token"),
+        scopes: list | None = Field(default=None, description="scopes"),
+        auth_host: str | None = Field(default=None, description="auth host"),
+        state: str | None = Field(default=None, description="state"),
+        client_id: str | None = Field(default=None, description="client id"),
+        redirect_uri: str | None = Field(default=None, description="redirect uri"),
+        code_challenge: str | None = Field(default=None, description="code challenge"),
+        code: str | None = Field(default=None, description="code"),
+        client=Depends(get_client),
+    ) -> dict:
+        """Manage internal operations.
 
-    @mcp.tool(
-        name="owncast-internal-get-custom-emoji-list",
-        description="Get list of custom emojis supported in the chat",
-        tags={"internal"},
-    )
-    def get_custom_emoji_list(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_custom_emoji_list()
-
-    @mcp.tool(
-        name="owncast-internal-get-chat-messages",
-        description="Gets a list of chat messages",
-        tags={"internal"},
-    )
-    def get_chat_messages(
-        access_token: str,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_chat_messages(access_token)
-
-    @mcp.tool(
-        name="owncast-internal-register-anonymous-chat-user",
-        description="Registers an anonymous chat user",
-        tags={"internal"},
-    )
-    def register_anonymous_chat_user(
-        x_forwarded_user: str | None = None,
-        display_name: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().register_anonymous_chat_user(x_forwarded_user, display_name)
-
-    @mcp.tool(
-        name="owncast-internal-update-message-visibility",
-        description="Update chat message visibility",
-        tags={"internal"},
-    )
-    def update_message_visibility(
-        access_token: str,
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().update_message_visibility(access_token, body)
-
-    @mcp.tool(
-        name="owncast-internal-update-user-enabled",
-        description="Enable/disable a user",
-        tags={"internal"},
-    )
-    def update_user_enabled(
-        access_token: str,
-        user_id: str | None = None,
-        enabled: bool | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().update_user_enabled(access_token, user_id, enabled)
-
-    @mcp.tool(
-        name="owncast-internal-get-web-config",
-        description="Get the web config",
-        tags={"internal"},
-    )
-    def get_web_config(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_web_config()
-
-    @mcp.tool(
-        name="owncast-internal-get-ypresponse",
-        description="Get the YP protocol data",
-        tags={"internal"},
-    )
-    def get_ypresponse(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_ypresponse()
-
-    @mcp.tool(
-        name="owncast-internal-get-all-social-platforms",
-        description="Get all social platforms",
-        tags={"internal"},
-    )
-    def get_all_social_platforms(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_all_social_platforms()
-
-    @mcp.tool(
-        name="owncast-internal-get-video-stream-output-variants",
-        description="Get a list of video variants available",
-        tags={"internal"},
-    )
-    def get_video_stream_output_variants(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_video_stream_output_variants()
-
-    @mcp.tool(
-        name="owncast-internal-ping",
-        description="Tell the backend you're an active viewer",
-        tags={"internal"},
-    )
-    def ping(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().ping()
-
-    @mcp.tool(
-        name="owncast-internal-remote-follow",
-        description="Request remote follow",
-        tags={"internal"},
-    )
-    def remote_follow(
-        account: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().remote_follow(account)
-
-    @mcp.tool(
-        name="owncast-internal-get-followers",
-        description="Gets the list of followers",
-        tags={"internal"},
-    )
-    def get_followers(
-        offset: int | None = None,
-        limit: int | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_followers(offset, limit)
-
-    @mcp.tool(
-        name="owncast-internal-report-playback-metrics",
-        description="Save video playback metrics for future video health recording",
-        tags={"internal"},
-    )
-    def report_playback_metrics(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().report_playback_metrics(body)
-
-    @mcp.tool(
-        name="owncast-internal-register-for-live-notifications",
-        description="Register for notifications",
-        tags={"internal"},
-    )
-    def register_for_live_notifications(
-        access_token: str,
-        channel: str | None = None,
-        destination: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().register_for_live_notifications(
-            access_token, channel, destination
+        Actions:
+          - 'get_status': Get the status of the server
+          - 'get_custom_emoji_list': Get list of custom emojis supported in the chat
+          - 'get_chat_messages': Gets a list of chat messages
+          - 'register_anonymous_chat_user': Registers an anonymous chat user
+          - 'update_message_visibility': Update chat message visibility
+          - 'update_user_enabled': Enable/disable a user
+          - 'get_web_config': Get the web config
+          - 'get_ypresponse': Get the YP protocol data
+          - 'get_all_social_platforms': Get all social platforms
+          - 'get_video_stream_output_variants': Get a list of video variants available
+          - 'ping': Tell the backend you're an active viewer
+          - 'remote_follow': Request remote follow
+          - 'get_followers': Gets the list of followers
+          - 'report_playback_metrics': Save video playback metrics for future video health recording
+          - 'register_for_live_notifications': Register for notifications
+          - 'status_admin': Get current inboard broadcaster
+          - 'disconnect_inbound_connection': Disconnect inbound stream
+          - 'get_server_config': Get the current server config
+          - 'get_viewers_over_time': Get viewer count over time
+          - 'get_active_viewers': Get active viewers
+          - 'get_hardware_stats': Get the current hardware stats
+          - 'get_connected_chat_clients': Get a detailed list of currently connected chat clients
+          - 'get_chat_messages_admin': Get all chat messages for the admin, unfiltered
+          - 'update_message_visibility_admin': Update visibility of chat messages
+          - 'update_user_enabled_admin': Enable or disable a user
+          - 'get_disabled_users': Get a list of disabled users
+          - 'ban_ipaddress': Ban an IP address
+          - 'unban_ipaddress': Remove an IP ban
+          - 'get_ipaddress_bans': Get all banned IP addresses
+          - 'update_user_moderator': Set moderator status for a user
+          - 'get_moderators': Get a list of moderator users
+          - 'get_logs': Get all logs
+          - 'get_warnings': Get warning/error logs
+          - 'get_followers_admin': Get followers
+          - 'get_pending_follow_requests': Get a list of pending follow requests
+          - 'get_blocked_and_rejected_followers': Get a list of rejected or blocked follows
+          - 'approve_follower': Set the following state of a follower or follow request
+          - 'upload_custom_emoji': Upload custom emoji
+          - 'delete_custom_emoji': Delete custom emoji
+          - 'set_admin_password': Change the current admin password
+          - 'set_stream_keys': Set an array of valid stream keys
+          - 'set_extra_page_content': Change the extra page content in memory
+          - 'set_stream_title': Change the stream title
+          - 'set_server_welcome_message': Change the welcome message
+          - 'set_chat_disabled': Disable chat
+          - 'set_chat_join_messages_enabled': Enable chat for user join messages
+          - 'set_enable_established_chat_user_mode': Enable/disable chat established user mode
+          - 'set_forbidden_username_list': Set chat usernames that are not allowed
+          - 'set_suggested_username_list': Set the suggested chat usernames that will be assigned automatically
+          - 'set_chat_spam_protection_enabled': Set spam protection enabled
+          - 'set_chat_slur_filter_enabled': Set slur filter enabled
+          - 'set_chat_require_authentication': Set require authentication for chat
+          - 'set_video_codec': Set video codec
+          - 'set_stream_latency_level': Set the number of video segments and duration per segment in a playlist
+          - 'set_stream_output_variants': Set an array of video output configurations
+          - 'set_custom_color_variable_values': Set style/color/css values
+          - 'set_logo': Update logo
+          - 'set_favicon': Upload custom favicon
+          - 'reset_favicon': Reset favicon to default
+          - 'set_tags': Update server tags
+          - 'set_ffmpeg_path': Update FFMPEG path
+          - 'set_web_server_port': Update server port
+          - 'set_web_server_ip': Update server IP address
+          - 'set_rtmpserver_port': Update RTMP post
+          - 'set_socket_host_override': Update websocket host override
+          - 'set_video_serving_endpoint': Update custom video serving endpoint
+          - 'set_nsfw': Update NSFW marking
+          - 'set_directory_enabled': Update directory enabled
+          - 'set_social_handles': Update social handles
+          - 'set_s3_configuration': Update S3 configuration
+          - 'set_server_url': Update server url
+          - 'set_external_actions': Update external action links
+          - 'set_custom_styles': Update custom styles
+          - 'set_custom_javascript': Update custom JavaScript
+          - 'set_hide_viewer_count': Update hide viewer count
+          - 'set_disable_search_indexing': Update search indexing
+          - 'set_federation_enabled': Enable/disable federation features
+          - 'set_federation_activity_private': Set if federation activities are private
+          - 'set_federation_show_engagement': Set if fediverse engagement appears in chat
+          - 'set_federation_username': Set local federated username
+          - 'set_federation_go_live_message': Set federated go live message
+          - 'set_federation_block_domains': Set Federation blocked domains
+          - 'set_discord_notification_configuration': Configure Discord notifications
+          - 'set_browser_notification_configuration': Configure Browser notifications
+          - 'get_webhooks': Get all the webhooks
+          - 'delete_webhook': Delete a single webhook
+          - 'create_webhook': Create a single webhook
+          - 'get_external_apiusers': Get all access tokens
+          - 'delete_external_apiuser': Delete a single external API user
+          - 'create_external_apiuser': Create a single access token
+          - 'auto_update_options': Return the auto-update features that are supported for this instance
+          - 'auto_update_start': Begin the auto-update
+          - 'auto_update_force_quit': Force quit the server and restart it
+          - 'reset_ypregistration': Reset YP configuration
+          - 'get_video_playback_metrics': Get video playback metrics
+          - 'get_prometheus_api': Endpoint to interface with Prometheus
+          - 'post_prometheus_api': Endpoint to interface with Prometheus
+          - 'put_prometheus_api': Endpoint to interface with Prometheus
+          - 'delete_prometheus_api': Endpoint to interface with Prometheus
+          - 'send_federated_message': Send a public message to the Fediverse from the server's user
+          - 'get_federated_actions': Get a paginated list of federated activities
+          - 'start_indie_auth_flow': Begins auth flow
+          - 'handle_indie_auth_redirect': Handle the redirect from an IndieAuth server to continue the auth flow
+          - 'handle_indie_auth_endpoint_get': Handles the IndieAuth auth endpoint
+          - 'handle_indie_auth_endpoint_post': Handles IndieAuth from form submission
+          - 'register_fediverse_otprequest': Register a Fediverse OTP request
+          - 'verify_fediverse_otprequest': Verify Fediverse OTP code
+        """
+        kwargs: dict[str, Any]
+        if action == "get_status":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_status(**kwargs)
+        if action == "get_custom_emoji_list":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_custom_emoji_list(**kwargs)
+        if action == "get_chat_messages":
+            kwargs = {"access_token": access_token}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_chat_messages(**kwargs)
+        if action == "register_anonymous_chat_user":
+            kwargs = {
+                "x_forwarded_user": x_forwarded_user,
+                "display_name": display_name,
+            }
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.register_anonymous_chat_user(**kwargs)
+        if action == "update_message_visibility":
+            kwargs = {"access_token": access_token, "body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.update_message_visibility(**kwargs)
+        if action == "update_user_enabled":
+            kwargs = {
+                "access_token": access_token,
+                "user_id": user_id,
+                "enabled": enabled,
+            }
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.update_user_enabled(**kwargs)
+        if action == "get_web_config":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_web_config(**kwargs)
+        if action == "get_ypresponse":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_ypresponse(**kwargs)
+        if action == "get_all_social_platforms":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_all_social_platforms(**kwargs)
+        if action == "get_video_stream_output_variants":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_video_stream_output_variants(**kwargs)
+        if action == "ping":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.ping(**kwargs)
+        if action == "remote_follow":
+            kwargs = {"account": account}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.remote_follow(**kwargs)
+        if action == "get_followers":
+            kwargs = {"offset": offset, "limit": limit}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_followers(**kwargs)
+        if action == "report_playback_metrics":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.report_playback_metrics(**kwargs)
+        if action == "register_for_live_notifications":
+            kwargs = {
+                "access_token": access_token,
+                "channel": channel,
+                "destination": destination,
+            }
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.register_for_live_notifications(**kwargs)
+        if action == "status_admin":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.status_admin(**kwargs)
+        if action == "disconnect_inbound_connection":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.disconnect_inbound_connection(**kwargs)
+        if action == "get_server_config":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_server_config(**kwargs)
+        if action == "get_viewers_over_time":
+            kwargs = {"window_start": window_start}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_viewers_over_time(**kwargs)
+        if action == "get_active_viewers":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_active_viewers(**kwargs)
+        if action == "get_hardware_stats":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_hardware_stats(**kwargs)
+        if action == "get_connected_chat_clients":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_connected_chat_clients(**kwargs)
+        if action == "get_chat_messages_admin":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_chat_messages_admin(**kwargs)
+        if action == "update_message_visibility_admin":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.update_message_visibility_admin(**kwargs)
+        if action == "update_user_enabled_admin":
+            kwargs = {"user_id": user_id, "enabled": enabled}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.update_user_enabled_admin(**kwargs)
+        if action == "get_disabled_users":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_disabled_users(**kwargs)
+        if action == "ban_ipaddress":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.ban_ipaddress(**kwargs)
+        if action == "unban_ipaddress":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.unban_ipaddress(**kwargs)
+        if action == "get_ipaddress_bans":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_ipaddress_bans(**kwargs)
+        if action == "update_user_moderator":
+            kwargs = {"user_id": user_id, "is_moderator": is_moderator}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.update_user_moderator(**kwargs)
+        if action == "get_moderators":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_moderators(**kwargs)
+        if action == "get_logs":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_logs(**kwargs)
+        if action == "get_warnings":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_warnings(**kwargs)
+        if action == "get_followers_admin":
+            kwargs = {"offset": offset, "limit": limit}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_followers_admin(**kwargs)
+        if action == "get_pending_follow_requests":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_pending_follow_requests(**kwargs)
+        if action == "get_blocked_and_rejected_followers":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_blocked_and_rejected_followers(**kwargs)
+        if action == "approve_follower":
+            kwargs = {"actor_iri": actor_iri, "approved": approved}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.approve_follower(**kwargs)
+        if action == "upload_custom_emoji":
+            kwargs = {"name": name, "data": data}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.upload_custom_emoji(**kwargs)
+        if action == "delete_custom_emoji":
+            kwargs = {"name": name}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.delete_custom_emoji(**kwargs)
+        if action == "set_admin_password":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_admin_password(**kwargs)
+        if action == "set_stream_keys":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_stream_keys(**kwargs)
+        if action == "set_extra_page_content":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_extra_page_content(**kwargs)
+        if action == "set_stream_title":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_stream_title(**kwargs)
+        if action == "set_server_welcome_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_server_welcome_message(**kwargs)
+        if action == "set_chat_disabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_chat_disabled(**kwargs)
+        if action == "set_chat_join_messages_enabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_chat_join_messages_enabled(**kwargs)
+        if action == "set_enable_established_chat_user_mode":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_enable_established_chat_user_mode(**kwargs)
+        if action == "set_forbidden_username_list":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_forbidden_username_list(**kwargs)
+        if action == "set_suggested_username_list":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_suggested_username_list(**kwargs)
+        if action == "set_chat_spam_protection_enabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_chat_spam_protection_enabled(**kwargs)
+        if action == "set_chat_slur_filter_enabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_chat_slur_filter_enabled(**kwargs)
+        if action == "set_chat_require_authentication":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_chat_require_authentication(**kwargs)
+        if action == "set_video_codec":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_video_codec(**kwargs)
+        if action == "set_stream_latency_level":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_stream_latency_level(**kwargs)
+        if action == "set_stream_output_variants":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_stream_output_variants(**kwargs)
+        if action == "set_custom_color_variable_values":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_custom_color_variable_values(**kwargs)
+        if action == "set_logo":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_logo(**kwargs)
+        if action == "set_favicon":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_favicon(**kwargs)
+        if action == "reset_favicon":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.reset_favicon(**kwargs)
+        if action == "set_tags":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_tags(**kwargs)
+        if action == "set_ffmpeg_path":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_ffmpeg_path(**kwargs)
+        if action == "set_web_server_port":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_web_server_port(**kwargs)
+        if action == "set_web_server_ip":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_web_server_ip(**kwargs)
+        if action == "set_rtmpserver_port":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_rtmpserver_port(**kwargs)
+        if action == "set_socket_host_override":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_socket_host_override(**kwargs)
+        if action == "set_video_serving_endpoint":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_video_serving_endpoint(**kwargs)
+        if action == "set_nsfw":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_nsfw(**kwargs)
+        if action == "set_directory_enabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_directory_enabled(**kwargs)
+        if action == "set_social_handles":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_social_handles(**kwargs)
+        if action == "set_s3_configuration":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_s3_configuration(**kwargs)
+        if action == "set_server_url":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_server_url(**kwargs)
+        if action == "set_external_actions":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_external_actions(**kwargs)
+        if action == "set_custom_styles":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_custom_styles(**kwargs)
+        if action == "set_custom_javascript":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_custom_javascript(**kwargs)
+        if action == "set_hide_viewer_count":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_hide_viewer_count(**kwargs)
+        if action == "set_disable_search_indexing":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_disable_search_indexing(**kwargs)
+        if action == "set_federation_enabled":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_enabled(**kwargs)
+        if action == "set_federation_activity_private":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_activity_private(**kwargs)
+        if action == "set_federation_show_engagement":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_show_engagement(**kwargs)
+        if action == "set_federation_username":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_username(**kwargs)
+        if action == "set_federation_go_live_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_go_live_message(**kwargs)
+        if action == "set_federation_block_domains":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_federation_block_domains(**kwargs)
+        if action == "set_discord_notification_configuration":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_discord_notification_configuration(**kwargs)
+        if action == "set_browser_notification_configuration":
+            kwargs = {"value": value}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_browser_notification_configuration(**kwargs)
+        if action == "get_webhooks":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_webhooks(**kwargs)
+        if action == "delete_webhook":
+            kwargs = {"id": id}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.delete_webhook(**kwargs)
+        if action == "create_webhook":
+            kwargs = {"url": url, "events": events}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.create_webhook(**kwargs)
+        if action == "get_external_apiusers":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_external_apiusers(**kwargs)
+        if action == "delete_external_apiuser":
+            kwargs = {"token": token}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.delete_external_apiuser(**kwargs)
+        if action == "create_external_apiuser":
+            kwargs = {"name": name, "scopes": scopes}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.create_external_apiuser(**kwargs)
+        if action == "auto_update_options":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.auto_update_options(**kwargs)
+        if action == "auto_update_start":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.auto_update_start(**kwargs)
+        if action == "auto_update_force_quit":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.auto_update_force_quit(**kwargs)
+        if action == "reset_ypregistration":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.reset_ypregistration(**kwargs)
+        if action == "get_video_playback_metrics":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_video_playback_metrics(**kwargs)
+        if action == "get_prometheus_api":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_prometheus_api(**kwargs)
+        if action == "post_prometheus_api":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.post_prometheus_api(**kwargs)
+        if action == "put_prometheus_api":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.put_prometheus_api(**kwargs)
+        if action == "delete_prometheus_api":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.delete_prometheus_api(**kwargs)
+        if action == "send_federated_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_federated_message(**kwargs)
+        if action == "get_federated_actions":
+            kwargs = {"offset": offset, "limit": limit}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_federated_actions(**kwargs)
+        if action == "start_indie_auth_flow":
+            kwargs = {
+                "access_token": access_token,
+                "auth_host": auth_host,
+            }
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.start_indie_auth_flow(**kwargs)
+        if action == "handle_indie_auth_redirect":
+            kwargs = {"state": state}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.handle_indie_auth_redirect(**kwargs)
+        if action == "handle_indie_auth_endpoint_get":
+            kwargs = {
+                "client_id": client_id,
+                "redirect_uri": redirect_uri,
+                "code_challenge": code_challenge,
+                "state": state,
+            }
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.handle_indie_auth_endpoint_get(**kwargs)
+        if action == "handle_indie_auth_endpoint_post":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.handle_indie_auth_endpoint_post(**kwargs)
+        if action == "register_fediverse_otprequest":
+            kwargs = {"access_token": access_token, "account": account}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.register_fediverse_otprequest(**kwargs)
+        if action == "verify_fediverse_otprequest":
+            kwargs = {"code": code}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.verify_fediverse_otprequest(**kwargs)
+        raise ValueError(
+            f"Unknown action: {action}. Must be one of: get_status', 'get_custom_emoji_list', 'get_chat_messages', 'register_anonymous_chat_user', 'update_message_visibility', 'update_user_enabled', 'get_web_config', 'get_ypresponse', 'get_all_social_platforms', 'get_video_stream_output_variants', 'ping', 'remote_follow', 'get_followers', 'report_playback_metrics', 'register_for_live_notifications', 'status_admin', 'disconnect_inbound_connection', 'get_server_config', 'get_viewers_over_time', 'get_active_viewers', 'get_hardware_stats', 'get_connected_chat_clients', 'get_chat_messages_admin', 'update_message_visibility_admin', 'update_user_enabled_admin', 'get_disabled_users', 'ban_ipaddress', 'unban_ipaddress', 'get_ipaddress_bans', 'update_user_moderator', 'get_moderators', 'get_logs', 'get_warnings', 'get_followers_admin', 'get_pending_follow_requests', 'get_blocked_and_rejected_followers', 'approve_follower', 'upload_custom_emoji', 'delete_custom_emoji', 'set_admin_password', 'set_stream_keys', 'set_extra_page_content', 'set_stream_title', 'set_server_welcome_message', 'set_chat_disabled', 'set_chat_join_messages_enabled', 'set_enable_established_chat_user_mode', 'set_forbidden_username_list', 'set_suggested_username_list', 'set_chat_spam_protection_enabled', 'set_chat_slur_filter_enabled', 'set_chat_require_authentication', 'set_video_codec', 'set_stream_latency_level', 'set_stream_output_variants', 'set_custom_color_variable_values', 'set_logo', 'set_favicon', 'reset_favicon', 'set_tags', 'set_ffmpeg_path', 'set_web_server_port', 'set_web_server_ip', 'set_rtmpserver_port', 'set_socket_host_override', 'set_video_serving_endpoint', 'set_nsfw', 'set_directory_enabled', 'set_social_handles', 'set_s3_configuration', 'set_server_url', 'set_external_actions', 'set_custom_styles', 'set_custom_javascript', 'set_hide_viewer_count', 'set_disable_search_indexing', 'set_federation_enabled', 'set_federation_activity_private', 'set_federation_show_engagement', 'set_federation_username', 'set_federation_go_live_message', 'set_federation_block_domains', 'set_discord_notification_configuration', 'set_browser_notification_configuration', 'get_webhooks', 'delete_webhook', 'create_webhook', 'get_external_apiusers', 'delete_external_apiuser', 'create_external_apiuser', 'auto_update_options', 'auto_update_start', 'auto_update_force_quit', 'reset_ypregistration', 'get_video_playback_metrics', 'get_prometheus_api', 'post_prometheus_api', 'put_prometheus_api', 'delete_prometheus_api', 'send_federated_message', 'get_federated_actions', 'start_indie_auth_flow', 'handle_indie_auth_redirect', 'handle_indie_auth_endpoint_get', 'handle_indie_auth_endpoint_post', 'register_fediverse_otprequest', 'verify_fediverse_otprequest"
         )
-
-    @mcp.tool(
-        name="owncast-internal-status-admin",
-        description="Get current inboard broadcaster",
-        tags={"internal"},
-    )
-    def status_admin(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().status_admin()
-
-    @mcp.tool(
-        name="owncast-internal-disconnect-inbound-connection",
-        description="Disconnect inbound stream",
-        tags={"internal"},
-    )
-    def disconnect_inbound_connection(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().disconnect_inbound_connection()
-
-    @mcp.tool(
-        name="owncast-internal-get-server-config",
-        description="Get the current server config",
-        tags={"internal"},
-    )
-    def get_server_config(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_server_config()
-
-    @mcp.tool(
-        name="owncast-internal-get-viewers-over-time",
-        description="Get viewer count over time",
-        tags={"internal"},
-    )
-    def get_viewers_over_time(
-        window_start: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_viewers_over_time(window_start)
-
-    @mcp.tool(
-        name="owncast-internal-get-active-viewers",
-        description="Get active viewers",
-        tags={"internal"},
-    )
-    def get_active_viewers(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_active_viewers()
-
-    @mcp.tool(
-        name="owncast-internal-get-hardware-stats",
-        description="Get the current hardware stats",
-        tags={"internal"},
-    )
-    def get_hardware_stats(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_hardware_stats()
-
-    @mcp.tool(
-        name="owncast-internal-get-connected-chat-clients",
-        description="Get a detailed list of currently connected chat clients",
-        tags={"internal"},
-    )
-    def get_connected_chat_clients(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_connected_chat_clients()
-
-    @mcp.tool(
-        name="owncast-internal-get-chat-messages-admin",
-        description="Get all chat messages for the admin, unfiltered",
-        tags={"internal"},
-    )
-    def get_chat_messages_admin(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_chat_messages_admin()
-
-    @mcp.tool(
-        name="owncast-internal-update-message-visibility-admin",
-        description="Update visibility of chat messages",
-        tags={"internal"},
-    )
-    def update_message_visibility_admin(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().update_message_visibility_admin(body)
-
-    @mcp.tool(
-        name="owncast-internal-update-user-enabled-admin",
-        description="Enable or disable a user",
-        tags={"internal"},
-    )
-    def update_user_enabled_admin(
-        user_id: str | None = None,
-        enabled: bool | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().update_user_enabled_admin(user_id, enabled)
-
-    @mcp.tool(
-        name="owncast-internal-get-disabled-users",
-        description="Get a list of disabled users",
-        tags={"internal"},
-    )
-    async def get_disabled_users(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal get disabled users"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().get_disabled_users()
-
-    @mcp.tool(
-        name="owncast-internal-ban-ipaddress",
-        description="Ban an IP address",
-        tags={"internal"},
-    )
-    async def ban_ipaddress(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(ctx, "owncast internal ban ipaddress"):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().ban_ipaddress(body)
-
-    @mcp.tool(
-        name="owncast-internal-unban-ipaddress",
-        description="Remove an IP ban",
-        tags={"internal"},
-    )
-    async def unban_ipaddress(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(ctx, "owncast internal unban ipaddress"):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().unban_ipaddress(body)
-
-    @mcp.tool(
-        name="owncast-internal-get-ipaddress-bans",
-        description="Get all banned IP addresses",
-        tags={"internal"},
-    )
-    async def get_ipaddress_bans(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal get ipaddress bans"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().get_ipaddress_bans()
-
-    @mcp.tool(
-        name="owncast-internal-update-user-moderator",
-        description="Set moderator status for a user",
-        tags={"internal"},
-    )
-    async def update_user_moderator(
-        user_id: str | None = None,
-        is_moderator: bool | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().update_user_moderator(user_id, is_moderator)
-
-    @mcp.tool(
-        name="owncast-internal-get-moderators",
-        description="Get a list of moderator users",
-        tags={"internal"},
-    )
-    def get_moderators(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_moderators()
-
-    @mcp.tool(
-        name="owncast-internal-get-logs", description="Get all logs", tags={"internal"}
-    )
-    def get_logs(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_logs()
-
-    @mcp.tool(
-        name="owncast-internal-get-warnings",
-        description="Get warning/error logs",
-        tags={"internal"},
-    )
-    def get_warnings(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_warnings()
-
-    @mcp.tool(
-        name="owncast-internal-get-followers-admin",
-        description="Get followers",
-        tags={"internal"},
-    )
-    def get_followers_admin(
-        offset: int | None = None,
-        limit: int | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_followers_admin(offset, limit)
-
-    @mcp.tool(
-        name="owncast-internal-get-pending-follow-requests",
-        description="Get a list of pending follow requests",
-        tags={"internal"},
-    )
-    def get_pending_follow_requests(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_pending_follow_requests()
-
-    @mcp.tool(
-        name="owncast-internal-get-blocked-and-rejected-followers",
-        description="Get a list of rejected or blocked follows",
-        tags={"internal"},
-    )
-    def get_blocked_and_rejected_followers(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_blocked_and_rejected_followers()
-
-    @mcp.tool(
-        name="owncast-internal-approve-follower",
-        description="Set the following state of a follower or follow request",
-        tags={"internal"},
-    )
-    async def approve_follower(
-        actor_iri: str | None = None,
-        approved: bool | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        await ctx_progress(ctx, 100, 100)
-        return get_client().approve_follower(actor_iri, approved)
-
-    @mcp.tool(
-        name="owncast-internal-upload-custom-emoji",
-        description="Upload custom emoji",
-        tags={"internal"},
-    )
-    async def upload_custom_emoji(
-        name: str | None = None,
-        data: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        await ctx_progress(ctx, 0, 100)
-        await ctx_progress(ctx, 0, 100)
-        await ctx_progress(ctx, 100, 100)
-        return get_client().upload_custom_emoji(name, data)
-
-    @mcp.tool(
-        name="owncast-internal-delete-custom-emoji",
-        description="Delete custom emoji",
-        tags={"internal"},
-    )
-    async def delete_custom_emoji(
-        name: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal delete custom emoji"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().delete_custom_emoji(name)
-
-    @mcp.tool(
-        name="owncast-internal-set-admin-password",
-        description="Change the current admin password",
-        tags={"internal"},
-    )
-    async def set_admin_password(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_admin_password(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-stream-keys",
-        description="Set an array of valid stream keys",
-        tags={"internal"},
-    )
-    def set_stream_keys(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_stream_keys(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-extra-page-content",
-        description="Change the extra page content in memory",
-        tags={"internal"},
-    )
-    def set_extra_page_content(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_extra_page_content(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-stream-title",
-        description="Change the stream title",
-        tags={"internal"},
-    )
-    def set_stream_title(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_stream_title(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-server-welcome-message",
-        description="Change the welcome message",
-        tags={"internal"},
-    )
-    def set_server_welcome_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_server_welcome_message(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-chat-disabled",
-        description="Disable chat",
-        tags={"internal"},
-    )
-    async def set_chat_disabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(ctx, "owncast internal set chat disabled"):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().set_chat_disabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-chat-join-messages-enabled",
-        description="Enable chat for user join messages",
-        tags={"internal"},
-    )
-    async def set_chat_join_messages_enabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_chat_join_messages_enabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-enable-established-chat-user-mode",
-        description="Enable/disable chat established user mode",
-        tags={"internal"},
-    )
-    def set_enable_established_chat_user_mode(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_enable_established_chat_user_mode(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-forbidden-username-list",
-        description="Set chat usernames that are not allowed",
-        tags={"internal"},
-    )
-    def set_forbidden_username_list(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_forbidden_username_list(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-suggested-username-list",
-        description="Set the suggested chat usernames that will be assigned automatically",
-        tags={"internal"},
-    )
-    def set_suggested_username_list(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_suggested_username_list(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-chat-spam-protection-enabled",
-        description="Set spam protection enabled",
-        tags={"internal"},
-    )
-    def set_chat_spam_protection_enabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_chat_spam_protection_enabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-chat-slur-filter-enabled",
-        description="Set slur filter enabled",
-        tags={"internal"},
-    )
-    def set_chat_slur_filter_enabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_chat_slur_filter_enabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-chat-require-authentication",
-        description="Set require authentication for chat",
-        tags={"internal"},
-    )
-    def set_chat_require_authentication(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_chat_require_authentication(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-video-codec",
-        description="Set video codec",
-        tags={"internal"},
-    )
-    def set_video_codec(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_video_codec(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-stream-latency-level",
-        description="Set the number of video segments and duration per segment in a playlist",
-        tags={"internal"},
-    )
-    def set_stream_latency_level(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_stream_latency_level(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-stream-output-variants",
-        description="Set an array of video output configurations",
-        tags={"internal"},
-    )
-    def set_stream_output_variants(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_stream_output_variants(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-custom-color-variable-values",
-        description="Set style/color/css values",
-        tags={"internal"},
-    )
-    def set_custom_color_variable_values(
-        value: dict | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_custom_color_variable_values(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-logo", description="Update logo", tags={"internal"}
-    )
-    def set_logo(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_logo(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-favicon",
-        description="Upload custom favicon",
-        tags={"internal"},
-    )
-    def set_favicon(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_favicon()
-
-    @mcp.tool(
-        name="owncast-internal-reset-favicon",
-        description="Reset favicon to default",
-        tags={"internal"},
-    )
-    async def reset_favicon(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(ctx, "owncast internal reset favicon"):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().reset_favicon()
-
-    @mcp.tool(
-        name="owncast-internal-set-tags",
-        description="Update server tags",
-        tags={"internal"},
-    )
-    async def set_tags(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_tags(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-ffmpeg-path",
-        description="Update FFMPEG path",
-        tags={"internal"},
-    )
-    def set_ffmpeg_path(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_ffmpeg_path(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-web-server-port",
-        description="Update server port",
-        tags={"internal"},
-    )
-    def set_web_server_port(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_web_server_port(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-web-server-ip",
-        description="Update server IP address",
-        tags={"internal"},
-    )
-    def set_web_server_ip(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_web_server_ip(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-rtmpserver-port",
-        description="Update RTMP post",
-        tags={"internal"},
-    )
-    def set_rtmpserver_port(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_rtmpserver_port(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-socket-host-override",
-        description="Update websocket host override",
-        tags={"internal"},
-    )
-    def set_socket_host_override(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_socket_host_override(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-video-serving-endpoint",
-        description="Update custom video serving endpoint",
-        tags={"internal"},
-    )
-    def set_video_serving_endpoint(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_video_serving_endpoint(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-nsfw",
-        description="Update NSFW marking",
-        tags={"internal"},
-    )
-    def set_nsfw(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_nsfw(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-directory-enabled",
-        description="Update directory enabled",
-        tags={"internal"},
-    )
-    def set_directory_enabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_directory_enabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-social-handles",
-        description="Update social handles",
-        tags={"internal"},
-    )
-    def set_social_handles(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_social_handles(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-s3-configuration",
-        description="Update S3 configuration",
-        tags={"internal"},
-    )
-    def set_s3_configuration(
-        value: Any | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_s3_configuration(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-server-url",
-        description="Update server url",
-        tags={"internal"},
-    )
-    def set_server_url(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_server_url(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-external-actions",
-        description="Update external action links",
-        tags={"internal"},
-    )
-    def set_external_actions(
-        value: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_external_actions(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-custom-styles",
-        description="Update custom styles",
-        tags={"internal"},
-    )
-    def set_custom_styles(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_custom_styles(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-custom-javascript",
-        description="Update custom JavaScript",
-        tags={"internal"},
-    )
-    def set_custom_javascript(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_custom_javascript(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-hide-viewer-count",
-        description="Update hide viewer count",
-        tags={"internal"},
-    )
-    def set_hide_viewer_count(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_hide_viewer_count(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-disable-search-indexing",
-        description="Update search indexing",
-        tags={"internal"},
-    )
-    async def set_disable_search_indexing(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal set disable search indexing"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().set_disable_search_indexing(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-enabled",
-        description="Enable/disable federation features",
-        tags={"internal"},
-    )
-    async def set_federation_enabled(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_enabled(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-activity-private",
-        description="Set if federation activities are private",
-        tags={"internal"},
-    )
-    def set_federation_activity_private(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_activity_private(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-show-engagement",
-        description="Set if fediverse engagement appears in chat",
-        tags={"internal"},
-    )
-    def set_federation_show_engagement(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_show_engagement(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-username",
-        description="Set local federated username",
-        tags={"internal"},
-    )
-    def set_federation_username(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_username(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-go-live-message",
-        description="Set federated go live message",
-        tags={"internal"},
-    )
-    def set_federation_go_live_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_go_live_message(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-federation-block-domains",
-        description="Set Federation blocked domains",
-        tags={"internal"},
-    )
-    def set_federation_block_domains(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_federation_block_domains(body)
-
-    @mcp.tool(
-        name="owncast-internal-set-discord-notification-configuration",
-        description="Configure Discord notifications",
-        tags={"internal"},
-    )
-    def set_discord_notification_configuration(
-        value: Any | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_discord_notification_configuration(value)
-
-    @mcp.tool(
-        name="owncast-internal-set-browser-notification-configuration",
-        description="Configure Browser notifications",
-        tags={"internal"},
-    )
-    def set_browser_notification_configuration(
-        value: Any | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_browser_notification_configuration(value)
-
-    @mcp.tool(
-        name="owncast-internal-get-webhooks",
-        description="Get all the webhooks",
-        tags={"internal"},
-    )
-    def get_webhooks(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_webhooks()
-
-    @mcp.tool(
-        name="owncast-internal-delete-webhook",
-        description="Delete a single webhook",
-        tags={"internal"},
-    )
-    async def delete_webhook(
-        id: int | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(ctx, "owncast internal delete webhook"):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().delete_webhook(id)
-
-    @mcp.tool(
-        name="owncast-internal-create-webhook",
-        description="Create a single webhook",
-        tags={"internal"},
-    )
-    async def create_webhook(
-        url: str | None = None,
-        events: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().create_webhook(url, events)
-
-    @mcp.tool(
-        name="owncast-internal-get-external-apiusers",
-        description="Get all access tokens",
-        tags={"internal"},
-    )
-    def get_external_apiusers(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_external_apiusers()
-
-    @mcp.tool(
-        name="owncast-internal-delete-external-apiuser",
-        description="Delete a single external API user",
-        tags={"internal"},
-    )
-    async def delete_external_apiuser(
-        token: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal delete external apiuser"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().delete_external_apiuser(token)
-
-    @mcp.tool(
-        name="owncast-internal-create-external-apiuser",
-        description="Create a single access token",
-        tags={"internal"},
-    )
-    async def create_external_apiuser(
-        name: str | None = None,
-        scopes: list | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().create_external_apiuser(name, scopes)
-
-    @mcp.tool(
-        name="owncast-internal-auto-update-options",
-        description="Return the auto-update features that are supported for this instance",
-        tags={"internal"},
-    )
-    def auto_update_options(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().auto_update_options()
-
-    @mcp.tool(
-        name="owncast-internal-auto-update-start",
-        description="Begin the auto-update",
-        tags={"internal"},
-    )
-    def auto_update_start(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().auto_update_start()
-
-    @mcp.tool(
-        name="owncast-internal-auto-update-force-quit",
-        description="Force quit the server and restart it",
-        tags={"internal"},
-    )
-    async def auto_update_force_quit(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal auto update force quit"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().auto_update_force_quit()
-
-    @mcp.tool(
-        name="owncast-internal-reset-ypregistration",
-        description="Reset YP configuration",
-        tags={"internal"},
-    )
-    async def reset_ypregistration(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal reset ypregistration"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().reset_ypregistration()
-
-    @mcp.tool(
-        name="owncast-internal-get-video-playback-metrics",
-        description="Get video playback metrics",
-        tags={"internal"},
-    )
-    async def get_video_playback_metrics(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_video_playback_metrics()
-
-    @mcp.tool(
-        name="owncast-internal-get-prometheus-api",
-        description="Endpoint to interface with Prometheus",
-        tags={"internal"},
-    )
-    def get_prometheus_api(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_prometheus_api()
-
-    @mcp.tool(
-        name="owncast-internal-post-prometheus-api",
-        description="Endpoint to interface with Prometheus",
-        tags={"internal"},
-    )
-    def post_prometheus_api(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().post_prometheus_api()
-
-    @mcp.tool(
-        name="owncast-internal-put-prometheus-api",
-        description="Endpoint to interface with Prometheus",
-        tags={"internal"},
-    )
-    def put_prometheus_api(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().put_prometheus_api()
-
-    @mcp.tool(
-        name="owncast-internal-delete-prometheus-api",
-        description="Endpoint to interface with Prometheus",
-        tags={"internal"},
-    )
-    async def delete_prometheus_api(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        if not await ctx_confirm_destructive(
-            ctx, "owncast internal delete prometheus api"
-        ):
-            return {"status": "cancelled", "message": "Operation cancelled by user"}
-        await ctx_progress(ctx, 0, 100)
-        return get_client().delete_prometheus_api()
-
-    @mcp.tool(
-        name="owncast-internal-send-federated-message",
-        description="Send a public message to the Fediverse from the server's user",
-        tags={"internal"},
-    )
-    async def send_federated_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().send_federated_message(body)
-
-    @mcp.tool(
-        name="owncast-internal-get-federated-actions",
-        description="Get a paginated list of federated activities",
-        tags={"internal"},
-    )
-    def get_federated_actions(
-        offset: int | None = None,
-        limit: int | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().get_federated_actions(offset, limit)
-
-    @mcp.tool(
-        name="owncast-internal-start-indie-auth-flow",
-        description="Begins auth flow",
-        tags={"internal"},
-    )
-    def start_indie_auth_flow(
-        access_token: str,
-        auth_host: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().start_indie_auth_flow(access_token, auth_host)
-
-    @mcp.tool(
-        name="owncast-internal-handle-indie-auth-redirect",
-        description="Handle the redirect from an IndieAuth server to continue the auth flow",
-        tags={"internal"},
-    )
-    def handle_indie_auth_redirect(
-        state: str,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().handle_indie_auth_redirect(state)
-
-    @mcp.tool(
-        name="owncast-internal-handle-indie-auth-endpoint-get",
-        description="Handles the IndieAuth auth endpoint",
-        tags={"internal"},
-    )
-    def handle_indie_auth_endpoint_get(
-        client_id: str,
-        redirect_uri: str,
-        code_challenge: str,
-        state: str,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().handle_indie_auth_endpoint_get(
-            client_id, redirect_uri, code_challenge, state
-        )
-
-    @mcp.tool(
-        name="owncast-internal-handle-indie-auth-endpoint-post",
-        description="Handles IndieAuth from form submission",
-        tags={"internal"},
-    )
-    def handle_indie_auth_endpoint_post(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().handle_indie_auth_endpoint_post()
-
-    @mcp.tool(
-        name="owncast-internal-register-fediverse-otprequest",
-        description="Register a Fediverse OTP request",
-        tags={"internal"},
-    )
-    def register_fediverse_otprequest(
-        access_token: str,
-        account: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().register_fediverse_otprequest(access_token, account)
-
-    @mcp.tool(
-        name="owncast-internal-verify-fediverse-otprequest",
-        description="Verify Fediverse OTP code",
-        tags={"internal"},
-    )
-    def verify_fediverse_otprequest(
-        code: str | None = None,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().verify_fediverse_otprequest(code)
 
 
 def register_objects_tools(mcp: FastMCP):
-    @mcp.tool(
-        name="owncast-objects-set-server-name",
-        description="Change the server name",
-        tags={"objects"},
-    )
-    def set_server_name(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
+    @mcp.tool(tags={"objects"})
+    async def owncast_objects(
+        action: str = Field(
+            description="Action to perform. Must be one of: 'set_server_name', 'set_server_summary', 'set_custom_offline_message'"
         ),
-    ) -> dict[str, Any]:
-        return get_client().set_server_name(body)
+        body: dict | None = Field(default=None, description="body"),
+        client=Depends(get_client),
+    ) -> dict:
+        """Manage objects operations.
 
-    @mcp.tool(
-        name="owncast-objects-set-server-summary",
-        description="Change the server summary",
-        tags={"objects"},
-    )
-    def set_server_summary(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_server_summary(body)
-
-    @mcp.tool(
-        name="owncast-objects-set-custom-offline-message",
-        description="Change the offline message",
-        tags={"objects"},
-    )
-    def set_custom_offline_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().set_custom_offline_message(body)
+        Actions:
+          - 'set_server_name': Change the server name
+          - 'set_server_summary': Change the server summary
+          - 'set_custom_offline_message': Change the offline message
+        """
+        kwargs: dict[str, Any]
+        if action == "set_server_name":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_server_name(**kwargs)
+        if action == "set_server_summary":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_server_summary(**kwargs)
+        if action == "set_custom_offline_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.set_custom_offline_message(**kwargs)
+        raise ValueError(
+            f"Unknown action: {action}. Must be one of: set_server_name', 'set_server_summary', 'set_custom_offline_message"
+        )
 
 
 def register_external_tools(mcp: FastMCP):
-    @mcp.tool(
-        name="owncast-external-send-system-message",
-        description="Send a system message to the chat",
-        tags={"external"},
-    )
-    def send_system_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
+    @mcp.tool(tags={"external"})
+    async def owncast_external(
+        action: str = Field(
+            description="Action to perform. Must be one of: 'send_system_message', 'send_system_message_to_connected_client', 'send_user_message', 'send_integration_chat_message', 'send_chat_action', 'external_update_message_visibility', 'external_get_status', 'external_set_stream_title', 'external_get_chat_messages', 'external_get_connected_chat_clients', 'external_get_user_details'"
         ),
-    ) -> dict[str, Any]:
-        return get_client().send_system_message(body)
+        body: dict | None = Field(default=None, description="body"),
+        client_id: int | None = Field(default=None, description="client id"),
+        user_id: str | None = Field(default=None, description="user id"),
+        client=Depends(get_client),
+    ) -> dict:
+        """Manage external operations.
 
-    @mcp.tool(
-        name="owncast-external-send-system-message-to-connected-client",
-        description="Send a system message to a single client",
-        tags={"external"},
-    )
-    def send_system_message_to_connected_client(
-        client_id: int,
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().send_system_message_to_connected_client(client_id, body)
-
-    @mcp.tool(
-        name="owncast-external-send-user-message",
-        description="Send a user message to chat",
-        tags={"external"},
-    )
-    def send_user_message(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().send_user_message()
-
-    @mcp.tool(
-        name="owncast-external-send-integration-chat-message",
-        description="Send a message to chat as a specific 3rd party bot/integration based on its access token",
-        tags={"external"},
-    )
-    def send_integration_chat_message(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().send_integration_chat_message(body)
-
-    @mcp.tool(
-        name="owncast-external-send-chat-action",
-        description="Send a user action to chat",
-        tags={"external"},
-    )
-    def send_chat_action(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().send_chat_action(body)
-
-    @mcp.tool(
-        name="owncast-external-update-message-visibility",
-        description="Hide chat message",
-        tags={"external"},
-    )
-    def external_update_message_visibility(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_update_message_visibility(body)
-
-    @mcp.tool(
-        name="owncast-external-get-status",
-        description="Get the server's status",
-        tags={"external"},
-    )
-    def external_get_status(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_get_status()
-
-    @mcp.tool(
-        name="owncast-external-set-stream-title",
-        description="Stream title",
-        tags={"external"},
-    )
-    def external_set_stream_title(
-        body: dict,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_set_stream_title(body)
-
-    @mcp.tool(
-        name="owncast-external-get-chat-messages",
-        description="Get chat history",
-        tags={"external"},
-    )
-    def external_get_chat_messages(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_get_chat_messages()
-
-    @mcp.tool(
-        name="owncast-external-get-connected-chat-clients",
-        description="Connected clients",
-        tags={"external"},
-    )
-    def external_get_connected_chat_clients(
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_get_connected_chat_clients()
-
-    @mcp.tool(
-        name="owncast-external-get-user-details",
-        description="Get a user's details",
-        tags={"external"},
-    )
-    def external_get_user_details(
-        user_id: str,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
-        ),
-    ) -> dict[str, Any]:
-        return get_client().external_get_user_details(user_id)
+        Actions:
+          - 'send_system_message': Send a system message to the chat
+          - 'send_system_message_to_connected_client': Send a system message to a single client
+          - 'send_user_message': Send a user message to chat
+          - 'send_integration_chat_message': Send a message to chat as a specific 3rd party bot/integration based on its access token
+          - 'send_chat_action': Send a user action to chat
+          - 'external_update_message_visibility': Hide chat message
+          - 'external_get_status': Get the server's status
+          - 'external_set_stream_title': Stream title
+          - 'external_get_chat_messages': Get chat history
+          - 'external_get_connected_chat_clients': Connected clients
+          - 'external_get_user_details': Get a user's details
+        """
+        kwargs: dict[str, Any]
+        if action == "send_system_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_system_message(**kwargs)
+        if action == "send_system_message_to_connected_client":
+            kwargs = {"client_id": client_id, "body": body}  # type: ignore
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_system_message_to_connected_client(**kwargs)
+        if action == "send_user_message":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_user_message(**kwargs)
+        if action == "send_integration_chat_message":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_integration_chat_message(**kwargs)
+        if action == "send_chat_action":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.send_chat_action(**kwargs)
+        if action == "external_update_message_visibility":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_update_message_visibility(**kwargs)
+        if action == "external_get_status":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_get_status(**kwargs)
+        if action == "external_set_stream_title":
+            kwargs = {"body": body}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_set_stream_title(**kwargs)
+        if action == "external_get_chat_messages":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_get_chat_messages(**kwargs)
+        if action == "external_get_connected_chat_clients":
+            kwargs = {}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_get_connected_chat_clients(**kwargs)
+        if action == "external_get_user_details":
+            kwargs = {"user_id": user_id}  # type: ignore
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.external_get_user_details(**kwargs)
+        raise ValueError(
+            f"Unknown action: {action}. Must be one of: send_system_message', 'send_system_message_to_connected_client', 'send_user_message', 'send_integration_chat_message', 'send_chat_action', 'external_update_message_visibility', 'external_get_status', 'external_set_stream_title', 'external_get_chat_messages', 'external_get_connected_chat_clients', 'external_get_user_details"
+        )
 
 
 def register_chat_tools(mcp: FastMCP):
-    @mcp.tool(
-        name="owncast-chat-get-user-details",
-        description="Get a user's details",
-        tags={"chat"},
-    )
-    def get_user_details(
-        user_id: str,
-        access_token: str,
-        ctx: Context = Field(
-            description="MCP context for progress reporting", default=None
+    @mcp.tool(tags={"chat"})
+    async def owncast_chat(
+        action: str = Field(
+            description="Action to perform. Must be one of: 'get_user_details'"
         ),
-    ) -> dict[str, Any]:
-        return get_client().get_user_details(user_id, access_token)
+        user_id: str | None = Field(default=None, description="user id"),
+        access_token: str | None = Field(default=None, description="access token"),
+        client=Depends(get_client),
+    ) -> dict:
+        """Manage chat operations.
+
+        Actions:
+          - 'get_user_details': Get a user's details
+        """
+        kwargs: dict[str, Any]
+        if action == "get_user_details":
+            kwargs = {"user_id": user_id, "access_token": access_token}
+            kwargs = {k: v for k, v in kwargs.items() if v is not None}
+            return client.get_user_details(**kwargs)
+        raise ValueError(f"Unknown action: {action}. Must be one of: get_user_details")
 
 
-def register_all_tools(mcp: FastMCP) -> list[str]:
-    registered_tags = []
-    if to_boolean(os.getenv("CHAT_TOOL", "True")):
-        register_chat_tools(mcp)
-        registered_tags.append("chat")
-    if to_boolean(os.getenv("EXTERNAL_TOOL", "True")):
-        register_external_tools(mcp)
-        registered_tags.append("external")
-    if to_boolean(os.getenv("INTERNAL_TOOL", "True")):
-        register_internal_tools(mcp)
-        registered_tags.append("internal")
-    if to_boolean(os.getenv("OBJECTS_TOOL", "True")):
-        register_objects_tools(mcp)
-        registered_tags.append("objects")
-    return registered_tags
-
-
-### END GENERATED TOOL REGISTRATION ###
-
-
-def get_mcp_instance() -> tuple[Any, Any, Any, Any]:
+def get_mcp_instance() -> tuple[Any, ...]:
+    """Initialize and return the MCP instance."""
     load_dotenv(find_dotenv())
-
     args, mcp, middlewares = create_mcp_server(
-        name="owncast",
+        name="owncast-agent MCP",
         version=__version__,
-        instructions="Owncast Agent MCP Server",
+        instructions="owncast-agent MCP Server — Condensed Action-Routed Tools.",
     )
 
-    registered_tags = register_all_tools(mcp)
-    register_prompts(mcp)
+    @mcp.custom_route("/health", methods=["GET"])
+    async def health_check(request: Request) -> JSONResponse:
+        return JSONResponse({"status": "OK"})
+
+    DEFAULT_INTERNALTOOL = to_boolean(os.getenv("INTERNALTOOL", "True"))
+    if DEFAULT_INTERNALTOOL:
+        register_internal_tools(mcp)
+    DEFAULT_OBJECTSTOOL = to_boolean(os.getenv("OBJECTSTOOL", "True"))
+    if DEFAULT_OBJECTSTOOL:
+        register_objects_tools(mcp)
+    DEFAULT_EXTERNALTOOL = to_boolean(os.getenv("EXTERNALTOOL", "True"))
+    if DEFAULT_EXTERNALTOOL:
+        register_external_tools(mcp)
+    DEFAULT_CHATTOOL = to_boolean(os.getenv("CHATTOOL", "True"))
+    if DEFAULT_CHATTOOL:
+        register_chat_tools(mcp)
 
     for mw in middlewares:
         mcp.add_middleware(mw)
+    return mcp, args, middlewares
 
-    return mcp, args, middlewares, registered_tags
 
-
-def mcp_server():
-    mcp, args, middlewares, registered_tags = get_mcp_instance()
-
-    print(f"Owncast Agent MCP v{__version__}", file=sys.stderr)
+def mcp_server() -> None:
+    mcp, args, middlewares = get_mcp_instance()
+    print(f"owncast-agent MCP v{__version__}", file=sys.stderr)
     print("\nStarting MCP Server", file=sys.stderr)
     print(f"  Transport: {args.transport.upper()}", file=sys.stderr)
     print(f"  Auth: {args.auth_type}", file=sys.stderr)
-    print(f"  Dynamic Tags Loaded: {registered_tags}", file=sys.stderr)
 
     if args.transport == "stdio":
         mcp.run(transport="stdio")
@@ -1740,7 +818,7 @@ def mcp_server():
     elif args.transport == "sse":
         mcp.run(transport="sse", host=args.host, port=args.port)
     else:
-        logger.error(f"Invalid transport: {args.transport}")
+        logger.error("Invalid transport", extra={"transport": args.transport})
         sys.exit(1)
 
 

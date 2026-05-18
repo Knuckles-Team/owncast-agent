@@ -8,13 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
--
+- Action-Routed dynamic metaprogramming to drastically reduce tool limits while preserving 1:1 endpoint parity
 
 ### Changed
--
+- Replaced 122 independent tools with 4 tag-grouped dynamic routers
+- Standardized tool schemas and removed any underscored parameters
 
 ### Fixed
--
+- Pydantic V2 validations and Pytest failures related to missing parameters or schema conflicts
 
 ## [0.1.7] - 2026-04-29
 

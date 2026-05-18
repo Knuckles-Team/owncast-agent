@@ -1,6 +1,6 @@
 import os
 
-from .owncast_api import OwncastApi
+from .api_client import OwncastApi
 
 _client = None
 

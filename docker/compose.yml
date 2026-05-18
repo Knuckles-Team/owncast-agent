@@ -3,8 +3,8 @@ services:
   owncast-agent:
     # image: docker.io/knucklessg1/owncast-agent:latest
     build:
-      context: . # Debug
-      dockerfile: debug.Dockerfile
+      context: .. # Debug
+      dockerfile: docker/debug.Dockerfile
     container_name: owncast-agent
     hostname: owncast-agent
     command: [ "owncast-agent" ]
@@ -17,7 +17,7 @@ services:
         max-file: "3"
     restart: always
     env_file:
-      - .env
+      - ../.env
     environment:
       - "HOST=0.0.0.0"
       - "PORT=9001"

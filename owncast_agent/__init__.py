@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 __all__: list[str] = []
 
 CORE_MODULES = [
-    "owncast_agent.owncast_api",
+    "owncast_agent.api_client",
 ]
 
 OPTIONAL_MODULES = {

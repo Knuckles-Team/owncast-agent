@@ -1,0 +1,57 @@
+# Tasks: Code Enhancement: owncast-agent
+
+Generated: 2026-05-12T14:14:41.013972+00:00
+Skipped informational: 5
+
+- [ ] [P] **T001** [Codebase Optimization] 1 functions exceed 200 lines (actionable refactoring targets): register_internal
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T002** [Codebase Optimization] Monolithic: mcp_server.py (1748L) — 1 functions with high complexity (worst: reg
+  - Priority: P1-High | Effort: Large
+- [ ] [P] **T003** [Codebase Optimization] Needs attention: owncast_api.py (881L) — God class: OwncastApi (124 methods) — c
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T004** [Test Coverage] Test suite lacks intent diversity (only one type)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T005** [Test Coverage] 17 potential doc-test drift items
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T006** [Documentation & Governance] README.md missing sections: installation, usage|quick start
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T007** [Documentation & Governance] README missing: MCP tools mapping table with descriptions
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T008** [Documentation & Governance] README missing: Has a Table of Contents
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T009** [Documentation & Governance] README missing: Has usage examples with code blocks
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T010** [Documentation & Governance] README missing: References /docs directory material
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T011** [Documentation & Governance] README missing: Has MCP tools mapping table with descriptions
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T012** [Architecture & Design Patterns] SRP: 2 modules exceed 500 lines (god modules)
+  - Priority: P2-Medium | Effort: Large
+- [ ] [P] **T013** [Architecture & Design Patterns] SRP: 1 classes have >15 methods
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T014** [Architecture & Design Patterns] No discernible layer architecture (no domain/service/adapter separation)
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T015** [Concept Traceability] Low traceability ratio: 0% concepts fully traced
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T016** [Concept Traceability] 3 test functions missing concept markers
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T017** [Concept Traceability] 41 significant functions (>10 lines) missing concept markers in docstrings
+  - Priority: P4-Enhancement | Effort: Small
+- [ ] [P] **T018** [Linting & Formatting] Total lint findings: 122 (high/error: 122, medium/warning: 0, low: 0)
+  - Priority: P1-High | Effort: Medium
+- [ ] [P] **T019** [Pre-Commit Compliance] 2 hook(s) may be outdated: ruff-pre-commit, uv-pre-commit
+  - Priority: P2-Medium | Effort: Small
+- [ ] [P] **T020** [Changelog Audit] CHANGELOG.md exists but could not be parsed — check format compliance
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T021** [Changelog Audit] No changelog entries within the last 30 days
+  - Priority: P3-Low | Effort: Medium
+- [ ] [P] **T022** [Changelog Audit] keepachangelog not installed — pip install 'universal-skills[code-enhancer]'
+  - Priority: P3-Low | Effort: Small
+- [ ] [P] **T023** [Pytest Quality] 1 tests have no assertions
+  - Priority: P4-Enhancement | Effort: Medium
+- [ ] [P] **T024** [Environment Variables] Partial env var documentation: 34% coverage
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T025** [Environment Variables] Undocumented env vars: ALLOWED_CLIENT_REDIRECT_URIS, AUTH_TYPE, EUNOMIA_POLICY_F
+  - Priority: P2-Medium | Effort: Medium
+- [ ] [P] **T026** [Environment Variables] 6 Python env vars not in .env.example: CHAT_TOOL, DEFAULT_AGENT_NAME, EXTERNAL_T
+  - Priority: P2-Medium | Effort: Medium
