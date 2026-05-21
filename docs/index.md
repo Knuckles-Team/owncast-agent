@@ -154,10 +154,7 @@ uv pip install owncast-agent
         "owncast-mcp"
       ],
       "env": {
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
         "CHAT_TOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
         "EXTERNAL_TOOL": "True",
         "INTERNAL_TOOL": "True",
         "OBJECTS_TOOL": "True",
@@ -187,10 +184,7 @@ uv pip install owncast-agent
         "8000"
       ],
       "env": {
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
         "CHAT_TOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
         "EXTERNAL_TOOL": "True",
         "INTERNAL_TOOL": "True",
         "OBJECTS_TOOL": "True",

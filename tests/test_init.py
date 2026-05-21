@@ -10,6 +10,7 @@ def test_mcp_instance_creation():
     assert isinstance(mcp, FastMCP)
     assert "owncast" in mcp.name
 
+
 def test_import_owncast_agent():
     """Test that the package can be imported."""
     pass
