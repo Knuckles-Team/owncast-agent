@@ -43,7 +43,7 @@
 
 This agent wraps the Agent for interacting with Owncast API API. You can interact with it programmatically or via its integrated execution entrypoints.
 
-Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](file:///home/apps/workspace/agent-packages/agents/owncast-agent/docs/index.md).
+Detailed instructions on how to use the underlying API wrappers, extended schema bindings, and developer SDK references are maintained in [docs/index.md](docs/index.md).
 
 ---
 
@@ -54,12 +54,33 @@ This server utilizes dynamic Action-Routed tools to optimize token overhead and 
 ### Available MCP Tools
 | Tool Module | Toggle Env Var | Enabled by Default | Description & Nested Methods |
 |-------------|----------------|--------------------|------------------------------|
-| **Internal** | `INTERNALTOOL` | `True` | Manage owncast internal operations. Action-routed methods: `get_status`, `get_custom_emoji_list`, `get_chat_messages`, `register_anonymous_chat_user`, `update_message_visibility`, `update_user_enabled`, `get_web_config`, `get_ypresponse`, `get_all_social_platforms`, `get_video_stream_output_variants`, `ping`, `remote_follow`, `get_followers`, `report_playback_metrics`, `register_for_live_notifications`, `status_admin`, `disconnect_inbound_connection`, `get_server_config`, `get_viewers_over_time`, `get_active_viewers`, `get_hardware_stats`, `get_connected_chat_clients`, `get_chat_messages_admin`, `update_message_visibility_admin`, `update_user_enabled_admin`, `get_disabled_users`, `ban_ipaddress`, `unban_ipaddress`, `get_ipaddress_bans`, `update_user_moderator`, `get_moderators`, `get_logs`, `get_warnings`, `get_followers_admin`, `get_pending_follow_requests`, `get_blocked_and_rejected_followers`, `approve_follower`, `upload_custom_emoji`, `delete_custom_emoji`, `set_admin_password`, `set_stream_keys`, `set_extra_page_content`, `set_stream_title`, `set_server_welcome_message`, `set_chat_disabled`, `set_chat_join_messages_enabled`, `set_enable_established_chat_user_mode`, `set_forbidden_username_list`, `set_suggested_username_list`, `set_chat_spam_protection_enabled`, `set_chat_slur_filter_enabled`, `set_chat_require_authentication`, `set_video_codec`, `set_stream_latency_level`, `set_stream_output_variants`, `set_custom_color_variable_values`, `set_logo`, `set_favicon`, `reset_favicon`, `set_tags`, `set_ffmpeg_path`, `set_web_server_port`, `set_web_server_ip`, `set_rtmpserver_port`, `set_socket_host_override`, `set_video_serving_endpoint`, `set_nsfw`, `set_directory_enabled`, `set_social_handles`, `set_s3_configuration`, `set_server_url`, `set_external_actions`, `set_custom_styles`, `set_custom_javascript`, `set_hide_viewer_count`, `set_disable_search_indexing`, `set_federation_enabled`, `set_federation_activity_private`, `set_federation_show_engagement`, `set_federation_username`, `set_federation_go_live_message`, `set_federation_block_domains`, `set_discord_notification_configuration`, `set_browser_notification_configuration`, `get_webhooks`, `delete_webhook`, `create_webhook`, `get_external_apiusers`, `delete_external_apiuser`, `create_external_apiuser`, `auto_update_options`, `auto_update_start`, `auto_update_force_quit`, `reset_ypregistration`, `get_video_playback_metrics`, `get_prometheus_api`, `post_prometheus_api`, `put_prometheus_api`, `delete_prometheus_api`, `send_federated_message`, `get_federated_actions`, `start_indie_auth_flow`, `handle_indie_auth_redirect`, `handle_indie_auth_endpoint_get`, `handle_indie_auth_endpoint_post`, `register_fediverse_otprequest`, `verify_fediverse_otprequest`. |
-| **Objects** | `OBJECTSTOOL` | `True` | Manage owncast objects operations. Action-routed methods: `set_server_name`, `set_server_summary`, `set_custom_offline_message`. |
-| **External** | `EXTERNALTOOL` | `True` | Manage owncast external operations. Action-routed methods: `send_system_message`, `send_system_message_to_connected_client`, `send_user_message`, `send_integration_chat_message`, `send_chat_action`, `external_update_message_visibility`, `external_get_status`, `external_set_stream_title`, `external_get_chat_messages`, `external_get_connected_chat_clients`, `external_get_user_details`. |
-| **Chat** | `CHATTOOL` | `True` | Manage owncast chat operations. Action-routed methods: `get_user_details`. |
+| **Internal** | `INTERNAL_TOOL` | `True` | Manage owncast internal operations. Action-routed methods: `approve_follower`, `auto_update_force_quit`, `auto_update_options`, `auto_update_start`, `ban_ipaddress`, `create_external_apiuser`, `create_webhook`, `delete_custom_emoji`, `delete_external_apiuser`, `delete_prometheus_api`, `delete_webhook`, `disconnect_inbound_connection`, `get_active_viewers`, `get_all_social_platforms`, `get_blocked_and_rejected_followers`, `get_chat_messages`, `get_chat_messages_admin`, `get_connected_chat_clients`, `get_custom_emoji_list`, `get_disabled_users`, `get_external_apiusers`, `get_federated_actions`, `get_followers`, `get_followers_admin`, `get_hardware_stats`, `get_ipaddress_bans`, `get_logs`, `get_moderators`, `get_pending_follow_requests`, `get_prometheus_api`, `get_server_config`, `get_status`, `get_video_playback_metrics`, `get_video_stream_output_variants`, `get_viewers_over_time`, `get_warnings`, `get_web_config`, `get_webhooks`, `get_ypresponse`, `handle_indie_auth_endpoint_get`, `handle_indie_auth_endpoint_post`, `handle_indie_auth_redirect`, `ping`, `post_prometheus_api`, `put_prometheus_api`, `register_anonymous_chat_user`, `register_fediverse_otprequest`, `register_for_live_notifications`, `remote_follow`, `report_playback_metrics`, `reset_favicon`, `reset_ypregistration`, `send_federated_message`, `set_admin_password`, `set_browser_notification_configuration`, `set_chat_disabled`, `set_chat_join_messages_enabled`, `set_chat_require_authentication`, `set_chat_slur_filter_enabled`, `set_chat_spam_protection_enabled`, `set_custom_color_variable_values`, `set_custom_javascript`, `set_custom_styles`, `set_directory_enabled`, `set_disable_search_indexing`, `set_discord_notification_configuration`, `set_enable_established_chat_user_mode`, `set_external_actions`, `set_extra_page_content`, `set_favicon`, `set_federation_activity_private`, `set_federation_block_domains`, `set_federation_enabled`, `set_federation_go_live_message`, `set_federation_show_engagement`, `set_federation_username`, `set_ffmpeg_path`, `set_forbidden_username_list`, `set_hide_viewer_count`, `set_logo`, `set_nsfw`, `set_rtmpserver_port`, `set_s3_configuration`, `set_server_url`, `set_server_welcome_message`, `set_social_handles`, `set_socket_host_override`, `set_stream_keys`, `set_stream_latency_level`, `set_stream_output_variants`, `set_stream_title`, `set_suggested_username_list`, `set_tags`, `set_video_codec`, `set_video_serving_endpoint`, `set_web_server_ip`, `set_web_server_port`, `start_indie_auth_flow`, `status_admin`, `unban_ipaddress`, `update_message_visibility`, `update_message_visibility_admin`, `update_user_enabled`, `update_user_enabled_admin`, `update_user_moderator`, `upload_custom_emoji`, `verify_fediverse_otprequest`. |
+| **Objects** | `OBJECTS_TOOL` | `True` | Manage owncast objects operations. Action-routed methods: `set_custom_offline_message`, `set_server_name`, `set_server_summary`. |
+| **External** | `EXTERNAL_TOOL` | `True` | Manage owncast external operations. Action-routed methods: `external_get_chat_messages`, `external_get_connected_chat_clients`, `external_get_status`, `external_get_user_details`, `external_set_stream_title`, `external_update_message_visibility`, `send_chat_action`, `send_integration_chat_message`, `send_system_message`, `send_system_message_to_connected_client`, `send_user_message`. |
+| **Chat** | `CHAT_TOOL` | `True` | Manage owncast chat operations. Action-routed methods: `get_user_details`. |
 
-Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](file:///home/apps/workspace/agent-packages/agents/owncast-agent/docs/mcp.md).
+Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
+
+### Dynamic Tool Selection & Visibility
+
+This MCP server supports dynamic toolset selection and visibility filtering at runtime. This allows you to restrict the set of exposed tools in order to prevent blowing up the LLM's context window.
+
+You can configure tool filtering via multiple input channels:
+
+- **CLI Arguments:** Pass `--tools` or `--toolsets` (or their disabled counterparts `--disabled-tools` and `--disabled-toolsets`) during startup.
+- **Environment Variables:** Define standard environment variables:
+  - `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS`
+  - `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS`
+- **HTTP SSE Request Headers:** Pass custom headers during transport initialization:
+  - `x-mcp-enabled-tools` / `x-mcp-disabled-tools`
+  - `x-mcp-enabled-tags` / `x-mcp-disabled-tags`
+- **HTTP SSE Request Query Parameters:** Append query parameters directly to your transport connection URL:
+  - `?tools=tool1,tool2`
+  - `?tags=tag1`
+
+When query strings or parameters are supplied, an LLM-free **Knowledge Graph resolution layer** (using `DynamicToolOrchestrator`) matches query intents against known tool tags, names, or descriptions, with safe fallback and automated 24-hour background cache refreshing.
+
+---
 
 ### MCP Configuration Examples
 
@@ -217,7 +238,7 @@ services:
 
 ```
 
-Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/agent.md](file:///home/apps/workspace/agent-packages/agents/owncast-agent/docs/agent.md).
+Detailed graph node architecture explanations, custom skill configurations, and agentic trace guides are available in [docs/agent.md](docs/agent.md).
 
 ---
 
@@ -236,6 +257,34 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 | **Tool Guard** | Sensitivity inspection with human-in-the-loop validation | Enabled by default |
 | **Prompt Injection Defense** | Input scanning, repetition monitoring, and recursive loop blocks | Enabled by default |
 | **Context Safety Guard** | Stuck-loop detectors and contextual overflow preemptive alerts | Enabled by default |
+
+---
+
+## Environment Variables
+
+The agent can be fully configured using the following environment variables:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `OWNCAST_URL` | Base URL of the target Owncast instance. | `http://localhost:8080` |
+| `OWNCAST_TOKEN` | Owncast Admin or Integration API Token for authorized operations. | `""` |
+| `DEFAULT_AGENT_NAME` | The default name displayed for the Graph Agent. | `Owncast Agent` |
+| `AGENT_DESCRIPTION` | Detailed description of the agent shown in UI/terminal contexts. | `"AI agent for Owncast Agent operations."` |
+| `AGENT_SYSTEM_PROMPT` | Custom system prompt instructions overriding workspace defaults. | *Auto-generated* |
+| `INTERNAL_TOOL` / `INTERNALTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Internal tools. | `True` |
+| `OBJECTS_TOOL` / `OBJECTSTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Objects tools. | `True` |
+| `EXTERNAL_TOOL` / `EXTERNALTOOL` | Toggle flag to enable (`True`) or disable (`False`) the External tools. | `True` |
+| `CHAT_TOOL` / `CHATTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Chat tools. | `True` |
+| `TRANSPORT` | The MCP transport protocol to run on (`stdio`, `streamable-http`, `sse`). | `stdio` |
+| `HOST` | The host address to bind the HTTP/SSE server. | `localhost` |
+| `PORT` | The port to bind the HTTP/SSE server. | `8000` |
+| `PROVIDER` | The Pydantic AI LLM provider to use (`openai`, `anthropic`, `ollama`, etc.). | `openai` |
+| `MODEL_ID` | The specific LLM model ID to execute. | `gpt-4o` |
+| `ENABLE_WEB_UI` | Boolean flag to enable or disable the built-in web playground. | `True` |
+| `AUTH_TYPE` | Type of authentication used for tool access controls. | `""` |
+| `EUNOMIA_POLICY_FILE` | Path to the JSON file containing Eunomia tool policies. | `""` |
+| `EUNOMIA_TYPE` | Eunomia policy evaluation type. | `""` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | The OTLP endpoint for OpenTelemetry metrics export. | `""` |
 
 ---
 

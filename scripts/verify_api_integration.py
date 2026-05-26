@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-import os
 import ast
 import glob
+import os
 import sys
 
 BASELINES = {
@@ -31,11 +31,13 @@ BASELINES = {
 
 
 def parse_api_client(filepath):
-    """
-    Parses api_client.py to find the main API/Client class and its public methods.
+    """Parses api_client.py to find the main API/Client class and its public methods.
+
     Returns a set of method names.
+
+    CONCEPT:ECO-4.1
     """
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(filepath, encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=filepath)
 
     methods = {}
@@ -82,7 +84,7 @@ class MethodCallVisitor(ast.NodeVisitor):
 
     def visit_Compare(self, node):
         # Capture action comparisons, e.g. action == "get"
-        for op, comparator in zip(node.ops, node.comparators):
+        for op, comparator in zip(node.ops, node.comparators, strict=True):
             if isinstance(op, (ast.Eq, ast.In)):
                 if isinstance(comparator, ast.Constant) and isinstance(
                     comparator.value, str
@@ -92,11 +94,11 @@ class MethodCallVisitor(ast.NodeVisitor):
 
 
 def parse_mcp_server(filepath, api_methods):
+    """Parses mcp_server.py to extract registered tools and identify which api_methods they leverage.
+
+    CONCEPT:ECO-4.1
     """
-    Parses mcp_server.py to extract registered tools and identify which
-    api_methods they leverage.
-    """
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(filepath, encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=filepath)
 
     tool_mappings = {}
@@ -135,6 +137,10 @@ def parse_mcp_server(filepath, api_methods):
 
 
 def verify_agent(agent_dir):
+    """Verify integration parity for a single agent.
+
+    CONCEPT:ECO-4.1
+    """
     # Find api_client.py and mcp_server.py
     api_clients = glob.glob(
         os.path.join(agent_dir, "**", "api_client.py"), recursive=True
@@ -175,6 +181,10 @@ def verify_agent(agent_dir):
 
 
 def main():
+    """Main verification script entry point.
+
+    CONCEPT:ECO-4.1
+    """
     args = sys.argv[1:]
 
     # --- Local Mode (Single Agent Validation) ---

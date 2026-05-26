@@ -1,6 +1,8 @@
 import os
 import re
 
+import pytest
+
 # Paths
 ROOT_DIR = "/home/apps/workspace/agent-packages/agents/owncast-agent"
 WORKSPACE_DIR = "/home/apps/workspace/agent-packages"
@@ -55,10 +57,13 @@ def extract_concepts_from_codebase(directory):
     return found_concepts
 
 
+@pytest.mark.concept("ECO-4.1")
 def test_concept_parity():
     """
     Enforces that all concepts documented or used in owncast-agent
     exist in the master agent-utilities registry.
+
+    CONCEPT:ECO-4.1
     """
     master_concepts = extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
 

@@ -1,12 +1,23 @@
-def test_server_startup():
-    """Validates that the server module can start successfully."""
-    # If this is not an agent, just pass
-    import os
+"""Basic startup smoke tests."""
 
-    if not os.path.exists("agent_server.py") and not any(
-        os.path.exists(os.path.join(d, "agent_server.py")) for d in ["src", "agent"]
-    ):
-        return
+import subprocess
+import sys
 
-    print("Startup tests handled correctly.")
-    pass
+import pytest
+
+
+def test_module_runnable():
+    """Package module should be runnable with --help or similar."""
+    pkg_name = (
+        __import__("pathlib")
+        .Path(__file__)
+        .resolve()
+        .parent.parent.name.replace("-", "_")
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", f"import {pkg_name}"],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"Import failed: {result.stderr}"
