@@ -32,7 +32,7 @@ from starlette.responses import JSONResponse
 
 from owncast_agent.auth import get_client
 
-__version__ = "0.14.0"
+__version__ = "0.15.0"
 
 logger = get_logger(name="owncast-agent")
 logger.setLevel(logging.INFO)
@@ -169,9 +169,9 @@ ALLOWED_EXTERNAL_ACTIONS = {
 
 ALLOWED_CHAT_ACTIONS = {"get_user_details"}
 
+
 def register_internal_tools(mcp: FastMCP):
-    """Register consolidated action-routed tools for internal operations.
-"""
+    """Register consolidated action-routed tools for internal operations."""
 
     @mcp.tool(tags={"internal"})
     async def owncast_internal(
@@ -187,8 +187,7 @@ def register_internal_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Manage owncast internal operations.
-"""
+        """Manage owncast internal operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -206,9 +205,9 @@ def register_internal_tools(mcp: FastMCP):
         method = getattr(client, action)
         return method(**kwargs)
 
+
 def register_objects_tools(mcp: FastMCP):
-    """Register consolidated action-routed tools for objects operations.
-"""
+    """Register consolidated action-routed tools for objects operations."""
 
     @mcp.tool(tags={"objects"})
     async def owncast_objects(
@@ -224,8 +223,7 @@ def register_objects_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Manage owncast objects operations.
-"""
+        """Manage owncast objects operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -243,9 +241,9 @@ def register_objects_tools(mcp: FastMCP):
         method = getattr(client, action)
         return method(**kwargs)
 
+
 def register_external_tools(mcp: FastMCP):
-    """Register consolidated action-routed tools for external operations.
-"""
+    """Register consolidated action-routed tools for external operations."""
 
     @mcp.tool(tags={"external"})
     async def owncast_external(
@@ -261,8 +259,7 @@ def register_external_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Manage owncast external operations.
-"""
+        """Manage owncast external operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -280,9 +277,9 @@ def register_external_tools(mcp: FastMCP):
         method = getattr(client, action)
         return method(**kwargs)
 
+
 def register_chat_tools(mcp: FastMCP):
-    """Register consolidated action-routed tools for chat operations.
-"""
+    """Register consolidated action-routed tools for chat operations."""
 
     @mcp.tool(tags={"chat"})
     async def owncast_chat(
@@ -298,8 +295,7 @@ def register_chat_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Manage owncast chat operations.
-"""
+        """Manage owncast chat operations."""
         if ctx:
             await ctx.info("Executing tool...")
         import json
@@ -317,9 +313,9 @@ def register_chat_tools(mcp: FastMCP):
         method = getattr(client, action)
         return method(**kwargs)
 
+
 def get_mcp_instance() -> tuple[Any, ...]:
-    """Initialize and return the MCP instance.
-"""
+    """Initialize and return the MCP instance."""
     load_dotenv(find_dotenv())
     args, mcp, middlewares = create_mcp_server(
         name="owncast-agent MCP",
@@ -348,9 +344,9 @@ def get_mcp_instance() -> tuple[Any, ...]:
         mcp.add_middleware(mw)
     return mcp, args, middlewares
 
+
 def mcp_server() -> None:
-    """Run the MCP server.
-"""
+    """Run the MCP server."""
     mcp, args, middlewares = get_mcp_instance()
     print(f"owncast-agent MCP v{__version__}", file=sys.stderr)
     print("\nStarting MCP Server", file=sys.stderr)
@@ -366,6 +362,7 @@ def mcp_server() -> None:
     else:
         logger.error("Invalid transport", extra={"transport": args.transport})
         sys.exit(1)
+
 
 if __name__ == "__main__":
     mcp_server()

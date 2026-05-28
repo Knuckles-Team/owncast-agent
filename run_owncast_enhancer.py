@@ -3,8 +3,10 @@ import json
 import time
 from pathlib import Path
 
-scripts_dir = Path("/home/genius/.gemini/antigravity/skills/code-enhancer/scripts")
-project_dir = "/home/apps/workspace/agent-packages/agents/owncast-agent"
+scripts_dir = (
+    Path.home() / ".gemini" / "antigravity" / "skills" / "code-enhancer" / "scripts"
+)
+project_dir = str(Path(__file__).parent.resolve())
 
 analyzers = [
     ("analyze_project", "analyze_project"),
@@ -58,7 +60,7 @@ if str(scripts_dir) not in sys.path:
     sys.path.append(str(scripts_dir))
 import generate_report
 
-report_path = "/home/apps/workspace/agent-packages/agents/owncast-agent/.specify/reports/report.md"
+report_path = str(Path(__file__).parent / ".specify" / "reports" / "report.md")
 Path(report_path).parent.mkdir(parents=True, exist_ok=True)
 generate_report.generate_report(
     results, project_name="owncast-agent", output_path=report_path
@@ -66,9 +68,7 @@ generate_report.generate_report(
 print(f"Report saved to {report_path}", flush=True)
 
 # Save results.json
-results_json_path = (
-    "/home/apps/workspace/agent-packages/agents/owncast-agent/.specify/results.json"
-)
+results_json_path = str(Path(__file__).parent / ".specify" / "results.json")
 with open(results_json_path, "w") as f:
     json.dump(results, f, indent=2)
 print(f"Results JSON saved to {results_json_path}", flush=True)
