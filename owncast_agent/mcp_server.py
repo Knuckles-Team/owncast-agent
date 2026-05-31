@@ -32,7 +32,7 @@ from starlette.responses import JSONResponse
 
 from owncast_agent.auth import get_client
 
-__version__ = "0.23.1"
+__version__ = "0.23.2"
 
 logger = get_logger(name="owncast-agent")
 logger.setLevel(logging.INFO)
