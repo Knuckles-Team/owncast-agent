@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/owncast-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/owncast-agent)
 
-*Version: 0.23.0*
+*Version: 0.23.1*
 
 ---
 
