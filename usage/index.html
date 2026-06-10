@@ -10,11 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://knuckles-team.github.io/owncast-agent/concepts/">
+        <link rel="canonical" href="https://knuckles-team.github.io/owncast-agent/usage/">
       
       
-        <link rel="prev" href="../platform/">
+        <link rel="prev" href="../deployment/">
       
+      
+        <link rel="next" href="../platform/">
       
       
         
@@ -25,7 +27,7 @@
     
     
       
-        <title>Concepts - owncast-agent</title>
+        <title>Usage (API / CLI / MCP) - owncast-agent</title>
       
     
     
@@ -76,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#concept-registry-owncast-agent" class="md-skip">
+        <a href="#usage-api-cli-mcp" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Concepts
+              Usage (API / CLI / MCP)
             
           </span>
         </div>
@@ -308,9 +310,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../usage/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -346,11 +350,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../concepts/" class="md-tabs__link">
         
   
   
@@ -526,10 +528,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage (API / CLI / MCP)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -545,6 +574,76 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#as-an-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#as-a-python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="As a Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#as-a-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        As a CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -580,37 +679,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Concepts
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../concepts/" class="md-nav__link">
         
   
   
@@ -626,59 +698,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#project-specific-concepts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Project-Specific Concepts
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#cross-project-references-from-agent-utilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cross-Project References (from agent-utilities)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#synergy-with-agent-utilities" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synergy with agent-utilities
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -710,10 +729,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#project-specific-concepts" class="md-nav__link">
+  <a href="#as-an-mcp-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Project-Specific Concepts
+        As an MCP server
       
     </span>
   </a>
@@ -721,21 +740,38 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cross-project-references-from-agent-utilities" class="md-nav__link">
+  <a href="#as-a-python-api" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cross-Project References (from agent-utilities)
+        As a Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="As a Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#writes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writes
       
     </span>
   </a>
   
 </li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#synergy-with-agent-utilities" class="md-nav__link">
+  <a href="#as-a-cli" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synergy with agent-utilities
+        As a CLI
       
     </span>
   </a>
@@ -762,94 +798,91 @@
   
 
 
-<h1 id="concept-registry-owncast-agent">Concept Registry — owncast-agent<a class="headerlink" href="#concept-registry-owncast-agent" title="Permanent link">&para;</a></h1>
-<blockquote>
-<p><strong>Prefix</strong>: <code>CONCEPT:OC-*</code>
-<strong>Version</strong>: 0.14.0
-<strong>Bridge</strong>: <a href="https://github.com/Knuckles-Team/agent-utilities/blob/main/docs/concepts.md"><code>CONCEPT:ECO-4.0</code></a> (Unified Toolkit Ingestion)</p>
-</blockquote>
-<hr />
-<h2 id="project-specific-concepts">Project-Specific Concepts<a class="headerlink" href="#project-specific-concepts" title="Permanent link">&para;</a></h2>
+<h1 id="usage-api-cli-mcp">Usage — API / CLI / MCP<a class="headerlink" href="#usage-api-cli-mcp" title="Permanent link">&para;</a></h1>
+<p><code>owncast-agent</code> exposes the same capability three ways: as <strong>MCP tools</strong> an agent
+calls, as a <strong>Python API</strong> (<code>OwncastApi</code>) you import, and as <strong>CLI</strong> entry points. The
+tool surface and the underlying Owncast REST contract are summarized in
+<a href="../overview/">Architecture</a>.</p>
+<h2 id="as-an-mcp-server">As an MCP server<a class="headerlink" href="#as-an-mcp-server" title="Permanent link">&para;</a></h2>
+<p>Once <a href="../deployment/">deployed</a>, the server registers four action-routed tool groups.
+Each tool takes an <code>action</code> name plus a <code>params_json</code> payload and dispatches to the
+matching <code>OwncastApi</code> method. The groups are individually togglable through
+<code>INTERNALTOOL</code>, <code>OBJECTSTOOL</code>, <code>EXTERNALTOOL</code>, and <code>CHATTOOL</code>.</p>
 <table>
 <thead>
 <tr>
-<th>Concept ID</th>
-<th>Name</th>
-<th>Description</th>
+<th>Tool</th>
+<th>Domain</th>
+<th>Representative actions</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>CONCEPT:OC-001</code></td>
-<td>Chat &amp; Messaging</td>
-<td>MCP tool domain <code>chat</code> — Action-routed dynamic tool registration</td>
+<td><code>owncast_internal</code></td>
+<td>Server, chat moderation, configuration</td>
+<td><code>get_status</code>, <code>get_active_viewers</code>, <code>get_hardware_stats</code>, <code>get_followers</code>, <code>set_stream_title</code>, <code>get_logs</code></td>
 </tr>
 <tr>
-<td><code>CONCEPT:OC-002</code></td>
-<td>External Operations</td>
-<td>MCP tool domain <code>external</code> — Action-routed dynamic tool registration</td>
+<td><code>owncast_objects</code></td>
+<td>Server identity objects</td>
+<td><code>set_server_name</code>, <code>set_server_summary</code>, <code>set_custom_offline_message</code></td>
 </tr>
 <tr>
-<td><code>CONCEPT:OC-003</code></td>
-<td>Internal Operations</td>
-<td>MCP tool domain <code>internal</code> — Action-routed dynamic tool registration</td>
+<td><code>owncast_external</code></td>
+<td>Integration / external messaging</td>
+<td><code>send_system_message</code>, <code>send_user_message</code>, <code>external_get_status</code>, <code>external_get_chat_messages</code></td>
 </tr>
 <tr>
-<td><code>CONCEPT:OC-004</code></td>
-<td>Objects Operations</td>
-<td>MCP tool domain <code>objects</code> — Action-routed dynamic tool registration</td>
+<td><code>owncast_chat</code></td>
+<td>Chat user details</td>
+<td><code>get_user_details</code></td>
 </tr>
 </tbody>
 </table>
-<h2 id="cross-project-references-from-agent-utilities">Cross-Project References (from agent-utilities)<a class="headerlink" href="#cross-project-references-from-agent-utilities" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Concept ID</th>
-<th>Name</th>
-<th>Origin</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>CONCEPT:ECO-4.0</code></td>
-<td>Unified Toolkit Ingestion</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:ORCH-1.2</code></td>
-<td>Confidence-Gated Router</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:OS-5.1</code></td>
-<td>Prompt Injection Defense</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:OS-5.2</code></td>
-<td>Cognitive Scheduler</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:OS-5.3</code></td>
-<td>Guardrail Engine</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:OS-5.4</code></td>
-<td>Audit Logging</td>
-<td>agent-utilities</td>
-</tr>
-<tr>
-<td><code>CONCEPT:KG-2.0</code></td>
-<td>Knowledge Graph Core</td>
-<td>agent-utilities</td>
-</tr>
-</tbody>
-</table>
-<h2 id="synergy-with-agent-utilities">Synergy with agent-utilities<a class="headerlink" href="#synergy-with-agent-utilities" title="Permanent link">&para;</a></h2>
-<p>This project integrates with <code>agent-utilities</code> via <code>CONCEPT:ECO-4.0</code> (Unified Toolkit Ingestion). The <code>owncast_agent</code> MCP server registers its tools with the agent-utilities FastMCP middleware, enabling automatic discovery, telemetry, and Knowledge Graph ingestion of all OC-* concepts.</p>
+<p>Example agent prompts that map onto these tools:</p>
+<ul>
+<li><em>"What is the current server status and active viewer count?"</em> → <code>owncast_internal</code> (<code>get_status</code>, <code>get_active_viewers</code>)</li>
+<li><em>"Set the stream title to 'Live coding session'"</em> → <code>owncast_internal</code> (<code>set_stream_title</code>)</li>
+<li><em>"Send a system message to the chat"</em> → <code>owncast_external</code> (<code>send_system_message</code>)</li>
+</ul>
+<h2 id="as-a-python-api">As a Python API<a class="headerlink" href="#as-a-python-api" title="Permanent link">&para;</a></h2>
+<p><code>OwncastApi</code> is a <code>requests</code>-based facade over the Owncast REST API, composed from
+per-domain mixins (system, chat, followers, configuration, integrations, auth).</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">owncast_agent.api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">OwncastApi</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">api</span> <span class="o">=</span> <span class="n">OwncastApi</span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://your-owncast:8080&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">token</span><span class="o">=</span><span class="s2">&quot;your_owncast_token&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Reads</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">status</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_status</span><span class="p">()</span>                 <span class="c1"># server status</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">viewers</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_active_viewers</span><span class="p">()</span>        <span class="c1"># current active viewers</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">followers</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_followers</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>   <span class="c1"># the follower list</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">hardware</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_hardware_stats</span><span class="p">()</span>       <span class="c1"># CPU / memory / disk</span>
+</span></code></pre></div>
+<p>Build a client straight from the environment:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">owncast_agent.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_client</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">api</span> <span class="o">=</span> <span class="n">get_client</span><span class="p">()</span>        <span class="c1"># reads OWNCAST_URL / OWNCAST_TOKEN from the environment / .env</span>
+</span></code></pre></div>
+<h3 id="writes">Writes<a class="headerlink" href="#writes" title="Permanent link">&para;</a></h3>
+<p>Configuration and moderation calls map to the same client:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">api</span><span class="o">.</span><span class="n">set_stream_title</span><span class="p">(</span><span class="s2">&quot;Live coding session&quot;</span><span class="p">)</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">api</span><span class="o">.</span><span class="n">send_system_message</span><span class="p">({</span><span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;Welcome to the stream!&quot;</span><span class="p">})</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">api</span><span class="o">.</span><span class="n">approve_follower</span><span class="p">(</span><span class="n">actor_iri</span><span class="o">=</span><span class="s2">&quot;https://example.social/users/alice&quot;</span><span class="p">,</span> <span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="as-a-cli">As a CLI<a class="headerlink" href="#as-a-cli" title="Permanent link">&para;</a></h2>
+<p>Two console scripts are installed with the package:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run the MCP server (stdio by default; see Deployment for HTTP transports)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>owncast-mcp<span class="w"> </span>--transport<span class="w"> </span>streamable-http<span class="w"> </span>--host<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>--port<span class="w"> </span><span class="m">8000</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Run the A2A agent server (consumes the MCP tools)</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>owncast-agent<span class="w"> </span>--provider<span class="w"> </span>openai<span class="w"> </span>--model-id<span class="w"> </span>gpt-4o<span class="w"> </span>--api-key<span class="w"> </span>sk-...
+</span></code></pre></div>
+<p>Both expose <code>--help</code> for the full option set:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>owncast-mcp<span class="w"> </span>--help
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>owncast-agent<span class="w"> </span>--help
+</span></code></pre></div>
 
 
 
@@ -887,7 +920,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../platform/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Backing Platform (Owncast)">
+          <a href="../deployment/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Deployment">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -897,11 +930,27 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Backing Platform (Owncast)
+                Deployment
               </div>
             </div>
           </a>
         
+        
+          
+          <a href="../platform/" class="md-footer__link md-footer__link--next" aria-label="Next: Backing Platform (Owncast)">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Backing Platform (Owncast)
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
         
       </nav>
     
