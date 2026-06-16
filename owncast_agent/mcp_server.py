@@ -25,7 +25,11 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server, resolve_action
+from agent_utilities.mcp_utilities import (
+    create_mcp_server,
+    resolve_action,
+    run_blocking,
+)
 from dotenv import find_dotenv, load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -207,7 +211,7 @@ def register_internal_tools(mcp: FastMCP):
         action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_objects_tools(mcp: FastMCP):
@@ -247,7 +251,7 @@ def register_objects_tools(mcp: FastMCP):
         action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_external_tools(mcp: FastMCP):
@@ -287,7 +291,7 @@ def register_external_tools(mcp: FastMCP):
         action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_chat_tools(mcp: FastMCP):
@@ -325,7 +329,7 @@ def register_chat_tools(mcp: FastMCP):
         action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def get_mcp_instance() -> tuple[Any, ...]:
