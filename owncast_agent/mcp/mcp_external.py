@@ -3,6 +3,7 @@
 Auto-generated from mcp_server.py during ecosystem standardization.
 """
 
+from agent_utilities.mcp_utilities import resolve_action
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -46,8 +47,12 @@ def register_external_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_EXTERNAL_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_EXTERNAL_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
         return method(**kwargs)
