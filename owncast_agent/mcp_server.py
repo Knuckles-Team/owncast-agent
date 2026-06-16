@@ -25,7 +25,7 @@ import sys
 from typing import Any
 
 from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server
+from agent_utilities.mcp_utilities import create_mcp_server, resolve_action
 from dotenv import find_dotenv, load_dotenv
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -199,8 +199,12 @@ def register_internal_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_INTERNAL_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_INTERNAL_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
         return method(**kwargs)
@@ -235,8 +239,12 @@ def register_objects_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_OBJECTS_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_OBJECTS_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
         return method(**kwargs)
@@ -271,8 +279,12 @@ def register_external_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_EXTERNAL_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_EXTERNAL_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
         return method(**kwargs)
@@ -307,8 +319,10 @@ def register_chat_tools(mcp: FastMCP):
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_CHAT_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(action, ALLOWED_CHAT_ACTIONS, service="owncast-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
         return method(**kwargs)
