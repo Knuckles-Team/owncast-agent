@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/owncast-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/owncast-agent)
 
-*Version: 0.32.0*
+*Version: 0.33.0*
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > interfaces, and guidance for provisioning the Owncast platform are maintained in
