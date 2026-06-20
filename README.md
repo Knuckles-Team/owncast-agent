@@ -56,12 +56,20 @@ Detailed instructions on how to use the underlying API wrappers, extended schema
 This server utilizes dynamic Action-Routed tools to optimize token overhead and maximize IDE compatibility.
 
 ### Available MCP Tools
-| Tool Module | Toggle Env Var | Enabled by Default | Description & Nested Methods |
-|-------------|----------------|--------------------|------------------------------|
-| **Internal** | `INTERNAL_TOOL` | `True` | Manage owncast internal operations. Action-routed methods: `approve_follower`, `auto_update_force_quit`, `auto_update_options`, `auto_update_start`, `ban_ipaddress`, `create_external_apiuser`, `create_webhook`, `delete_custom_emoji`, `delete_external_apiuser`, `delete_prometheus_api`, `delete_webhook`, `disconnect_inbound_connection`, `get_active_viewers`, `get_all_social_platforms`, `get_blocked_and_rejected_followers`, `get_chat_messages`, `get_chat_messages_admin`, `get_connected_chat_clients`, `get_custom_emoji_list`, `get_disabled_users`, `get_external_apiusers`, `get_federated_actions`, `get_followers`, `get_followers_admin`, `get_hardware_stats`, `get_ipaddress_bans`, `get_logs`, `get_moderators`, `get_pending_follow_requests`, `get_prometheus_api`, `get_server_config`, `get_status`, `get_video_playback_metrics`, `get_video_stream_output_variants`, `get_viewers_over_time`, `get_warnings`, `get_web_config`, `get_webhooks`, `get_ypresponse`, `handle_indie_auth_endpoint_get`, `handle_indie_auth_endpoint_post`, `handle_indie_auth_redirect`, `ping`, `post_prometheus_api`, `put_prometheus_api`, `register_anonymous_chat_user`, `register_fediverse_otprequest`, `register_for_live_notifications`, `remote_follow`, `report_playback_metrics`, `reset_favicon`, `reset_ypregistration`, `send_federated_message`, `set_admin_password`, `set_browser_notification_configuration`, `set_chat_disabled`, `set_chat_join_messages_enabled`, `set_chat_require_authentication`, `set_chat_slur_filter_enabled`, `set_chat_spam_protection_enabled`, `set_custom_color_variable_values`, `set_custom_javascript`, `set_custom_styles`, `set_directory_enabled`, `set_disable_search_indexing`, `set_discord_notification_configuration`, `set_enable_established_chat_user_mode`, `set_external_actions`, `set_extra_page_content`, `set_favicon`, `set_federation_activity_private`, `set_federation_block_domains`, `set_federation_enabled`, `set_federation_go_live_message`, `set_federation_show_engagement`, `set_federation_username`, `set_ffmpeg_path`, `set_forbidden_username_list`, `set_hide_viewer_count`, `set_logo`, `set_nsfw`, `set_rtmpserver_port`, `set_s3_configuration`, `set_server_url`, `set_server_welcome_message`, `set_social_handles`, `set_socket_host_override`, `set_stream_keys`, `set_stream_latency_level`, `set_stream_output_variants`, `set_stream_title`, `set_suggested_username_list`, `set_tags`, `set_video_codec`, `set_video_serving_endpoint`, `set_web_server_ip`, `set_web_server_port`, `start_indie_auth_flow`, `status_admin`, `unban_ipaddress`, `update_message_visibility`, `update_message_visibility_admin`, `update_user_enabled`, `update_user_enabled_admin`, `update_user_moderator`, `upload_custom_emoji`, `verify_fediverse_otprequest`. |
-| **Objects** | `OBJECTS_TOOL` | `True` | Manage owncast objects operations. Action-routed methods: `set_custom_offline_message`, `set_server_name`, `set_server_summary`. |
-| **External** | `EXTERNAL_TOOL` | `True` | Manage owncast external operations. Action-routed methods: `external_get_chat_messages`, `external_get_connected_chat_clients`, `external_get_status`, `external_get_user_details`, `external_set_stream_title`, `external_update_message_visibility`, `send_chat_action`, `send_integration_chat_message`, `send_system_message`, `send_system_message_to_connected_client`, `send_user_message`. |
-| **Chat** | `CHAT_TOOL` | `True` | Manage owncast chat operations. Action-routed methods: `get_user_details`. |
+
+This table is auto-generated from the live server — do not edit by hand.
+
+<!-- MCP-TOOLS-TABLE:START -->
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `owncast_chat` | `CHATTOOL` | Manage owncast chat operations. |
+| `owncast_external` | `EXTERNALTOOL` | Manage owncast external operations. |
+| `owncast_internal` | `INTERNALTOOL` | Manage owncast internal operations. |
+| `owncast_objects` | `OBJECTSTOOL` | Manage owncast objects operations. |
+
+_4 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+<!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
 
