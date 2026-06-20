@@ -20,20 +20,20 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
 import logging
-import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
 from agent_utilities.mcp_utilities import (
     create_mcp_server,
     load_config,
+    register_tool_surface,
     resolve_action,
     run_blocking,
 )
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from owncast_agent.api_client import OwncastApi
 from owncast_agent.auth import get_client
 
 __version__ = "0.33.0"
@@ -345,27 +345,22 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    DEFAULT_INTERNALTOOL = to_boolean(os.getenv("INTERNALTOOL", "True"))
-    if DEFAULT_INTERNALTOOL:
-        register_internal_tools(mcp)
-    DEFAULT_OBJECTSTOOL = to_boolean(os.getenv("OBJECTSTOOL", "True"))
-    if DEFAULT_OBJECTSTOOL:
-        register_objects_tools(mcp)
-    DEFAULT_EXTERNALTOOL = to_boolean(os.getenv("EXTERNALTOOL", "True"))
-    if DEFAULT_EXTERNALTOOL:
-        register_external_tools(mcp)
-    DEFAULT_CHATTOOL = to_boolean(os.getenv("CHATTOOL", "True"))
-    if DEFAULT_CHATTOOL:
-        register_chat_tools(mcp)
+    registered_tags = register_tool_surface(
+        mcp,
+        client_cls=OwncastApi,
+        get_client=get_client,
+        service="owncast-agent",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)
-    return mcp, args, middlewares
+    return mcp, args, middlewares, registered_tags
 
 
 def mcp_server() -> None:
     """Run the MCP server."""
-    mcp, args, middlewares = get_mcp_instance()
+    mcp, args, middlewares, *_ = get_mcp_instance()
     print(f"owncast-agent MCP v{__version__}", file=sys.stderr)
     print("\nStarting MCP Server", file=sys.stderr)
     print(f"  Transport: {args.transport.upper()}", file=sys.stderr)
