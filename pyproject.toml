@@ -28,10 +28,10 @@ owncast-mcp = "owncast_agent.mcp_server:mcp_server"
 owncast-agent = "owncast_agent.agent_server:agent_server"
 
 [project.entry-points."agent_utilities.skill_providers"]
-modular-contrib = "owncast_agent.skills"
+owncast-agent = "owncast_agent.skills"
 
 [project.entry-points."agent_utilities.prompt_providers"]
-modular-contrib = "owncast_agent.prompts"
+owncast-agent = "owncast_agent.prompts"
 
 [tool.setuptools]
 include-package-data = true
