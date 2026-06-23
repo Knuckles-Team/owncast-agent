@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   owncast-agent-mcp:
-    image: knucklessg1/owncast-agent:latest
+    image: knucklessg1/owncast-agent:mcp
     container_name: owncast-agent-mcp
     hostname: owncast-agent-mcp
     restart: always
