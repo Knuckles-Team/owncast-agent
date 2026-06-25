@@ -96,6 +96,14 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
 
 ### MCP Configuration Examples
 
+> **Install the slim `[mcp]` extra.** All examples below install
+> `owncast-agent[mcp]` — the MCP-server extra that pulls only the FastMCP /
+> FastAPI tooling (`agent-utilities[mcp]`). It deliberately **excludes** the heavy
+> agent runtime (the epistemic-graph engine, `pydantic-ai`, `dspy`, `llama-index`,
+> `tree-sitter`), so `uvx`/container installs are dramatically smaller and faster.
+> Use the full `[agent]` extra only when you need the integrated Pydantic AI agent
+> (see [Installation](#installation)).
+
 #### stdio Transport (Recommended for local IDEs e.g., Cursor, Claude Desktop)
 Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
 
@@ -106,7 +114,7 @@ Configure your IDE's `mcp.json` to launch the MCP server via `uvx`:
       "command": "uvx",
       "args": [
         "--from",
-        "owncast-agent",
+        "owncast-agent[mcp]",
         "owncast-mcp"
       ],
       "env": {
@@ -127,7 +135,7 @@ Configure your client's `mcp.json` to launch the Streamable-HTTP server via `uvx
       "command": "uvx",
       "args": [
         "--from",
-        "owncast-agent",
+        "owncast-agent[mcp]",
         "owncast-mcp"
       ],
       "env": {
@@ -162,8 +170,15 @@ docker run -d \
   -e TRANSPORT=streamable-http \
   -e PORT=8000 \
   -e OWNCAST_URL="your_value" \
-  knucklessg1/owncast-agent:latest
+  knucklessg1/owncast-agent:mcp
 ```
+
+> The `:mcp` tag is the **slim MCP-server image** (built from
+> `docker/Dockerfile --target mcp`, installing `owncast-agent[mcp]`). The default
+> `:latest` tag is the **full agent image** (`--target agent`, `owncast-agent[agent]`)
+> which also bundles the Pydantic AI agent and the epistemic-graph engine — use it
+> when you run `owncast-agent` (the agent), not just the MCP server. See
+> [Container images](#container-images-mcp-vs-agent).
 
 ---
 
@@ -289,43 +304,108 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 
 ## Environment Variables
 
-The agent can be fully configured using the following environment variables:
+Every variable the server reads, grouped by purpose.
 
+### Connection & Credentials
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `OWNCAST_URL` | Base URL of the target Owncast instance. | `http://localhost:8080` |
-| `OWNCAST_TOKEN` | Owncast Admin or Integration API Token for authorized operations. | `""` |
-| `DEFAULT_AGENT_NAME` | The default name displayed for the Graph Agent. | `Owncast Agent` |
-| `AGENT_DESCRIPTION` | Detailed description of the agent shown in UI/terminal contexts. | `"AI agent for Owncast Agent operations."` |
-| `AGENT_SYSTEM_PROMPT` | Custom system prompt instructions overriding workspace defaults. | *Auto-generated* |
-| `INTERNAL_TOOL` / `INTERNALTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Internal tools. | `True` |
-| `OBJECTS_TOOL` / `OBJECTSTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Objects tools. | `True` |
-| `EXTERNAL_TOOL` / `EXTERNALTOOL` | Toggle flag to enable (`True`) or disable (`False`) the External tools. | `True` |
-| `CHAT_TOOL` / `CHATTOOL` | Toggle flag to enable (`True`) or disable (`False`) the Chat tools. | `True` |
-| `TRANSPORT` | The MCP transport protocol to run on (`stdio`, `streamable-http`, `sse`). | `stdio` |
-| `HOST` | The host address to bind the HTTP/SSE server. | `localhost` |
-| `PORT` | The port to bind the HTTP/SSE server. | `8000` |
-| `PROVIDER` | The Pydantic AI LLM provider to use (`openai`, `anthropic`, `ollama`, etc.). | `openai` |
-| `MODEL_ID` | The specific LLM model ID to execute. | `gpt-4o` |
-| `ENABLE_WEB_UI` | Boolean flag to enable or disable the built-in web playground. | `True` |
-| `AUTH_TYPE` | Type of authentication used for tool access controls. | `""` |
-| `EUNOMIA_POLICY_FILE` | Path to the JSON file containing Eunomia tool policies. | `""` |
-| `EUNOMIA_TYPE` | Eunomia policy evaluation type. | `""` |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | The OTLP endpoint for OpenTelemetry metrics export. | `""` |
+| `OWNCAST_URL` | Base URL of the target Owncast instance. | `http://localhost:9000` |
+| `OWNCAST_TOKEN` | Owncast Admin or Integration API token for authorized operations. | — |
+
+### MCP server / transport
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `TRANSPORT` | `stdio`, `streamable-http`, or `sse`. | `stdio` |
+| `HOST` | Bind host (HTTP transports). | `0.0.0.0` |
+| `PORT` | Bind port (HTTP transports). | `8000` |
+| `MCP_TOOL_MODE` | Tool surface: `condensed`, `verbose`, or `both`. | `condensed` |
+| `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS` | Comma-separated tool allow/deny list. | — |
+| `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS` | Comma-separated tag allow/deny list. | — |
+| `PYTHONUNBUFFERED` | Unbuffered stdout (recommended in containers). | `1` |
+
+### Tool toggles
+Each action-routed tool can be disabled individually by setting its toggle env var to `false`.
+The names match the authoritative "Toggle Env Var" column in the
+[Available MCP Tools](#available-mcp-tools) table above.
+
+| Variable | Tool | Default |
+|----------|------|---------|
+| `INTERNALTOOL` | `owncast_internal` | `True` |
+| `OBJECTSTOOL` | `owncast_objects` | `True` |
+| `EXTERNALTOOL` | `owncast_external` | `True` |
+| `CHATTOOL` | `owncast_chat` | `True` |
+
+### Telemetry & governance
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ENABLE_OTEL` | Enable OpenTelemetry export. | `True` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP collector endpoint. | — |
+| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` / `OTEL_EXPORTER_OTLP_SECRET_KEY` | OTLP auth keys. | — |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | OTLP protocol (e.g. `http/protobuf`). | — |
+| `EUNOMIA_TYPE` | Authorization mode: `none`, `embedded`, `remote`. | `none` |
+| `EUNOMIA_POLICY_FILE` | Embedded policy file. | `mcp_policies.json` |
+| `EUNOMIA_REMOTE_URL` | Remote Eunomia server URL. | — |
+
+### Agent CLI (full `[agent]` runtime only)
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `MCP_URL` | URL of the MCP server the agent connects to. | `http://localhost:8000/mcp` |
+| `PROVIDER` | LLM provider (e.g. `openai`). | `openai` |
+| `MODEL_ID` | Model id (e.g. `gpt-4o`). | `gpt-4o` |
+| `ENABLE_WEB_UI` | Serve the AG-UI web interface. | `True` |
+| `DEFAULT_AGENT_NAME` | Display name for the Graph Agent. | `Owncast Agent` |
+
+See [`.env.example`](.env.example) for a copy-paste starting point.
 
 ---
 
 ## Installation
 
-Install the Python package locally:
+Pick the extra that matches what you want to run:
+
+| Extra | Installs | Use when |
+|-------|----------|----------|
+| `owncast-agent[mcp]` | Slim MCP server only (`agent-utilities[mcp]` — FastMCP/FastAPI) | You only run the **MCP server** (smallest install / image) |
+| `owncast-agent[agent]` | Full agent runtime (`agent-utilities[agent,logfire]` — Pydantic AI + the epistemic-graph engine) | You run the **integrated agent** |
+| `owncast-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
-# Using uv (highly recommended)
-uv pip install owncast-agent[all]
+# MCP server only (recommended for tool hosting — slim deps)
+uv pip install "owncast-agent[mcp]"
 
-# Using standard pip
-python -m pip install owncast-agent[all]
+# Full agent runtime (Pydantic AI + epistemic-graph engine)
+uv pip install "owncast-agent[agent]"
+
+# Everything (development)
+uv pip install "owncast-agent[all]"      # or: python -m pip install "owncast-agent[all]"
 ```
+
+### Container images (`:mcp` vs `:agent`)
+
+One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+
+| Image tag | Build target | Contents | Entrypoint |
+|-----------|--------------|----------|------------|
+| `knucklessg1/owncast-agent:mcp` | `--target mcp` | `owncast-agent[mcp]` — **slim**, no engine/`pydantic-ai`/`dspy`/`llama-index`/`tree-sitter` | `owncast-mcp` |
+| `knucklessg1/owncast-agent:latest` | `--target agent` (default) | `owncast-agent[agent]` — **full** agent runtime + epistemic-graph engine | `owncast-agent` |
+
+```bash
+docker build --target mcp   -t knucklessg1/owncast-agent:mcp    docker/   # slim MCP server
+docker build --target agent -t knucklessg1/owncast-agent:latest docker/   # full agent
+```
+
+`docker/mcp.compose.yml` runs the slim `:mcp` server; `docker/agent.compose.yml` runs the
+agent (`:latest`) with a co-located `:mcp` sidecar.
+
+### Knowledge-graph database (`epistemic-graph`)
+
+The **full agent** (`[agent]` / `:latest`) embeds the **epistemic-graph** engine (pulled in
+transitively via `agent-utilities[agent]`). For production — or to share one knowledge graph
+across multiple agents — run **epistemic-graph as its own database container** and point the
+agent at it instead of embedding it. Deployment recipes (single-node + Raft HA), connection
+config, and the full database architecture (with diagrams) are documented in the
+[epistemic-graph deployment guide](https://knuckles-team.github.io/epistemic-graph/deployment/).
+The slim `[mcp]` server does **not** require the database.
 
 ---
 
