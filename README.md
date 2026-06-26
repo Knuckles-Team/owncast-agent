@@ -61,6 +61,8 @@ This table is auto-generated from the live server — do not edit by hand.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
+#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `owncast_chat` | `CHATTOOL` | Manage owncast chat operations. |
@@ -68,7 +70,139 @@ This table is auto-generated from the live server — do not edit by hand.
 | `owncast_internal` | `INTERNALTOOL` | Manage owncast internal operations. |
 | `owncast_objects` | `OBJECTSTOOL` | Manage owncast objects operations. |
 
-_4 action-routed tools (default `MCP_TOOL_MODE=condensed`). Each is enabled unless its toggle is set false; set `MCP_TOOL_MODE=verbose` (or `both`) for the 1:1 per-operation surface. Auto-generated — do not edit._
+#### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
+
+<details>
+<summary>122 per-operation tools — one per public API method (click to expand)</summary>
+
+| MCP Tool | Toggle Env Var | Description |
+|----------|----------------|-------------|
+| `owncast_approve_follower` | `OWNCAST_APITOOL` | Set the following state of a follower or follow request |
+| `owncast_auto_update_force_quit` | `OWNCAST_APITOOL` | Force quit the server and restart it |
+| `owncast_auto_update_options` | `OWNCAST_APITOOL` | Return the auto-update features that are supported for this instance |
+| `owncast_auto_update_start` | `OWNCAST_APITOOL` | Begin the auto-update |
+| `owncast_ban_ipaddress` | `OWNCAST_APITOOL` | Ban an IP address |
+| `owncast_create_external_apiuser` | `OWNCAST_APITOOL` | Create a single access token |
+| `owncast_create_webhook` | `OWNCAST_APITOOL` | Create a single webhook |
+| `owncast_delete_custom_emoji` | `OWNCAST_APITOOL` | Delete custom emoji |
+| `owncast_delete_external_apiuser` | `OWNCAST_APITOOL` | Delete a single external API user |
+| `owncast_delete_prometheus_api` | `OWNCAST_APITOOL` | Endpoint to interface with Prometheus |
+| `owncast_delete_webhook` | `OWNCAST_APITOOL` | Delete a single webhook |
+| `owncast_disconnect_inbound_connection` | `OWNCAST_APITOOL` | Disconnect inbound stream |
+| `owncast_external_get_chat_messages` | `OWNCAST_APITOOL` | Get chat history |
+| `owncast_external_get_connected_chat_clients` | `OWNCAST_APITOOL` | Connected clients |
+| `owncast_external_get_status` | `OWNCAST_APITOOL` | Get the server's status |
+| `owncast_external_get_user_details` | `OWNCAST_APITOOL` | Get a user's details |
+| `owncast_external_set_stream_title` | `OWNCAST_APITOOL` | Stream title |
+| `owncast_external_update_message_visibility` | `OWNCAST_APITOOL` | Hide chat message |
+| `owncast_get_active_viewers` | `OWNCAST_APITOOL` | Get active viewers |
+| `owncast_get_all_social_platforms` | `OWNCAST_APITOOL` | Get all social platforms |
+| `owncast_get_blocked_and_rejected_followers` | `OWNCAST_APITOOL` | Get a list of rejected or blocked follows |
+| `owncast_get_chat_messages` | `OWNCAST_APITOOL` | Gets a list of chat messages |
+| `owncast_get_chat_messages_admin` | `OWNCAST_APITOOL` | Get all chat messages for the admin, unfiltered |
+| `owncast_get_connected_chat_clients` | `OWNCAST_APITOOL` | Get a detailed list of currently connected chat clients |
+| `owncast_get_custom_emoji_list` | `OWNCAST_APITOOL` | Get list of custom emojis supported in the chat |
+| `owncast_get_disabled_users` | `OWNCAST_APITOOL` | Get a list of disabled users |
+| `owncast_get_external_apiusers` | `OWNCAST_APITOOL` | Get all access tokens |
+| `owncast_get_federated_actions` | `OWNCAST_APITOOL` | Get a paginated list of federated activities |
+| `owncast_get_followers` | `OWNCAST_APITOOL` | Gets the list of followers |
+| `owncast_get_followers_admin` | `OWNCAST_APITOOL` | Get followers |
+| `owncast_get_hardware_stats` | `OWNCAST_APITOOL` | Get the current hardware stats |
+| `owncast_get_ipaddress_bans` | `OWNCAST_APITOOL` | Get all banned IP addresses |
+| `owncast_get_logs` | `OWNCAST_APITOOL` | Get all logs |
+| `owncast_get_moderators` | `OWNCAST_APITOOL` | Get a list of moderator users |
+| `owncast_get_pending_follow_requests` | `OWNCAST_APITOOL` | Get a list of pending follow requests |
+| `owncast_get_prometheus_api` | `OWNCAST_APITOOL` | Endpoint to interface with Prometheus |
+| `owncast_get_server_config` | `OWNCAST_APITOOL` | Get the current server config |
+| `owncast_get_status` | `OWNCAST_APITOOL` | Get the status of the server |
+| `owncast_get_user_details` | `OWNCAST_APITOOL` | Get a user's details |
+| `owncast_get_video_playback_metrics` | `OWNCAST_APITOOL` | Get video playback metrics |
+| `owncast_get_video_stream_output_variants` | `OWNCAST_APITOOL` | Get a list of video variants available |
+| `owncast_get_viewers_over_time` | `OWNCAST_APITOOL` | Get viewer count over time |
+| `owncast_get_warnings` | `OWNCAST_APITOOL` | Get warning/error logs |
+| `owncast_get_web_config` | `OWNCAST_APITOOL` | Get the web config |
+| `owncast_get_webhooks` | `OWNCAST_APITOOL` | Get all the webhooks |
+| `owncast_get_ypresponse` | `OWNCAST_APITOOL` | Get the YP protocol data |
+| `owncast_handle_indie_auth_endpoint_get` | `OWNCAST_APITOOL` | Handles the IndieAuth auth endpoint |
+| `owncast_handle_indie_auth_endpoint_post` | `OWNCAST_APITOOL` | Handles IndieAuth from form submission |
+| `owncast_handle_indie_auth_redirect` | `OWNCAST_APITOOL` | Handle the redirect from an IndieAuth server to continue the auth flow |
+| `owncast_ping` | `OWNCAST_APITOOL` | Tell the backend you're an active viewer |
+| `owncast_post_prometheus_api` | `OWNCAST_APITOOL` | Endpoint to interface with Prometheus |
+| `owncast_put_prometheus_api` | `OWNCAST_APITOOL` | Endpoint to interface with Prometheus |
+| `owncast_register_anonymous_chat_user` | `OWNCAST_APITOOL` | Registers an anonymous chat user |
+| `owncast_register_fediverse_otprequest` | `OWNCAST_APITOOL` | Register a Fediverse OTP request |
+| `owncast_register_for_live_notifications` | `OWNCAST_APITOOL` | Register for notifications |
+| `owncast_remote_follow` | `OWNCAST_APITOOL` | Request remote follow |
+| `owncast_report_playback_metrics` | `OWNCAST_APITOOL` | Save video playback metrics for future video health recording |
+| `owncast_reset_favicon` | `OWNCAST_APITOOL` | Reset favicon to default |
+| `owncast_reset_ypregistration` | `OWNCAST_APITOOL` | Reset YP configuration |
+| `owncast_send_chat_action` | `OWNCAST_APITOOL` | Send a user action to chat |
+| `owncast_send_federated_message` | `OWNCAST_APITOOL` | Send a public message to the Fediverse from the server's user |
+| `owncast_send_integration_chat_message` | `OWNCAST_APITOOL` | Send a message to chat as a specific 3rd party bot/integration based on its access token |
+| `owncast_send_system_message` | `OWNCAST_APITOOL` | Send a system message to the chat |
+| `owncast_send_system_message_to_connected_client` | `OWNCAST_APITOOL` | Send a system message to a single client |
+| `owncast_send_user_message` | `OWNCAST_APITOOL` | Send a user message to chat |
+| `owncast_set_admin_password` | `OWNCAST_APITOOL` | Change the current admin password |
+| `owncast_set_browser_notification_configuration` | `OWNCAST_APITOOL` | Configure Browser notifications |
+| `owncast_set_chat_disabled` | `OWNCAST_APITOOL` | Disable chat |
+| `owncast_set_chat_join_messages_enabled` | `OWNCAST_APITOOL` | Enable chat for user join messages |
+| `owncast_set_chat_require_authentication` | `OWNCAST_APITOOL` | Set require authentication for chat |
+| `owncast_set_chat_slur_filter_enabled` | `OWNCAST_APITOOL` | Set slur filter enabled |
+| `owncast_set_chat_spam_protection_enabled` | `OWNCAST_APITOOL` | Set spam protection enabled |
+| `owncast_set_custom_color_variable_values` | `OWNCAST_APITOOL` | Set style/color/css values |
+| `owncast_set_custom_javascript` | `OWNCAST_APITOOL` | Update custom JavaScript |
+| `owncast_set_custom_offline_message` | `OWNCAST_APITOOL` | Change the offline message |
+| `owncast_set_custom_styles` | `OWNCAST_APITOOL` | Update custom styles |
+| `owncast_set_directory_enabled` | `OWNCAST_APITOOL` | Update directory enabled |
+| `owncast_set_disable_search_indexing` | `OWNCAST_APITOOL` | Update search indexing |
+| `owncast_set_discord_notification_configuration` | `OWNCAST_APITOOL` | Configure Discord notifications |
+| `owncast_set_enable_established_chat_user_mode` | `OWNCAST_APITOOL` | Enable/disable chat established user mode |
+| `owncast_set_external_actions` | `OWNCAST_APITOOL` | Update external action links |
+| `owncast_set_extra_page_content` | `OWNCAST_APITOOL` | Change the extra page content in memory |
+| `owncast_set_favicon` | `OWNCAST_APITOOL` | Upload custom favicon |
+| `owncast_set_federation_activity_private` | `OWNCAST_APITOOL` | Set if federation activities are private |
+| `owncast_set_federation_block_domains` | `OWNCAST_APITOOL` | Set Federation blocked domains |
+| `owncast_set_federation_enabled` | `OWNCAST_APITOOL` | Enable/disable federation features |
+| `owncast_set_federation_go_live_message` | `OWNCAST_APITOOL` | Set federated go live message |
+| `owncast_set_federation_show_engagement` | `OWNCAST_APITOOL` | Set if fediverse engagement appears in chat |
+| `owncast_set_federation_username` | `OWNCAST_APITOOL` | Set local federated username |
+| `owncast_set_ffmpeg_path` | `OWNCAST_APITOOL` | Update FFMPEG path |
+| `owncast_set_forbidden_username_list` | `OWNCAST_APITOOL` | Set chat usernames that are not allowed |
+| `owncast_set_hide_viewer_count` | `OWNCAST_APITOOL` | Update hide viewer count |
+| `owncast_set_logo` | `OWNCAST_APITOOL` | Update logo |
+| `owncast_set_nsfw` | `OWNCAST_APITOOL` | Update NSFW marking |
+| `owncast_set_rtmpserver_port` | `OWNCAST_APITOOL` | Update RTMP post |
+| `owncast_set_s3_configuration` | `OWNCAST_APITOOL` | Update S3 configuration |
+| `owncast_set_server_name` | `OWNCAST_APITOOL` | Change the server name |
+| `owncast_set_server_summary` | `OWNCAST_APITOOL` | Change the server summary |
+| `owncast_set_server_url` | `OWNCAST_APITOOL` | Update server url |
+| `owncast_set_server_welcome_message` | `OWNCAST_APITOOL` | Change the welcome message |
+| `owncast_set_social_handles` | `OWNCAST_APITOOL` | Update social handles |
+| `owncast_set_socket_host_override` | `OWNCAST_APITOOL` | Update websocket host override |
+| `owncast_set_stream_keys` | `OWNCAST_APITOOL` | Set an array of valid stream keys |
+| `owncast_set_stream_latency_level` | `OWNCAST_APITOOL` | Set the number of video segments and duration per segment in a playlist |
+| `owncast_set_stream_output_variants` | `OWNCAST_APITOOL` | Set an array of video output configurations |
+| `owncast_set_stream_title` | `OWNCAST_APITOOL` | Change the stream title |
+| `owncast_set_suggested_username_list` | `OWNCAST_APITOOL` | Set the suggested chat usernames that will be assigned automatically |
+| `owncast_set_tags` | `OWNCAST_APITOOL` | Update server tags |
+| `owncast_set_video_codec` | `OWNCAST_APITOOL` | Set video codec |
+| `owncast_set_video_serving_endpoint` | `OWNCAST_APITOOL` | Update custom video serving endpoint |
+| `owncast_set_web_server_ip` | `OWNCAST_APITOOL` | Update server IP address |
+| `owncast_set_web_server_port` | `OWNCAST_APITOOL` | Update server port |
+| `owncast_start_indie_auth_flow` | `OWNCAST_APITOOL` | Begins auth flow |
+| `owncast_status_admin` | `OWNCAST_APITOOL` | Get current inboard broadcaster |
+| `owncast_unban_ipaddress` | `OWNCAST_APITOOL` | Remove an IP ban |
+| `owncast_update_message_visibility` | `OWNCAST_APITOOL` | Update chat message visibility |
+| `owncast_update_message_visibility_admin` | `OWNCAST_APITOOL` | Update visibility of chat messages |
+| `owncast_update_user_enabled` | `OWNCAST_APITOOL` | Enable/disable a user |
+| `owncast_update_user_enabled_admin` | `OWNCAST_APITOOL` | Enable or disable a user |
+| `owncast_update_user_moderator` | `OWNCAST_APITOOL` | Set moderator status for a user |
+| `owncast_upload_custom_emoji` | `OWNCAST_APITOOL` | Upload custom emoji |
+| `owncast_verify_fediverse_otprequest` | `OWNCAST_APITOOL` | Verify Fediverse OTP code |
+
+</details>
+
+_4 action-routed tool(s) (default) · 122 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/mcp.md](docs/mcp.md).
