@@ -7,13 +7,14 @@
         "owncast-mcp"
       ],
       "env": {
+        "MCP_TOOL_MODE": "condensed",
         "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
         "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
-        "CHAT_TOOL": "True",
+        "CHATTOOL": "True",
         "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
-        "EXTERNAL_TOOL": "True",
-        "INTERNAL_TOOL": "True",
-        "OBJECTS_TOOL": "True",
+        "EXTERNALTOOL": "True",
+        "INTERNALTOOL": "True",
+        "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "<YOUR_OWNCAST_TOKEN>",
         "OWNCAST_URL": "<YOUR_OWNCAST_URL>"
       }
