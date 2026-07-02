@@ -8,15 +8,12 @@
       ],
       "env": {
         "MCP_TOOL_MODE": "condensed",
-        "AGENT_DESCRIPTION": "<YOUR_AGENT_DESCRIPTION>",
-        "AGENT_SYSTEM_PROMPT": "<YOUR_AGENT_SYSTEM_PROMPT>",
         "CHATTOOL": "True",
-        "DEFAULT_AGENT_NAME": "<YOUR_DEFAULT_AGENT_NAME>",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
         "OBJECTSTOOL": "True",
-        "OWNCAST_TOKEN": "<YOUR_OWNCAST_TOKEN>",
-        "OWNCAST_URL": "<YOUR_OWNCAST_URL>"
+        "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
+        "OWNCAST_URL": "http://localhost:9000"
       }
     }
   }
