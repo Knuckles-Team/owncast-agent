@@ -332,6 +332,76 @@ def register_chat_tools(mcp: FastMCP):
         return await run_blocking(method, **kwargs)
 
 
+def register_kg_tools(mcp: FastMCP):
+    """Register the Wire-First native KG ingestion tool.
+
+    Lists live Owncast telemetry through the real client and pushes it into the ONE
+    epistemic-graph knowledge graph as typed :Stream / :Viewer / :ViewerSample /
+    :HardwareSample / :ChatMessage / :Person nodes. Best-effort + engine-guarded:
+    returns ``{"ingested": None}`` when no engine is reachable.
+    CONCEPT:AU-KG.ingest.enterprise-source-extractor.
+    """
+
+    @mcp.tool(tags={"kg"})
+    async def owncast_ingest_telemetry(
+        include: str = Field(
+            default="status,viewers,viewers_over_time,hardware,followers,chat",
+            description=(
+                "Comma-separated modalities to ingest: any of "
+                "status, viewers, viewers_over_time, hardware, followers, chat."
+            ),
+        ),
+        access_token: str | None = Field(
+            default=None,
+            description="Access token for chat message retrieval (chat modality only).",
+        ),
+        client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
+    ) -> dict:
+        """Ingest live Owncast telemetry into epistemic-graph as typed nodes + timeseries."""
+        if ctx:
+            await ctx.info("Ingesting Owncast telemetry into the knowledge graph...")
+
+        from owncast_agent import kg_ingest
+
+        instance = getattr(client, "base_url", None)
+        wanted = {w.strip() for w in include.split(",") if w.strip()}
+        result: dict[str, Any] = {"instance": kg_ingest._instance_id(instance)}
+
+        async def _call(method, **kwargs):
+            return await run_blocking(method, **kwargs)
+
+        if "status" in wanted:
+            status = await _call(client.get_status)
+            result["status"] = kg_ingest.ingest_status(status, instance=instance)
+        if "viewers" in wanted:
+            viewers = await _call(client.get_active_viewers)
+            recs = viewers if isinstance(viewers, list) else viewers.get("data", [])
+            result["viewers"] = kg_ingest.ingest_active_viewers(recs, instance=instance)
+        if "viewers_over_time" in wanted:
+            vot = await _call(client.get_viewers_over_time)
+            recs = vot if isinstance(vot, list) else vot.get("data", [])
+            result["viewers_over_time"] = kg_ingest.ingest_viewers_over_time(
+                recs, instance=instance
+            )
+        if "hardware" in wanted:
+            hw = await _call(client.get_hardware_stats)
+            result["hardware"] = kg_ingest.ingest_hardware_stats(hw, instance=instance)
+        if "followers" in wanted:
+            followers = await _call(client.get_followers)
+            result["followers"] = kg_ingest.ingest_followers(
+                followers, instance=instance
+            )
+        if "chat" in wanted and access_token:
+            msgs = await _call(client.get_chat_messages, access_token=access_token)
+            recs = msgs if isinstance(msgs, list) else msgs.get("data", [])
+            result["chat"] = kg_ingest.ingest_chat_messages(recs, instance=instance)
+
+        return result
+
+
 def get_mcp_instance() -> tuple[Any, ...]:
     """Initialize and return the MCP instance."""
     load_config()
@@ -344,6 +414,8 @@ def get_mcp_instance() -> tuple[Any, ...]:
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
+
+    register_kg_tools(mcp)
 
     registered_tags = register_tool_surface(
         mcp,
