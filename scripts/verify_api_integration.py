@@ -35,7 +35,7 @@ def parse_api_client(filepath):
 
     Returns a set of method names.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     with open(filepath, encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=filepath)
@@ -96,7 +96,7 @@ class MethodCallVisitor(ast.NodeVisitor):
 def parse_mcp_server(filepath, api_methods):
     """Parses mcp_server.py to extract registered tools and identify which api_methods they leverage.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     with open(filepath, encoding="utf-8") as f:
         tree = ast.parse(f.read(), filename=filepath)
@@ -139,7 +139,7 @@ def parse_mcp_server(filepath, api_methods):
 def verify_agent(agent_dir):
     """Verify integration parity for a single agent.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     # Find api_client.py and mcp_server.py
     api_clients = glob.glob(
@@ -183,7 +183,7 @@ def verify_agent(agent_dir):
 def main():
     """Main verification script entry point.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     args = sys.argv[1:]
 

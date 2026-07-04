@@ -9,7 +9,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Begins auth flow
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -21,7 +21,7 @@ class OwncastApi(BaseApiClient):
     def handle_indie_auth_redirect(self, state: str) -> dict[str, Any]:
         """Handle the redirect from an IndieAuth server to continue the auth flow
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "GET", "/auth/indieauth/callback", params={"state": state}, data=None
@@ -32,7 +32,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Handles the IndieAuth auth endpoint
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "GET",
@@ -51,7 +51,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Handles IndieAuth from form submission
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request("POST", "/auth/provider/indieauth", params=None, data=None)
 
@@ -60,7 +60,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Register a Fediverse OTP request
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -72,7 +72,7 @@ class OwncastApi(BaseApiClient):
     def verify_fediverse_otprequest(self, code: str | None = None) -> dict[str, Any]:
         """Verify Fediverse OTP code
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST", "/auth/fediverse/verify", params=None, data={"code": code}

@@ -41,7 +41,7 @@ DEFAULT_AGENT_SYSTEM_PROMPT = os.getenv(
 def agent_server():
     """Start the Owncast agent server using the auto-discovery pattern.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
     warnings.filterwarnings("ignore", category=DeprecationWarning, module="fastmcp")

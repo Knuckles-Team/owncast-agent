@@ -23,7 +23,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Get followers
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "GET",
@@ -49,7 +49,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Set the following state of a follower or follow request
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",

@@ -28,11 +28,11 @@ with patch.dict(os.environ, {}, clear=True):
     importlib.reload(agent_server)
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_module_level_variables_on_import():
     """Verify module-level variables are correctly loaded and fallback logic is executed.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     assert mock_init.called
     assert mock_load.called
@@ -41,11 +41,11 @@ def test_module_level_variables_on_import():
     assert agent_server.DEFAULT_AGENT_SYSTEM_PROMPT == "Mock Agent System Prompt"
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_agent_server_cli_execution():
     """Verify CLI configuration and server startup transitions with patched arguments.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     mock_parser = MagicMock()
     mock_args = MagicMock()
@@ -108,11 +108,11 @@ def test_agent_server_cli_execution():
         )
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_agent_server_main_execution():
     """Verify that calling the module directly runs the server.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     import runpy
 
@@ -134,11 +134,11 @@ def test_agent_server_main_execution():
         mock_create_server.assert_called_once()
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_main_execution():
     """Verify that importing/running __main__ executes the server.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     import runpy
 

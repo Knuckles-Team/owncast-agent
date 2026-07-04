@@ -46,7 +46,7 @@ def _import_module_safely(module_name: str):
 def __getattr__(name: str) -> Any:
     """Dynamic attribute access for lazy loading optional modules.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     # Handle availability flags dynamically without eager imports
     if name == "_MCP_AVAILABLE":

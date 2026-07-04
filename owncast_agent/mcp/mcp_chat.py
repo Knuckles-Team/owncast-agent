@@ -15,7 +15,7 @@ from owncast_agent.mcp_server import ALLOWED_CHAT_ACTIONS
 def register_chat_tools(mcp: FastMCP):
     """Register consolidated action-routed tools for chat operations.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
 
     @mcp.tool(tags={"chat"})
@@ -34,7 +34,7 @@ def register_chat_tools(mcp: FastMCP):
     ) -> dict:
         """Manage owncast chat operations.
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         if ctx:
             await ctx.info("Executing tool...")

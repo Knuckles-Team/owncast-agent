@@ -1,6 +1,6 @@
 """Tests for standardized action discovery via the shared helper.
 
-CONCEPT:ECO-4.1
+CONCEPT:AU-ECO.mcp.fastmcp-middleware
 """
 
 import pytest

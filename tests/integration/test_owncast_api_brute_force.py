@@ -24,11 +24,11 @@ def mock_requests():
         yield mock_req
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_base_api_client_request_branches(mock_requests):
     """Directly test all branch logic inside BaseApiClient._request.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     api = OwncastApi(base_url="http://test.local", token="token")
 
@@ -83,11 +83,11 @@ def test_base_api_client_request_branches(mock_requests):
         api._request("GET", "/test")
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_auth_client_initializer():
     """Verify auth get_client initialization behavior under varied env settings.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     # Reset existing cached client if any
     import owncast_agent.auth as auth
@@ -111,12 +111,12 @@ def test_auth_client_initializer():
         assert client.token == ""
 
 
-@pytest.mark.concept("ECO-4.1")
-@pytest.mark.concept("OS-5.4")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
+@pytest.mark.concept("AU-OS.governance.wasm-micro-agent-sandbox")
 def test_owncast_api_brute_force(mock_requests):
     """Dynamically discover and run every single public method on OwncastApi to achieve 100% API client coverage.
 
-    CONCEPT:ECO-4.1, OS-5.4
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware, CONCEPT:AU-OS.governance.wasm-micro-agent-sandbox
     """
     api = OwncastApi(base_url="http://test.local", token="token")
 

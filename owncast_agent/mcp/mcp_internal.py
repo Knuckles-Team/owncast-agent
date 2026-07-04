@@ -15,7 +15,7 @@ from owncast_agent.mcp_server import ALLOWED_INTERNAL_ACTIONS
 def register_internal_tools(mcp: FastMCP):
     """Register consolidated action-routed tools for internal operations.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
 
     @mcp.tool(tags={"internal"})
@@ -34,7 +34,7 @@ def register_internal_tools(mcp: FastMCP):
     ) -> dict:
         """Manage owncast internal operations.
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         if ctx:
             await ctx.info("Executing tool...")

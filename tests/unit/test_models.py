@@ -8,11 +8,11 @@ from owncast_agent.owncast_models import (
 )
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_models():
     """Verify that all Pydantic models can be instantiated and validated with correct types.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     status = OwncastStatusResponse(
         online=True,

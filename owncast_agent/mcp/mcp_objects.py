@@ -15,7 +15,7 @@ from owncast_agent.mcp_server import ALLOWED_OBJECTS_ACTIONS
 def register_objects_tools(mcp: FastMCP):
     """Register consolidated action-routed tools for objects operations.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
 
     @mcp.tool(tags={"objects"})
@@ -34,7 +34,7 @@ def register_objects_tools(mcp: FastMCP):
     ) -> dict:
         """Manage owncast objects operations.
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         if ctx:
             await ctx.info("Executing tool...")

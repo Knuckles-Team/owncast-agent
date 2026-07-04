@@ -15,7 +15,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Registers an anonymous chat user
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -29,7 +29,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Update chat message visibility
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -46,7 +46,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Enable/disable a user
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -78,7 +78,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Enable or disable a user
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
@@ -118,7 +118,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Set moderator status for a user
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
