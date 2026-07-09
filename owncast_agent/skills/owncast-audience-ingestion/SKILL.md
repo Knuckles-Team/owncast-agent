@@ -1,5 +1,6 @@
 ---
 name: owncast-audience-ingestion
+skill_type: skill
 description: >-
   Natively push Owncast live-streaming telemetry into the epistemic-graph knowledge graph
   via the owncast-agent MCP server — mapping stream status, active viewers, viewers-over-time

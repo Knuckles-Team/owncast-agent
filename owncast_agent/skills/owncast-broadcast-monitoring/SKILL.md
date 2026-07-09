@@ -1,5 +1,6 @@
 ---
 name: owncast-broadcast-monitoring
+skill_type: skill
 description: >-
   Monitor an Owncast live broadcast via the owncast-agent MCP server — read stream
   status (online state, title, viewer counts), active viewers, viewers-over-time and

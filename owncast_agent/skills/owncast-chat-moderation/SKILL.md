@@ -1,5 +1,6 @@
 ---
 name: owncast-chat-moderation
+skill_type: skill
 description: >-
   Moderate an Owncast live chat via the owncast-agent MCP server — read chat messages,
   toggle message visibility, enable/disable users, grant/revoke moderator status, list
