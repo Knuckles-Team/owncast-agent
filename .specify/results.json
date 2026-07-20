@@ -23,7 +23,7 @@
       {
         "criterion": "externalized_prompts",
         "points": 0,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent",
         "reasoning": "No prompts/ directory found. Prompts may be hardcoded in source."
       },
       {
@@ -41,25 +41,25 @@
       {
         "criterion": "agents_md",
         "points": 10,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent/AGENTS.md (3925 bytes)",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/AGENTS.md (3925 bytes)",
         "reasoning": "AGENTS.md exists with comprehensive content"
       },
       {
         "criterion": "pre_commit_hooks",
         "points": 10,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent/.pre-commit-config.yaml",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/.pre-commit-config.yaml",
         "reasoning": "Pre-commit configuration found for automated code quality checks"
       },
       {
         "criterion": "gitignore",
         "points": 10,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent/.gitignore",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/.gitignore",
         "reasoning": ".gitignore exists to prevent committing build artifacts and secrets"
       },
       {
         "criterion": "env_template",
         "points": 10,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent/.env.example",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/.env.example",
         "reasoning": "Environment template exists for onboarding and secret management"
       },
       {
@@ -88,7 +88,7 @@
       {
         "criterion": "dependency_freshness",
         "points": 100,
-        "evidence": "source=/home/apps/workspace/agent-packages/agents/owncast-agent/pyproject.toml total=5 major=0 minor=0 patch=0 not_installed=0",
+        "evidence": "source=${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/pyproject.toml total=5 major=0 minor=0 patch=0 not_installed=0",
         "reasoning": "Audited 5 deps (5 installed, 0 constraint-only). 0 major, 0 minor, 0 patch updates."
       }
     ],
@@ -180,7 +180,7 @@
         "length": 103,
         "complexity": 19,
         "nesting_depth": 4,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
       },
       {
         "name": "test_owncast_api_brute_force",
@@ -188,7 +188,7 @@
         "length": 46,
         "complexity": 18,
         "nesting_depth": 6,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
       },
       {
         "name": "test_mcp_tools_routing",
@@ -196,7 +196,7 @@
         "length": 210,
         "complexity": 16,
         "nesting_depth": 6,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py"
       },
       {
         "name": "parse_mcp_server",
@@ -204,7 +204,7 @@
         "length": 41,
         "complexity": 14,
         "nesting_depth": 5,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
       },
       {
         "name": "test_models",
@@ -212,7 +212,7 @@
         "length": 32,
         "complexity": 13,
         "nesting_depth": 0,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_models.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_models.py"
       }
     ],
     "top_long": [
@@ -222,7 +222,7 @@
         "length": 210,
         "complexity": 16,
         "nesting_depth": 6,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py"
       },
       {
         "name": "main",
@@ -230,7 +230,7 @@
         "length": 103,
         "complexity": 19,
         "nesting_depth": 4,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/scripts/verify_api_integration.py"
       },
       {
         "name": "test_agent_server_cli_execution",
@@ -238,7 +238,7 @@
         "length": 64,
         "complexity": 1,
         "nesting_depth": 1,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py"
       },
       {
         "name": "test_base_api_client_request_branches",
@@ -246,7 +246,7 @@
         "length": 56,
         "complexity": 4,
         "nesting_depth": 1,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
       },
       {
         "name": "test_owncast_api_brute_force",
@@ -254,7 +254,7 @@
         "length": 46,
         "complexity": 18,
         "nesting_depth": 6,
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py"
       }
     ],
     "structural_issues": [],
@@ -313,7 +313,7 @@
     "tests": [
       {
         "name": "test_import_owncast_agent",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 12,
         "length": 7,
         "intent": "unit",
@@ -325,7 +325,7 @@
       },
       {
         "name": "test_getattr_mcp_agent_availability",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 22,
         "length": 7,
         "intent": "unit",
@@ -337,7 +337,7 @@
       },
       {
         "name": "test_getattr_optional_module_success",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 32,
         "length": 8,
         "intent": "unit",
@@ -349,7 +349,7 @@
       },
       {
         "name": "test_getattr_attribute_error",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 43,
         "length": 7,
         "intent": "unit",
@@ -361,7 +361,7 @@
       },
       {
         "name": "test_getattr_import_error_simulation",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 53,
         "length": 22,
         "intent": "unit",
@@ -373,7 +373,7 @@
       },
       {
         "name": "test_getattr_availability_fallback",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 78,
         "length": 10,
         "intent": "unit",
@@ -385,7 +385,7 @@
       },
       {
         "name": "test_dir_implementation",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_init.py",
         "line": 91,
         "length": 10,
         "intent": "unit",
@@ -397,7 +397,7 @@
       },
       {
         "name": "test_server_startup",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_startup.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_startup.py",
         "line": 8,
         "length": 13,
         "intent": "unit",
@@ -409,7 +409,7 @@
       },
       {
         "name": "test_module_level_variables_on_import",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
         "line": 32,
         "length": 10,
         "intent": "unit",
@@ -421,7 +421,7 @@
       },
       {
         "name": "test_agent_server_cli_execution",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
         "line": 45,
         "length": 64,
         "intent": "unit",
@@ -433,7 +433,7 @@
       },
       {
         "name": "test_agent_server_main_execution",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
         "line": 112,
         "length": 23,
         "intent": "unit",
@@ -445,7 +445,7 @@
       },
       {
         "name": "test_main_execution",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_agent_server_comprehensive.py",
         "line": 138,
         "length": 10,
         "intent": "unit",
@@ -457,7 +457,7 @@
       },
       {
         "name": "test_concept_parity",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_concept_parity.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_concept_parity.py",
         "line": 61,
         "length": 32,
         "intent": "unit",
@@ -469,7 +469,7 @@
       },
       {
         "name": "test_base_api_client_request_branches",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
         "line": 28,
         "length": 56,
         "intent": "unit",
@@ -481,7 +481,7 @@
       },
       {
         "name": "test_auth_client_initializer",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
         "line": 87,
         "length": 25,
         "intent": "unit",
@@ -493,7 +493,7 @@
       },
       {
         "name": "test_owncast_api_brute_force",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_owncast_api_brute_force.py",
         "line": 116,
         "length": 46,
         "intent": "unit",
@@ -506,7 +506,7 @@
       },
       {
         "name": "test_mcp_health_check",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 17,
         "length": 24,
         "intent": "unit",
@@ -519,7 +519,7 @@
       },
       {
         "name": "test_mcp_tools_routing",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 45,
         "length": 210,
         "intent": "unit",
@@ -532,7 +532,7 @@
       },
       {
         "name": "test_mcp_context_logging",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 259,
         "length": 43,
         "intent": "unit",
@@ -545,7 +545,7 @@
       },
       {
         "name": "test_mcp_server_cli_execution",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 305,
         "length": 36,
         "intent": "unit",
@@ -557,7 +557,7 @@
       },
       {
         "name": "test_import_dependency_warning_import_error",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 344,
         "length": 26,
         "intent": "unit",
@@ -569,7 +569,7 @@
       },
       {
         "name": "test_mcp_server_main_execution",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/integration/test_mcp_server_comprehensive.py",
         "line": 373,
         "length": 10,
         "intent": "unit",
@@ -581,7 +581,7 @@
       },
       {
         "name": "test_models",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/tests/unit/test_models.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/tests/unit/test_models.py",
         "line": 12,
         "length": 32,
         "intent": "unit",
@@ -859,17 +859,17 @@
           "items": [
             {
               "class": "OwncastApi",
-              "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_chat.py",
+              "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_chat.py",
               "method_count": 17
             },
             {
               "class": "OwncastApi",
-              "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
+              "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
               "method_count": 54
             },
             {
               "class": "OwncastApi",
-              "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
+              "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
               "method_count": 28
             }
           ]
@@ -1029,43 +1029,43 @@
     "functions_missing_docstrings": [
       {
         "function": "upload_custom_emoji",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_chat.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_chat.py",
         "line": 144,
         "length": 10
       },
       {
         "function": "set_discord_notification_configuration",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
         "line": 310,
         "length": 10
       },
       {
         "function": "set_browser_notification_configuration",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_config.py",
         "line": 321,
         "length": 10
       },
       {
         "function": "get_federated_actions",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
         "line": 116,
         "length": 10
       },
       {
         "function": "register_for_live_notifications",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
         "line": 131,
         "length": 13
       },
       {
         "function": "create_webhook",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
         "line": 166,
         "length": 10
       },
       {
         "function": "create_external_apiuser",
-        "file": "/home/apps/workspace/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
+        "file": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/owncast_agent/api/api_client_system.py",
         "line": 189,
         "length": 10
       }
@@ -1277,7 +1277,7 @@
         "language": "python",
         "framework": "pytest",
         "command": [
-          "/home/apps/workspace/agent-packages/agents/owncast-agent/.venv/bin/python3",
+          "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/.venv/bin/python3",
           "-m",
           "pytest",
           "--tb=line",
@@ -1348,7 +1348,7 @@
       {
         "criterion": "ui_detection",
         "points": -1,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent",
         "reasoning": "No web or terminal UI framework detected. Domain skipped."
       }
     ],
@@ -1366,7 +1366,7 @@
       {
         "criterion": "bumpversion_exists",
         "points": 20,
-        "evidence": "/home/apps/workspace/agent-packages/agents/owncast-agent/.bumpversion.cfg",
+        "evidence": "${WORKSPACE_ROOT}/agent-packages/agents/owncast-agent/.bumpversion.cfg",
         "reasoning": ".bumpversion.cfg found"
       },
       {
