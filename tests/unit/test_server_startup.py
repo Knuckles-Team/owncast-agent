@@ -4,11 +4,11 @@ import os
 import pytest
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_server_startup():
     """Validates that the server module can start successfully and exposures are correct.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     assert os.path.exists("owncast_agent/agent_server.py")
     assert os.path.exists("owncast_agent/mcp_server.py")

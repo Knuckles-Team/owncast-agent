@@ -32,7 +32,7 @@ for module_name in CORE_MODULES:
         _expose_members(module)
 
 # Dynamic/lazy loading of optional modules (agent_server, mcp_server)
-_loaded_optional_modules = {}
+_loaded_optional_modules: dict[str, Any] = {}
 
 
 def _import_module_safely(module_name: str):
@@ -46,7 +46,7 @@ def _import_module_safely(module_name: str):
 def __getattr__(name: str) -> Any:
     """Dynamic attribute access for lazy loading optional modules.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     # Handle availability flags dynamically without eager imports
     if name == "_MCP_AVAILABLE":

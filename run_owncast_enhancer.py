@@ -1,11 +1,17 @@
 import importlib.util
 import json
+import os
+import sys
 import time
 from pathlib import Path
 
-scripts_dir = (
-    Path.home() / ".gemini" / "antigravity" / "skills" / "code-enhancer" / "scripts"
-)
+from agent_utilities.security.persistence_privacy import sanitize_for_persistence
+
+scripts_dir_value = os.getenv("CODE_ENHANCER_SCRIPTS_DIR")
+if not scripts_dir_value:
+    print("CODE_ENHANCER_SCRIPTS_DIR must be configured", file=sys.stderr)
+    raise SystemExit(2)
+scripts_dir = Path(scripts_dir_value).expanduser().resolve()
 project_dir = str(Path(__file__).parent.resolve())
 
 analyzers = [
@@ -50,34 +56,35 @@ for module_name, func_name in analyzers:
             f"  -> Success in {elapsed:.2f}s, score: {result.get('score')}", flush=True
         )
         results.append(result)
-    except Exception as e:
-        print(f"  -> ERROR running {module_name}: {e}", flush=True)
+    except Exception as exc:
+        print(
+            f"  -> ERROR running {module_name}: {type(exc).__name__}", flush=True
+        )
 
 print("\nGenerating report...", flush=True)
-import sys
-
 if str(scripts_dir) not in sys.path:
     sys.path.append(str(scripts_dir))
 import generate_report
 
 report_path = str(Path(__file__).parent / ".specify" / "reports" / "report.md")
 Path(report_path).parent.mkdir(parents=True, exist_ok=True)
+safe_results, _privacy_report = sanitize_for_persistence(results)
 generate_report.generate_report(
-    results, project_name="owncast-agent", output_path=report_path
+    safe_results, project_name="owncast-agent", output_path=report_path
 )
-print(f"Report saved to {report_path}", flush=True)
+print("Report saved successfully", flush=True)
 
 # Save results.json
 results_json_path = str(Path(__file__).parent / ".specify" / "results.json")
 with open(results_json_path, "w") as f:
-    json.dump(results, f, indent=2)
-print(f"Results JSON saved to {results_json_path}", flush=True)
+    json.dump(safe_results, f, indent=2)
+print("Results JSON saved successfully", flush=True)
 
 print("Generating SDD handoff...", flush=True)
 import generate_sdd_handoff
 
 handoff = generate_sdd_handoff.generate_sdd_handoff(
-    results, project_name="owncast-agent", output_dir=project_dir
+    safe_results, project_name="owncast-agent", output_dir=project_dir
 )
 print("SDD handoff generated successfully!", flush=True)
 print("All done!", flush=True)

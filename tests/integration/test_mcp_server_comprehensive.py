@@ -13,11 +13,11 @@ from owncast_agent.mcp_server import get_mcp_instance, mcp_server
 
 
 @pytest.mark.asyncio
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 async def test_mcp_health_check():
     """Verify that the FastMCP health check endpoint behaves correctly by capturing the custom_route decorator.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     captured_routes = {}
 
@@ -41,11 +41,11 @@ async def test_mcp_health_check():
 
 
 @pytest.mark.asyncio
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 async def test_mcp_tools_routing(mock_client):
     """Test all mcp tools programmatically and verify all action branches.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     mcp, _, _ = get_mcp_instance()
 
@@ -255,11 +255,11 @@ async def test_mcp_tools_routing(mock_client):
 
 
 @pytest.mark.asyncio
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 async def test_mcp_context_logging(mock_client):
     """Confirm that passing a FastMCP Context records execution steps correctly.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     mcp, _, _ = get_mcp_instance()
     tools = await mcp.list_tools()
@@ -301,11 +301,11 @@ async def test_mcp_context_logging(mock_client):
     assert len(called_info) > 0
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_mcp_server_cli_execution():
     """Verify CLI configuration and server startup transitions for stdio, HTTP, and SSE transports.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     mock_mcp = MagicMock()
     mock_args = MagicMock()
@@ -340,11 +340,11 @@ def test_mcp_server_cli_execution():
             mcp_server()
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_import_dependency_warning_import_error():
     """Verify handling of RequestsDependencyWarning when requests is missing.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     import sys
 
@@ -369,11 +369,11 @@ def test_import_dependency_warning_import_error():
             )
 
 
-@pytest.mark.concept("ORCH-1.4")
+@pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_mcp_server_main_execution():
     """Verify that calling the module directly runs the server.
 
-    CONCEPT:ORCH-1.4
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
     import runpy
 

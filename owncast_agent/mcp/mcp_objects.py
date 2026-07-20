@@ -3,6 +3,8 @@
 Auto-generated from mcp_server.py during ecosystem standardization.
 """
 
+from agent_utilities.mcp.action_dispatch import resolve_action
+from agent_utilities.mcp.concurrency import run_blocking
 from fastmcp import Context, FastMCP
 from fastmcp.dependencies import Depends
 from pydantic import Field
@@ -14,7 +16,7 @@ from owncast_agent.mcp_server import ALLOWED_OBJECTS_ACTIONS
 def register_objects_tools(mcp: FastMCP):
     """Register consolidated action-routed tools for objects operations.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
 
     @mcp.tool(tags={"objects"})
@@ -33,7 +35,7 @@ def register_objects_tools(mcp: FastMCP):
     ) -> dict:
         """Manage owncast objects operations.
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         if ctx:
             await ctx.info("Executing tool...")
@@ -42,12 +44,16 @@ def register_objects_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_OBJECTS_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_OBJECTS_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)

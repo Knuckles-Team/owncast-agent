@@ -20,19 +20,21 @@ warnings.filterwarnings("ignore", message=".*urllib3.*or chardet.*")
 warnings.filterwarnings("ignore", message=".*urllib3.*or charset_normalizer.*")
 
 import logging
-import os
 import sys
 from typing import Any
 
-from agent_utilities.base_utilities import to_boolean
-from agent_utilities.mcp_utilities import create_mcp_server
-from dotenv import find_dotenv, load_dotenv
+from agent_utilities.core.config import load_config
+from agent_utilities.mcp.action_dispatch import resolve_action
+from agent_utilities.mcp.concurrency import run_blocking
+from agent_utilities.mcp.server_factory import create_mcp_server
+from agent_utilities.mcp.verbose_tools import register_tool_surface
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from owncast_agent.api_client import OwncastApi
 from owncast_agent.auth import get_client
 
-__version__ = "0.28.0"
+__version__ = "1.0.1"
 
 logger = get_logger(name="owncast-agent")
 logger.setLevel(logging.INFO)
@@ -195,15 +197,19 @@ def register_internal_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_INTERNAL_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_INTERNAL_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_objects_tools(mcp: FastMCP):
@@ -231,15 +237,19 @@ def register_objects_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_OBJECTS_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_OBJECTS_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_external_tools(mcp: FastMCP):
@@ -267,15 +277,19 @@ def register_external_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_EXTERNAL_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(
+            action, ALLOWED_EXTERNAL_ACTIONS, service="owncast-agent"
+        )
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
 
 
 def register_chat_tools(mcp: FastMCP):
@@ -303,20 +317,92 @@ def register_chat_tools(mcp: FastMCP):
         try:
             kwargs = json.loads(params_json)
         except Exception as e:
-            return {"error": f"Invalid params_json: {e}"}
+            return {"error": "Operation failed"}
 
         kwargs = {k: v for k, v in kwargs.items() if v is not None}
 
-        if action not in ALLOWED_CHAT_ACTIONS:
-            raise ValueError(f"Unknown action: {action}")
+        resolved = resolve_action(action, ALLOWED_CHAT_ACTIONS, service="owncast-agent")
+        if isinstance(resolved, dict):
+            return resolved
+        action = resolved
 
         method = getattr(client, action)
-        return method(**kwargs)
+        return await run_blocking(method, **kwargs)
+
+
+def register_kg_tools(mcp: FastMCP):
+    """Register the Wire-First native KG ingestion tool.
+
+    Lists live Owncast telemetry through the real client and pushes it into the ONE
+    epistemic-graph knowledge graph as typed :Stream / :Viewer / :ViewerSample /
+    :HardwareSample / :ChatMessage / :Person nodes. Best-effort + engine-guarded:
+    returns ``{"ingested": None}`` when no engine is reachable.
+    CONCEPT:AU-KG.ingest.enterprise-source-extractor.
+    """
+
+    @mcp.tool(tags={"kg"})
+    async def owncast_ingest_telemetry(
+        include: str = Field(
+            default="status,viewers,viewers_over_time,hardware,followers,chat",
+            description=(
+                "Comma-separated modalities to ingest: any of "
+                "status, viewers, viewers_over_time, hardware, followers, chat."
+            ),
+        ),
+        access_token: str | None = Field(
+            default=None,
+            description="Access token for chat message retrieval (chat modality only).",
+        ),
+        client=Depends(get_client),
+        ctx: Context | None = Field(
+            default=None, description="MCP context for progress reporting"
+        ),
+    ) -> dict:
+        """Ingest live Owncast telemetry into epistemic-graph as typed nodes + timeseries."""
+        if ctx:
+            await ctx.info("Ingesting Owncast telemetry into the knowledge graph...")
+
+        from owncast_agent import kg_ingest
+
+        instance = getattr(client, "base_url", None)
+        wanted = {w.strip() for w in include.split(",") if w.strip()}
+        result: dict[str, Any] = {"instance": kg_ingest._instance_id(instance)}
+
+        async def _call(method, **kwargs):
+            return await run_blocking(method, **kwargs)
+
+        if "status" in wanted:
+            status = await _call(client.get_status)
+            result["status"] = kg_ingest.ingest_status(status, instance=instance)
+        if "viewers" in wanted:
+            viewers = await _call(client.get_active_viewers)
+            recs = viewers if isinstance(viewers, list) else viewers.get("data", [])
+            result["viewers"] = kg_ingest.ingest_active_viewers(recs, instance=instance)
+        if "viewers_over_time" in wanted:
+            vot = await _call(client.get_viewers_over_time)
+            recs = vot if isinstance(vot, list) else vot.get("data", [])
+            result["viewers_over_time"] = kg_ingest.ingest_viewers_over_time(
+                recs, instance=instance
+            )
+        if "hardware" in wanted:
+            hw = await _call(client.get_hardware_stats)
+            result["hardware"] = kg_ingest.ingest_hardware_stats(hw, instance=instance)
+        if "followers" in wanted:
+            followers = await _call(client.get_followers)
+            result["followers"] = kg_ingest.ingest_followers(
+                followers, instance=instance
+            )
+        if "chat" in wanted and access_token:
+            msgs = await _call(client.get_chat_messages, access_token=access_token)
+            recs = msgs if isinstance(msgs, list) else msgs.get("data", [])
+            result["chat"] = kg_ingest.ingest_chat_messages(recs, instance=instance)
+
+        return result
 
 
 def get_mcp_instance() -> tuple[Any, ...]:
     """Initialize and return the MCP instance."""
-    load_dotenv(find_dotenv())
+    load_config()
     args, mcp, middlewares = create_mcp_server(
         name="owncast-agent MCP",
         version=__version__,
@@ -327,27 +413,24 @@ def get_mcp_instance() -> tuple[Any, ...]:
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
 
-    DEFAULT_INTERNALTOOL = to_boolean(os.getenv("INTERNALTOOL", "True"))
-    if DEFAULT_INTERNALTOOL:
-        register_internal_tools(mcp)
-    DEFAULT_OBJECTSTOOL = to_boolean(os.getenv("OBJECTSTOOL", "True"))
-    if DEFAULT_OBJECTSTOOL:
-        register_objects_tools(mcp)
-    DEFAULT_EXTERNALTOOL = to_boolean(os.getenv("EXTERNALTOOL", "True"))
-    if DEFAULT_EXTERNALTOOL:
-        register_external_tools(mcp)
-    DEFAULT_CHATTOOL = to_boolean(os.getenv("CHATTOOL", "True"))
-    if DEFAULT_CHATTOOL:
-        register_chat_tools(mcp)
+    register_kg_tools(mcp)
+
+    registered_tags = register_tool_surface(
+        mcp,
+        client_cls=OwncastApi,
+        get_client=get_client,
+        service="owncast-agent",
+        tools_module=sys.modules[__name__],
+    )
 
     for mw in middlewares:
         mcp.add_middleware(mw)
-    return mcp, args, middlewares
+    return mcp, args, middlewares, registered_tags
 
 
 def mcp_server() -> None:
     """Run the MCP server."""
-    mcp, args, middlewares = get_mcp_instance()
+    mcp, args, middlewares, *_ = get_mcp_instance()
     print(f"owncast-agent MCP v{__version__}", file=sys.stderr)
     print("\nStarting MCP Server", file=sys.stderr)
     print(f"  Transport: {args.transport.upper()}", file=sys.stderr)

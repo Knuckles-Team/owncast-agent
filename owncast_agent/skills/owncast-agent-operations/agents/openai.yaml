@@ -1,0 +1,4 @@
+interface:
+  display_name: "Owncast Agent Operations"
+  short_description: "Help with Owncast Agent Operations tasks"
+  default_prompt: "Use $owncast-agent-operations to complete a governed provider workflow."

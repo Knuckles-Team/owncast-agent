@@ -49,15 +49,15 @@ uv run owncast-mcp
 
 ## Prebuilt Docker image
 
-A multi-stage, slim image is published on every release (entrypoint `owncast-mcp`):
+A multi-stage runtime image is published on every release (entrypoint `owncast-mcp`):
 
 ```bash
-docker pull knucklessg1/owncast-agent:latest
+docker pull example/owncast-agent@sha256:<digest>
 
 docker run --rm -i \
   -e OWNCAST_URL=http://your-owncast:8080 \
   -e OWNCAST_TOKEN=your_owncast_token \
-  knucklessg1/owncast-agent:latest        # stdio transport (default)
+  example/owncast-agent@sha256:<digest>        # stdio transport (default)
 ```
 
 For an HTTP server with a published port, and for running the agent server, see

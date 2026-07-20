@@ -1,0 +1,132 @@
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix : <http://knuckles.team/kg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Owncast live-streaming ontology — broadcast status, viewer sessions, viewer/hardware
+# timeseries, chat, and fediverse followers. All classes and properties live in the shared
+# `:` (kg#) namespace; only the owl:Ontology node gets the per-package IRI. :Person is a
+# shared class (reused, never redefined) for fediverse followers and chat authors. Backs the
+# owncast-agent MCP tool surface (owncast_internal get_status / get_active_viewers /
+# get_viewers_over_time / get_hardware_stats / get_followers / get_chat_messages_admin).
+
+:Stream a owl:Class ;
+    rdfs:label "Stream" ;
+    rdfs:comment "An Owncast broadcast / live channel on one instance — its online state, title, and viewer counts (get_status / status_admin)." .
+
+:Viewer a owl:Class ;
+    rdfs:label "Viewer" ;
+    rdfs:comment "An active viewer session connected to a Stream, identified by clientID, with user-agent and coarse geo (get_active_viewers)." .
+
+:ViewerSample a owl:Class ;
+    rdfs:label "Viewer Sample" ;
+    rdfs:comment "A timeseries data point of the concurrent viewer count for a Stream at an instant (get_viewers_over_time)." .
+
+:HardwareSample a owl:Class ;
+    rdfs:label "Hardware Sample" ;
+    rdfs:comment "A timeseries data point of server hardware utilisation (CPU / memory / disk) for a Stream at an instant (get_hardware_stats)." .
+
+:ChatMessage a owl:Class ;
+    rdfs:label "Chat Message" ;
+    rdfs:comment "A message posted in a Stream's live chat, with body, author, and visibility (get_chat_messages_admin)." .
+
+# --- links (owl:ObjectProperty) ---
+
+:onStream a owl:ObjectProperty ;
+    rdfs:label "on stream" ;
+    rdfs:comment "Links a Viewer, ViewerSample, HardwareSample, or ChatMessage to the Stream it belongs to." ;
+    rdfs:range :Stream .
+
+:sentBy a owl:ObjectProperty ;
+    rdfs:label "sent by" ;
+    rdfs:comment "Links a ChatMessage to the Person who authored it." ;
+    rdfs:domain :ChatMessage ;
+    rdfs:range :Person .
+
+:follows a owl:ObjectProperty ;
+    rdfs:label "follows" ;
+    rdfs:comment "Links a Person (fediverse actor) to the Stream they follow." ;
+    rdfs:domain :Person ;
+    rdfs:range :Stream .
+
+# --- fields (owl:DatatypeProperty) ---
+
+:online a owl:DatatypeProperty ;
+    rdfs:label "online" ;
+    rdfs:comment "Whether the Stream is currently broadcasting live." ;
+    rdfs:domain :Stream ;
+    rdfs:range xsd:boolean .
+
+:streamTitle a owl:DatatypeProperty ;
+    rdfs:label "stream title" ;
+    rdfs:comment "The current title of the broadcast." ;
+    rdfs:domain :Stream ;
+    rdfs:range xsd:string .
+
+:viewerCount a owl:DatatypeProperty ;
+    rdfs:label "viewer count" ;
+    rdfs:comment "Concurrent viewer count on a Stream or captured in a ViewerSample." ;
+    rdfs:range xsd:integer .
+
+:sampledAt a owl:DatatypeProperty ;
+    rdfs:label "sampled at" ;
+    rdfs:comment "Timestamp of a ViewerSample or HardwareSample timeseries point." ;
+    rdfs:range xsd:dateTime .
+
+:cpuUsage a owl:DatatypeProperty ;
+    rdfs:label "cpu usage" ;
+    rdfs:comment "CPU utilisation percentage recorded in a HardwareSample." ;
+    rdfs:domain :HardwareSample ;
+    rdfs:range xsd:double .
+
+:memoryUsage a owl:DatatypeProperty ;
+    rdfs:label "memory usage" ;
+    rdfs:comment "Memory utilisation percentage recorded in a HardwareSample." ;
+    rdfs:domain :HardwareSample ;
+    rdfs:range xsd:double .
+
+:diskUsage a owl:DatatypeProperty ;
+    rdfs:label "disk usage" ;
+    rdfs:comment "Disk utilisation percentage recorded in a HardwareSample." ;
+    rdfs:domain :HardwareSample ;
+    rdfs:range xsd:double .
+
+:clientID a owl:DatatypeProperty ;
+    rdfs:label "client id" ;
+    rdfs:comment "Owncast connection identifier of a Viewer session." ;
+    rdfs:domain :Viewer ;
+    rdfs:range xsd:string .
+
+:userAgent a owl:DatatypeProperty ;
+    rdfs:label "user agent" ;
+    rdfs:comment "Browser / player user-agent string of a Viewer session." ;
+    rdfs:domain :Viewer ;
+    rdfs:range xsd:string .
+
+:actorIRI a owl:DatatypeProperty ;
+    rdfs:label "actor IRI" ;
+    rdfs:comment "ActivityPub actor IRI of a fediverse follower Person." ;
+    rdfs:domain :Person ;
+    rdfs:range xsd:string .
+
+:body a owl:DatatypeProperty ;
+    rdfs:label "body" ;
+    rdfs:comment "Text body of a ChatMessage." ;
+    rdfs:domain :ChatMessage ;
+    rdfs:range xsd:string .
+
+:externalToolId a owl:DatatypeProperty ;
+    rdfs:label "external tool id" ;
+    rdfs:comment "Native external identifier of the source record (for cross-source dedup)." ;
+    rdfs:range xsd:string .
+
+<http://knuckles.team/kg/owncast> a owl:Ontology ;
+    rdfs:label "Owncast Live-Streaming Ontology" ;
+    rdfs:comment """Owncast self-hosted live-streaming model — broadcast Stream state, active
+    Viewer sessions, viewer-count and hardware-utilisation timeseries samples, live ChatMessages,
+    and fediverse follower Persons, with their :onStream / :sentBy / :follows relationships —
+    federated into the agent-utilities knowledge-graph hub.""" ;
+    owl:imports <http://knuckles.team/kg> .

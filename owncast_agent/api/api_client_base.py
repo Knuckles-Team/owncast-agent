@@ -30,7 +30,7 @@ class BaseApiClient:
                 params=params,
             )
             if response.status_code == 401:
-                raise AuthError(f"Unauthorized: {response.text}")
+                raise AuthError("Owncast authentication was rejected")
             response.raise_for_status()
             if response.text:
                 try:
@@ -39,4 +39,4 @@ class BaseApiClient:
                     return {"status": "success", "text": response.text}
             return {"success": True}
         except requests.exceptions.RequestException as e:
-            raise ApiError(f"API request failed: {e}") from e
+            raise ApiError(f"API request failed: {type(e).__name__}") from e

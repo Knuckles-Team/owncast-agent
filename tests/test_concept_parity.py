@@ -4,8 +4,8 @@ import re
 import pytest
 
 # Paths
-ROOT_DIR = "/home/apps/workspace/agent-packages/agents/owncast-agent"
-WORKSPACE_DIR = "/home/apps/workspace/agent-packages"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+WORKSPACE_DIR = os.path.dirname(os.path.dirname(ROOT_DIR))
 MASTER_OVERVIEW_PATH = os.path.join(
     WORKSPACE_DIR, "agent-utilities", "docs", "overview.md"
 )
@@ -57,13 +57,13 @@ def extract_concepts_from_codebase(directory):
     return found_concepts
 
 
-@pytest.mark.concept("ECO-4.1")
+@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 def test_concept_parity():
     """
     Enforces that all concepts documented or used in owncast-agent
     exist in the master agent-utilities registry.
 
-    CONCEPT:ECO-4.1
+    CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     master_concepts = extract_concepts_from_overview(MASTER_OVERVIEW_PATH)
 

@@ -1,0 +1,6 @@
+{
+  "connector": "owncast-agent",
+  "current_ontology_source": "owncast",
+  "migrations": [],
+  "schema_version": "1"
+}

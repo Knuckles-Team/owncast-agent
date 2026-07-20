@@ -1,5 +1,67 @@
 # Deployment
 
+<!-- BEGIN GENERATED: deployment-options -->
+## Deployment Options
+
+`owncast-agent` supports local stdio, a loopback-only development listener, a
+least-privilege stdio container, and a remote authenticated HTTPS boundary.
+Provider endpoint, credential, selector, identity, and trust material are supplied
+at runtime through `AgentConfig`; none is stored in this repository.
+
+### Installed stdio process
+
+```json
+{
+  "mcpServers": {
+    "owncast": {
+      "command": "owncast-mcp",
+      "args": [],
+      "env": {"MCP_TOOL_MODE": "intent"}
+    }
+  }
+}
+```
+
+### Loopback development listener
+
+```bash
+owncast-mcp --transport streamable-http --host 127.0.0.1 --port 8000
+```
+
+Do not expose this listener beyond loopback. Network deployments require direct TLS
+or an explicitly trusted TLS-terminating ingress, configured authentication, exact
+`MCP_ALLOWED_HOSTS`, and an exact trusted-proxy CIDR policy.
+
+### Least-privilege local container
+
+```bash
+docker run -i --rm \
+  --read-only \
+  --cap-drop=ALL \
+  --security-opt=no-new-privileges \
+  --pids-limit=256 \
+  --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
+  -e TRANSPORT=stdio \
+  registry.example.invalid/owncast-agent@sha256:<digest> owncast-mcp
+```
+
+The operator projects the selected AgentConfig profile into the process at runtime;
+the image remains immutable and contains no environment connection profile.
+
+### Remote authenticated HTTPS endpoint
+
+```json
+{
+  "mcpServers": {
+    "owncast": {"url": "https://service.example.invalid/mcp"}
+  }
+}
+```
+
+Store the real remote URL, outbound identity reference, and TLS-profile reference in
+`AgentConfig`, not in MCP client JSON or documentation.
+<!-- END GENERATED: deployment-options -->
+
 This page covers running `owncast-agent` as a long-lived server: the transports, a
 Docker Compose stack, the optional A2A agent server, putting it behind a Caddy
 reverse proxy, and giving it a DNS name with Technitium. To provision the **Owncast
@@ -69,7 +131,7 @@ It reads a sibling `.env` and publishes the HTTP server on `:8000`:
 ```yaml
 services:
   owncast-agent-mcp:
-    image: knucklessg1/owncast-agent:latest
+    image: example/owncast-agent@sha256:<digest>
     container_name: owncast-agent-mcp
     hostname: owncast-agent-mcp
     restart: always
@@ -114,7 +176,7 @@ which runs the MCP server and the agent server together. The agent listens on
 ```yaml
 services:
   owncast-agent-mcp:
-    image: knucklessg1/owncast-agent:latest
+    image: example/owncast-agent@sha256:<digest>
     hostname: owncast-agent-mcp
     env_file: [../.env]
     environment:
@@ -124,7 +186,7 @@ services:
     ports: ["8000:8000"]
 
   owncast-agent-agent:
-    image: knucklessg1/owncast-agent:latest
+    image: example/owncast-agent@sha256:<digest>
     depends_on: [owncast-agent-mcp]
     command: ["owncast-agent"]
     env_file: [../.env]
@@ -147,8 +209,8 @@ docker compose -f docker/agent.compose.yml up -d
 Expose the HTTP server on a hostname with automatic TLS. Add to your `Caddyfile`:
 
 ```caddy
-# Internal (self-signed) — homelab .arpa zone
-owncast-agent.arpa {
+# Internal (self-signed) — homelab .example.invalid zone
+owncast-agent.example.invalid {
     tls internal
     reverse_proxy owncast-agent-mcp:8000
 }
@@ -172,17 +234,17 @@ docker compose -f services/caddy/compose.yml exec caddy caddy reload --config /e
 Point the hostname at the host running Caddy. Via the Technitium API:
 
 ```bash
-curl -s "http://technitium.arpa:5380/api/zones/records/add" \
+curl -s "http://technitium.example.invalid:5380/api/zones/records/add" \
   --data-urlencode "token=$TECHNITIUM_DNS_TOKEN" \
-  --data-urlencode "domain=owncast-agent.arpa" \
+  --data-urlencode "domain=owncast-agent.example.invalid" \
   --data-urlencode "zone=arpa" \
   --data-urlencode "type=A" \
-  --data-urlencode "ipAddress=10.0.0.10" \
+  --data-urlencode "ipAddress=192.0.2.10" \
   --data-urlencode "ttl=3600"
 ```
 
-…or add an **A record** `owncast-agent.arpa → <caddy-host-ip>` in the Technitium web
-console (`http://technitium.arpa:5380`). The ecosystem
+…or add an **A record** `owncast-agent.example.invalid → <caddy-host-ip>` in the Technitium web
+console (`http://technitium.example.invalid:5380`). The ecosystem
 [`technitium-dns-mcp`](https://knuckles-team.github.io/technitium-dns-mcp/) automates
 this as a tool.
 
@@ -205,4 +267,4 @@ Add to your client's `mcp_config.json`:
 }
 ```
 
-For a remote HTTP server, point the client at `http://owncast-agent.arpa/mcp` instead.
+For a remote HTTP server, point the client at `http://owncast-agent.example.invalid/mcp` instead.

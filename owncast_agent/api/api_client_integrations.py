@@ -15,7 +15,7 @@ class OwncastApi(BaseApiClient):
     ) -> dict[str, Any]:
         """Send a system message to a single client
 
-        CONCEPT:ECO-4.1
+        CONCEPT:AU-ECO.mcp.fastmcp-middleware
         """
         return self._request(
             "POST",
