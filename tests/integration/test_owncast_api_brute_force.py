@@ -155,7 +155,7 @@ def test_owncast_api_brute_force(mock_requests):
         try:
             method(**kwargs)
         except Exception as e:
-            print(f"Method {name} raised unexpected error: {e}")
+            print(f"Operation failed: {type(e).__name__}")
 
     # Robust assertion resolving the zero assertion finding
     assert mock_requests.called

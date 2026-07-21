@@ -1,0 +1,8 @@
+{
+  "algorithm": "agent-utilities:mcp-tool-schema-compat:v1",
+  "connector": "owncast-agent",
+  "schema_version": "1",
+  "tools": {
+    "owncast_internal": "cdd5cf7e2ebb9fad36c8c81efb88341e14b31295e7ae9f825e09ad8b52273d36"
+  }
+}

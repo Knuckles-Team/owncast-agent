@@ -1,0 +1,20 @@
+schema_version: '1'
+connector: owncast-agent
+ontology_source: owncast
+sync:
+- preset: owncast-followers
+  server: owncast-agent
+  tool: owncast_internal
+  action: get_followers
+  records_path: results
+  id_field: link
+  title_field: name
+  text_field: username
+  updated_field: timestamp
+  doc_type: owncast_follower
+  tool_schema_sha256: cdd5cf7e2ebb9fad36c8c81efb88341e14b31295e7ae9f825e09ad8b52273d36
+governance:
+  default_acl: quarantine
+  identity: opaque-reference
+  tenant: required-at-materialization
+  provenance: required-at-materialization

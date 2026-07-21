@@ -4,7 +4,7 @@ CONCEPT:AU-ECO.mcp.fastmcp-middleware
 """
 
 import pytest
-from agent_utilities.mcp_utilities import resolve_action
+from agent_utilities.mcp.action_dispatch import resolve_action
 
 from owncast_agent.mcp_server import (
     ALLOWED_CHAT_ACTIONS,

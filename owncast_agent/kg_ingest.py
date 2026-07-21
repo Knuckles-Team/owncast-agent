@@ -1,20 +1,9 @@
-"""Native epistemic-graph ingestion for Owncast records (typed graph nodes + timeseries).
+"""Native epistemic-graph ingestion for Owncast records and telemetry.
 
-CONCEPT:AU-KG.ingest.enterprise-source-extractor. The package natively pushes its
-live-streaming telemetry into the ONE epistemic-graph knowledge graph as **typed OWL
-nodes** — ``:Stream`` (broadcast status), ``:Viewer`` (active viewer sessions),
-``:ViewerSample`` / ``:HardwareSample`` (timeseries), ``:ChatMessage``, and ``:Person``
-(fediverse followers / chat authors) — plus links, using the lightweight engine client
-(``GraphComputeEngine()._client`` + ``txn``), NOT the heavy in-process ingestion engine.
-
-This is a thin mapper over the shared native-ingest primitive
-(``agent_utilities.knowledge_graph.memory.native_ingest``). That primitive is not yet in
-every installed ``agent_utilities``; the import is **guarded** and falls back to a
-self-contained txn writer with the identical contract. Either way everything is
-best-effort and engine-guarded: with no KG stack or no reachable engine, every entry
-point **no-ops** (returns ``None``), so the connector keeps working with zero KG
-infrastructure. Node ids follow ``owncast:<class>:<externalId>`` and every ``type``
-matches a class federated by ``owncast_agent.ontology`` (``owncast.ttl``).
+All writes use the required ``agent_utilities.knowledge_graph.memory.native_ingest``
+primitive. Nodes use canonical ``node_type`` and edges use canonical ``relationship``;
+nodes and edges commit in one native transaction. Missing engine dependencies, rejected
+records, conflicts, and transaction failures propagate as ``NativeIngestError``.
 """
 
 from __future__ import annotations
@@ -22,127 +11,34 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    NativeIngestError,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+
 logger = logging.getLogger("owncast_agent.kg")
 
 _SOURCE = "owncast-agent"
 _DOMAIN = "owncast"
-_DEFAULT_GRAPH = "__commons__"
-
-
-# --- shared-primitive seam (guarded) ---------------------------------------
-
-try:  # pragma: no cover - exercised only where the shared primitive is installed
-    from agent_utilities.knowledge_graph.memory.native_ingest import (
-        ingest_entities as _shared_ingest_entities,
-    )
-
-    _HAVE_SHARED = True
-except Exception:  # noqa: BLE001 — primitive absent -> self-contained fallback
-    _shared_ingest_entities = None
-    _HAVE_SHARED = False
-
-
-def _fallback_client() -> tuple[Any | None, str]:
-    """Resolve ``(engine_client, graph_name)`` or ``(None, "")`` when unavailable."""
-    try:
-        from agent_utilities.knowledge_graph.core.graph_compute import (
-            GraphComputeEngine,
-        )
-    except Exception as e:  # noqa: BLE001 — KG stack absent
-        logger.debug("KG ingest unavailable (import): %s", e)
-        return None, ""
-    try:
-        engine = GraphComputeEngine()
-        client = getattr(engine, "_client", None)
-        if client is None:
-            return None, ""
-        graph = getattr(engine, "graph_name", None) or _DEFAULT_GRAPH
-        return client, graph
-    except Exception as e:  # noqa: BLE001 — engine unreachable
-        logger.debug("KG ingest: engine unreachable: %s", e)
-        return None, ""
-
-
-def _fallback_ingest_entities(
-    entities: list[dict[str, Any]],
-    relationships: list[dict[str, Any]] | None,
-    *,
-    source: str,
-    domain: str,
-    client: Any | None,
-    graph: str | None,
-) -> dict[str, int] | None:
-    """Self-contained txn writer used when the shared primitive is not installed."""
-    entities = [e for e in (entities or []) if e.get("id")]
-    if not entities:
-        return None
-    if client is None:
-        client, graph = _fallback_client()
-    if client is None:
-        return None
-    graph = graph or _DEFAULT_GRAPH
-
-    try:
-        txn = client.txn.begin(graph=graph)
-        for ent in entities:
-            props = {k: v for k, v in ent.items() if k != "id" and v is not None}
-            props.setdefault("source", source)
-            props.setdefault("domain", domain)
-            client.txn.add_node(txn, ent["id"], props)
-        committed = client.txn.commit(txn)
-    except Exception as e:  # noqa: BLE001 — engine/txn failure is non-fatal
-        logger.warning("KG ingest: txn failed: %s", e)
-        return None
-    if not committed:
-        logger.warning("KG ingest: txn not committed (conflict)")
-        return None
-
-    edges = 0
-    for rel in relationships or []:
-        try:
-            client.edges.add(
-                rel["source"], rel["target"], {"type": rel.get("type", "RELATED")}
-            )
-            edges += 1
-        except Exception as e:  # noqa: BLE001 — pure edge link, best-effort
-            logger.debug("KG ingest: edge skipped: %s", e)
-
-    logger.info("KG ingest: wrote %d nodes, %d edges", len(entities), edges)
-    return {"nodes": len(entities), "edges": edges}
 
 
 def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
+    source: str = _SOURCE,
+    domain: str = _DOMAIN,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
-    """Write typed OWL nodes (+ edges) into epistemic-graph.
-
-    ``entities``: ``[{"id":..., "type":<owl:Class>, ...props}]``.
-    ``relationships``: ``[{"source":id, "target":id, "type":<link>}]``.
-    Routes through the shared native-ingest primitive when installed, else a
-    self-contained txn writer. Returns ``{"nodes":n, "edges":m}`` or ``None``
-    (no engine / failure; never raises). ``client``/``graph`` may be injected (tests).
-    """
-    entities = [e for e in (entities or []) if e.get("id")]
-    if not entities:
-        return None
-    if _HAVE_SHARED and _shared_ingest_entities is not None:
-        return _shared_ingest_entities(
-            entities,
-            relationships,
-            source=_SOURCE,
-            domain=_DOMAIN,
-            client=client,
-            graph=graph,
-        )
-    return _fallback_ingest_entities(
+) -> dict[str, int]:
+    """Write canonical typed nodes and relationships in one native transaction."""
+    return _native_ingest_entities(
         entities,
         relationships,
-        source=_SOURCE,
-        domain=_DOMAIN,
+        source=source,
+        domain=domain,
         client=client,
         graph=graph,
     )
@@ -170,14 +66,14 @@ def ingest_status(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map an Owncast ``/status`` response → a single ``:Stream`` node."""
     if not status:
-        return None
+        raise NativeIngestError("Owncast status ingestion requires a status record")
     sid = _stream_node_id(instance)
     entity = {
         "id": sid,
-        "type": "Stream",
+        "node_type": "Stream",
         "instance": _instance_id(instance),
         "online": status.get("online"),
         "streamTitle": status.get("streamTitle"),
@@ -198,7 +94,7 @@ def ingest_active_viewers(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map ``/admin/viewers`` records → ``:Viewer`` nodes linked ``:onStream``."""
     sid = _stream_node_id(instance)
     entities: list[dict[str, Any]] = []
@@ -212,7 +108,7 @@ def ingest_active_viewers(
         entities.append(
             {
                 "id": vid,
-                "type": "Viewer",
+                "node_type": "Viewer",
                 "clientID": str(cid),
                 "userAgent": v.get("userAgent"),
                 "connectedAt": v.get("connectedAt"),
@@ -224,7 +120,7 @@ def ingest_active_viewers(
                 "externalToolId": str(cid),
             }
         )
-        relationships.append({"source": vid, "target": sid, "type": "onStream"})
+        relationships.append({"source": vid, "target": sid, "relationship": "onStream"})
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
@@ -234,7 +130,7 @@ def ingest_viewers_over_time(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map ``/admin/viewersOverTime`` points → ``:ViewerSample`` timeseries nodes."""
     inst = _instance_id(instance)
     sid = _stream_node_id(instance)
@@ -248,14 +144,14 @@ def ingest_viewers_over_time(
         entities.append(
             {
                 "id": nid,
-                "type": "ViewerSample",
+                "node_type": "ViewerSample",
                 "sampledAt": ts,
                 "viewerCount": s.get("value", s.get("Value")),
                 "instance": inst,
                 "externalToolId": f"{inst}:{ts}",
             }
         )
-        relationships.append({"source": nid, "target": sid, "type": "onStream"})
+        relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
@@ -265,13 +161,13 @@ def ingest_hardware_stats(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map ``/admin/hardwarestats`` cpu/memory/disk series → ``:HardwareSample`` nodes.
 
     The three parallel timeseries are merged by timestamp into one sample per instant.
     """
     if not stats:
-        return None
+        raise NativeIngestError("Owncast hardware ingestion requires statistics")
     inst = _instance_id(instance)
     sid = _stream_node_id(instance)
 
@@ -294,7 +190,7 @@ def ingest_hardware_stats(
         entities.append(
             {
                 "id": nid,
-                "type": "HardwareSample",
+                "node_type": "HardwareSample",
                 "sampledAt": ts,
                 "cpuUsage": cpu.get(ts),
                 "memoryUsage": mem.get(ts),
@@ -303,7 +199,7 @@ def ingest_hardware_stats(
                 "externalToolId": f"{inst}:{ts}",
             }
         )
-        relationships.append({"source": nid, "target": sid, "type": "onStream"})
+        relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
@@ -313,7 +209,7 @@ def ingest_followers(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map ``/followers`` fediverse actors → ``:Person`` nodes linked ``:follows``."""
     if isinstance(followers, dict):
         followers = followers.get("results") or followers.get("data") or []
@@ -328,7 +224,7 @@ def ingest_followers(
         entities.append(
             {
                 "id": pid,
-                "type": "Person",
+                "node_type": "Person",
                 "name": f.get("name"),
                 "username": f.get("username"),
                 "actorIRI": f.get("link"),
@@ -337,7 +233,7 @@ def ingest_followers(
                 "externalToolId": actor,
             }
         )
-        relationships.append({"source": pid, "target": sid, "type": "follows"})
+        relationships.append({"source": pid, "target": sid, "relationship": "follows"})
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
@@ -347,7 +243,7 @@ def ingest_chat_messages(
     instance: str | None = None,
     client: Any | None = None,
     graph: str | None = None,
-) -> dict[str, int] | None:
+) -> dict[str, int]:
     """Map admin chat messages → ``:ChatMessage`` nodes + author ``:Person`` links."""
     sid = _stream_node_id(instance)
     entities: list[dict[str, Any]] = []
@@ -363,7 +259,7 @@ def ingest_chat_messages(
         entities.append(
             {
                 "id": nid,
-                "type": "ChatMessage",
+                "node_type": "ChatMessage",
                 "body": m.get("body"),
                 "author": author,
                 "timestamp": m.get("timestamp"),
@@ -372,17 +268,19 @@ def ingest_chat_messages(
                 "externalToolId": str(mid),
             }
         )
-        relationships.append({"source": nid, "target": sid, "type": "onStream"})
+        relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
         if uid:
             pid = f"owncast:person:{uid}"
             entities.append(
                 {
                     "id": pid,
-                    "type": "Person",
+                    "node_type": "Person",
                     "name": author,
                     "username": user.get("displayName"),
                     "externalToolId": str(uid),
                 }
             )
-            relationships.append({"source": nid, "target": pid, "type": "sentBy"})
+            relationships.append(
+                {"source": nid, "target": pid, "relationship": "sentBy"}
+            )
     return ingest_entities(entities, relationships, client=client, graph=graph)

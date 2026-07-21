@@ -20,7 +20,7 @@ on `:8080` (HTTP) and `:1935` (RTMP ingest) with a persistent data volume:
 # docker/owncast.compose.yml
 services:
   owncast:
-    image: docker.io/owncast/owncast:latest
+    image: docker.io/owncast/owncast@sha256:<digest>
     container_name: owncast
     hostname: owncast
     restart: unless-stopped
@@ -68,7 +68,7 @@ server reaches Owncast by container name:
 # docker/stack.compose.yml
 services:
   owncast:
-    image: docker.io/owncast/owncast:latest
+    image: docker.io/owncast/owncast@sha256:<digest>
     hostname: owncast
     ports:
       - "8080:8080"
@@ -77,7 +77,7 @@ services:
       - owncast_data:/app/data
 
   owncast-agent-mcp:
-    image: knucklessg1/owncast-agent:latest
+    image: example/owncast-agent@sha256:<digest>
     depends_on: [owncast]
     environment:
       - OWNCAST_URL=http://owncast:8080

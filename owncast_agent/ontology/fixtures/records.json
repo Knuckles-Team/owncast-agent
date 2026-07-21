@@ -1,0 +1,21 @@
+{
+  "connector": "owncast-agent",
+  "fixtures": [
+    {
+      "expected": {
+        "acl_state": "quarantine",
+        "id": "fixture-record",
+        "title": "Synthetic certification record"
+      },
+      "preset": "owncast-followers",
+      "record": {
+        "acl_public": false,
+        "link": "fixture-record",
+        "name": "Synthetic certification record",
+        "timestamp": "2000-01-01T00:00:00Z",
+        "username": "Synthetic content used only for contract validation."
+      }
+    }
+  ],
+  "schema_version": "1"
+}

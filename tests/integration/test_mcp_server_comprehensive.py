@@ -30,7 +30,7 @@ async def test_mcp_health_check():
 
     # Patch FastMCP's custom_route method to capture the local health_check function
     with patch("fastmcp.FastMCP.custom_route", side_effect=mock_custom_route):
-        mcp, _, _ = get_mcp_instance()
+        mcp, *_ = get_mcp_instance()
 
     # Trigger captured health_check route
     assert "/health" in captured_routes
@@ -47,7 +47,7 @@ async def test_mcp_tools_routing(mock_client):
 
     CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
-    mcp, _, _ = get_mcp_instance()
+    mcp, *_ = get_mcp_instance()
 
     # Retrieve all tools registered on FastMCP
     tools = await mcp.list_tools()
@@ -185,6 +185,16 @@ async def test_mcp_tools_routing(mock_client):
 
     chat_actions = ["get_user_details"]
 
+    # Only the condensed action-routed tools share the action/params_json calling
+    # convention exercised below; other tools (e.g. the KG telemetry-ingest tool
+    # registered by register_kg_tools) have their own distinct signature.
+    action_routed_tools = {
+        "owncast_internal",
+        "owncast_objects",
+        "owncast_external",
+        "owncast_chat",
+    }
+
     for tool in tools:
         # Test each possible action string to hit the individual routing branches
         if tool.name == "owncast_internal":
@@ -243,15 +253,18 @@ async def test_mcp_tools_routing(mock_client):
                     ctx=None,
                 )
 
-        # Test invalid JSON parsing error path
-        res_error = await tool.fn(
-            action="get_status",
-            params_json="{invalid-json",
-            client=mock_client,
-            ctx=None,
-        )
-        assert "error" in res_error
-        assert "Invalid params_json" in res_error["error"]
+        # Test invalid JSON parsing error path (only applies to action-routed tools).
+        # The handler deliberately returns a generic message (not the raw exception
+        # text) so a malformed request never leaks internals back to the caller.
+        if tool.name in action_routed_tools:
+            res_error = await tool.fn(
+                action="get_status",
+                params_json="{invalid-json",
+                client=mock_client,
+                ctx=None,
+            )
+            assert "error" in res_error
+            assert res_error["error"] == "Operation failed"
 
 
 @pytest.mark.asyncio
@@ -261,7 +274,7 @@ async def test_mcp_context_logging(mock_client):
 
     CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
-    mcp, _, _ = get_mcp_instance()
+    mcp, *_ = get_mcp_instance()
     tools = await mcp.list_tools()
 
     called_info = []
