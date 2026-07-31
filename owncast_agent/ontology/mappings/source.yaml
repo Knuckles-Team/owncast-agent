@@ -3,7 +3,7 @@ connector: owncast-agent
 ontology_source: owncast
 sync:
 - preset: owncast-followers
-  server: owncast-agent
+  server: owncast-mcp
   tool: owncast_internal
   action: get_followers
   records_path: results
