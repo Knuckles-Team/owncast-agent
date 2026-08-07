@@ -1,10 +1,12 @@
 {
   "_comment": "Tier-1 mcp_tool source preset(s) for owncast-agent (AU-KG.ingest.mcp-tool-connector). Lists fediverse followers via the condensed owncast_internal action-routed tool and syncs them into the KG as documents. The richer typed-node + timeseries path is the native owncast_ingest_telemetry tool (owncast_agent.kg_ingest). Contributed presets win over the central MCP_TOOL_PRESETS.",
   "owncast-followers": {
-    "server": "owncast-agent",
+    "server": "owncast-mcp",
     "tool": "owncast_internal",
     "action": "get_followers",
-    "params": {"action": "get_followers"},
+    "params": {
+      "action": "get_followers"
+    },
     "records_path": "results",
     "id_field": "link",
     "title_field": "name",
