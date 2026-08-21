@@ -1,8 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "a2a.json": "a9030cc30e235c113af075dd1f7c537e24ea1802ba928a7a76e43519ebb75e0c",
-    "connector_manifest.yml": "da4a4249d1db79b680e1b97c9addb30f605984f42721d0aa77c0dc953c02edf5",
+    "connector_manifest.yml": "1eaebaa398dff8271571a94d6b6d73a876dd4cf7e8354fc2721df9ed4e9567c0",
     "owncast_agent/connectors/mcp_source_presets.json": "fde3a1d6f0c523651444ef31b6027c0e5642cdc092784eede6c34c735912f5b0",
     "owncast_agent/connectors/tool_schema_fingerprints.json": "c5392fa9a1232fbcb05bc2dc61a7ccb789459cd6bb3df1a8d0411ea8b9db739b",
     "owncast_agent/ontology/fixtures/records.json": "a4e6e60944da12012f6d4ff7330da6c75ecbbef1a5ad5c21d8a940b9f0494d81",
@@ -19,19 +18,19 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.1.0,<3",
+    "agent_utilities": ">=2.4.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.23.0,<3"
+    "epistemic_graph": ">=2.26.0,<3"
   },
   "connector": "owncast-agent",
   "kind": "ConnectorSourceAttestation",
   "live_certified": false,
   "mode": "offline-source",
   "schema_version": "2",
-  "signature": "uF5Zak3JoKWaHcd1YicQ7WKWboUNk9ipvz8Tg0tdmz_LVHCwqcdcPxUqUcATYbd_FM6-azpLMSeViocPAXYbDA",
-  "signature_algorithm": "ed25519",
-  "signer": "ontology-manifest-generator",
-  "signing_public_key": "QkigdPNpcUU7x7NcSkwCsUXIQpaFncMQbYSoiSgI2SY",
+  "signature": null,
+  "signature_algorithm": "none",
+  "signer": "UNSIGNED-PREVIEW",
+  "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-07-31T04:00:00Z"
+  "validated_at": "2026-08-21T04:30:39Z"
 }
