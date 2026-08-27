@@ -1,7 +1,7 @@
 {
   "api_version": "graphos.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "1eaebaa398dff8271571a94d6b6d73a876dd4cf7e8354fc2721df9ed4e9567c0",
+    "connector_manifest.yml": "e5b528386db6b6eeda8d0170aa2d85127e2d812dfb4bf25126a3f55e8918874f",
     "owncast_agent/connectors/mcp_source_presets.json": "fde3a1d6f0c523651444ef31b6027c0e5642cdc092784eede6c34c735912f5b0",
     "owncast_agent/connectors/tool_schema_fingerprints.json": "c5392fa9a1232fbcb05bc2dc61a7ccb789459cd6bb3df1a8d0411ea8b9db739b",
     "owncast_agent/ontology/fixtures/records.json": "a4e6e60944da12012f6d4ff7330da6c75ecbbef1a5ad5c21d8a940b9f0494d81",
@@ -18,9 +18,9 @@
     "synthetic_fixture_contract": "passed"
   },
   "compatibility": {
-    "agent_utilities": ">=2.4.0,<3",
+    "agent_utilities": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.26.0,<3"
+    "epistemic_graph": ">=2.27.0,<3"
   },
   "connector": "owncast-agent",
   "kind": "ConnectorSourceAttestation",
@@ -32,5 +32,5 @@
   "signer": "UNSIGNED-PREVIEW",
   "signing_public_key": "",
   "status": "source-validated",
-  "validated_at": "2026-08-21T04:30:39Z"
+  "validated_at": "2026-08-26T13:42:55Z"
 }
