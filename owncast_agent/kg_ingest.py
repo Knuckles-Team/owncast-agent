@@ -9,6 +9,8 @@ records, conflicts, and transaction failures propagate as ``NativeIngestError``.
 from __future__ import annotations
 
 import logging
+from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any
 
 from agent_utilities.knowledge_graph.memory.native_ingest import (
@@ -17,6 +19,7 @@ from agent_utilities.knowledge_graph.memory.native_ingest import (
 from agent_utilities.knowledge_graph.memory.native_ingest import (
     ingest_entities as _native_ingest_entities,
 )
+from agent_utilities.mcp.concurrency import run_blocking
 
 logger = logging.getLogger("owncast_agent.kg")
 
@@ -284,3 +287,94 @@ def ingest_chat_messages(
                 {"source": nid, "target": pid, "relationship": "sentBy"}
             )
     return ingest_entities(entities, relationships, client=client, graph=graph)
+
+
+# --- live telemetry fan-out ---------------------------------------------------
+#
+# The MCP ``owncast_ingest_telemetry`` tool fetches a caller-selected subset of
+# live Owncast telemetry and ingests each into the graph. Every modality shares
+# the same fetch-then-ingest shape, so it is expressed once as data (below)
+# instead of once per modality as repeated branches.
+
+
+@dataclass(frozen=True)
+class _TelemetryModality:
+    """One ingestible live-telemetry feed: how to fetch it and how to ingest it."""
+
+    name: str
+    method_name: str
+    ingest: Callable[..., dict[str, int]]
+    extract_records: bool = True
+    requires_token: bool = False
+
+
+_TELEMETRY_MODALITIES: tuple[_TelemetryModality, ...] = (
+    _TelemetryModality("status", "get_status", ingest_status, extract_records=False),
+    _TelemetryModality("viewers", "get_active_viewers", ingest_active_viewers),
+    _TelemetryModality(
+        "viewers_over_time", "get_viewers_over_time", ingest_viewers_over_time
+    ),
+    _TelemetryModality(
+        "hardware", "get_hardware_stats", ingest_hardware_stats, extract_records=False
+    ),
+    _TelemetryModality(
+        "followers", "get_followers", ingest_followers, extract_records=False
+    ),
+    _TelemetryModality(
+        "chat", "get_chat_messages", ingest_chat_messages, requires_token=True
+    ),
+)
+
+
+def _extract_records(payload: Any) -> Any:
+    """Normalize a list-or-envelope API payload into a bare record list."""
+    if isinstance(payload, list):
+        return payload
+    return payload.get("data", [])
+
+
+async def _fetch_modality_payload(
+    modality: _TelemetryModality, client: Any, access_token: str | None
+) -> Any:
+    """Call the client method backing one modality, off the event loop."""
+    method = getattr(client, modality.method_name)
+    if modality.requires_token:
+        return await run_blocking(method, access_token=access_token)
+    return await run_blocking(method)
+
+
+async def _ingest_one_modality(
+    modality: _TelemetryModality,
+    client: Any,
+    instance: str | None,
+    access_token: str | None,
+) -> dict[str, int] | None:
+    """Fetch + ingest one telemetry modality; None if its precondition isn't met."""
+    if modality.requires_token and not access_token:
+        return None
+    payload = await _fetch_modality_payload(modality, client, access_token)
+    records = _extract_records(payload) if modality.extract_records else payload
+    return modality.ingest(records, instance=instance)
+
+
+async def ingest_selected_telemetry(
+    client: Any,
+    wanted: set[str],
+    *,
+    access_token: str | None = None,
+    instance: str | None = None,
+) -> dict[str, Any]:
+    """Fetch + ingest every requested live-telemetry modality as typed KG nodes.
+
+    ``wanted`` names must be drawn from ``{m.name for m in _TELEMETRY_MODALITIES}``
+    (status, viewers, viewers_over_time, hardware, followers, chat); unknown names
+    are silently ignored, matching the prior inline implementation.
+    """
+    result: dict[str, Any] = {"instance": _instance_id(instance)}
+    for modality in _TELEMETRY_MODALITIES:
+        if modality.name not in wanted:
+            continue
+        value = await _ingest_one_modality(modality, client, instance, access_token)
+        if value is not None:
+            result[modality.name] = value
+    return result

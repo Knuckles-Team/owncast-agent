@@ -43,24 +43,27 @@ def _import_module_safely(module_name: str):
         return None
 
 
-def __getattr__(name: str) -> Any:
-    """Dynamic attribute access for lazy loading optional modules.
+# Marker substrings used to locate each availability flag's backing module in
+# OPTIONAL_MODULES, keyed by the dunder-ish flag name callers probe for.
+_AVAILABILITY_FLAG_MARKERS = {
+    "_MCP_AVAILABLE": "mcp_server",
+    "_AGENT_AVAILABLE": "agent_server",
+}
 
-    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
-    """
-    # Handle availability flags dynamically without eager imports
-    if name == "_MCP_AVAILABLE":
-        mcp_key = next((k for k in OPTIONAL_MODULES if "mcp_server" in k), None)
-        if mcp_key:
-            return _import_module_safely(mcp_key) is not None
-        return False
-    if name == "_AGENT_AVAILABLE":
-        agent_key = next((k for k in OPTIONAL_MODULES if "agent_server" in k), None)
-        if agent_key:
-            return _import_module_safely(agent_key) is not None
-        return False
 
-    # Check optional modules
+def _resolve_availability_flag(name: str) -> bool | None:
+    """Return an ``_*_AVAILABLE`` flag's live value, or None if ``name`` isn't one."""
+    marker = _AVAILABILITY_FLAG_MARKERS.get(name)
+    if marker is None:
+        return None
+    module_key = next((k for k in OPTIONAL_MODULES if marker in k), None)
+    if module_key is None:
+        return False
+    return _import_module_safely(module_key) is not None
+
+
+def _find_attr_in_optional_modules(name: str) -> Any:
+    """Import (and cache) each optional module in turn, searching for ``name``."""
     for module_name in OPTIONAL_MODULES:
         if module_name not in _loaded_optional_modules:
             module = _import_module_safely(module_name)
@@ -73,6 +76,17 @@ def __getattr__(name: str) -> Any:
             return getattr(module, name)
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+def __getattr__(name: str) -> Any:
+    """Dynamic attribute access for lazy loading optional modules.
+
+    CONCEPT:AU-ORCH.adapter.kg-graph-materialization
+    """
+    flag_value = _resolve_availability_flag(name)
+    if flag_value is not None:
+        return flag_value
+    return _find_attr_in_optional_modules(name)
 
 
 def __dir__() -> list[str]:
