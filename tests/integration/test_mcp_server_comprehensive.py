@@ -40,6 +40,33 @@ async def test_mcp_health_check():
     assert json.loads(response.body.decode("utf-8")) == {"status": "OK"}
 
 
+async def _assert_tool_routes_actions(tool, actions, unknown_action, mock_client):
+    """Call ``tool`` with every action in ``actions`` and confirm success, then
+    confirm an unrecognized action still raises ValueError."""
+    for act in actions:
+        res = await tool.fn(
+            action=act, params_json='{"arg": 1}', client=mock_client, ctx=None
+        )
+        assert res.get("status") == "success"
+    with pytest.raises(ValueError):
+        await tool.fn(
+            action=unknown_action, params_json="{}", client=mock_client, ctx=None
+        )
+
+
+async def _assert_invalid_json_is_rejected(tool, mock_client):
+    """Confirm malformed params_json returns a generic error, not raw exception text.
+
+    The handler deliberately returns a generic message (not the raw exception
+    text) so a malformed request never leaks internals back to the caller.
+    """
+    res_error = await tool.fn(
+        action="get_status", params_json="{invalid-json", client=mock_client, ctx=None
+    )
+    assert "error" in res_error
+    assert res_error["error"] == "Operation failed"
+
+
 @pytest.mark.asyncio
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 async def test_mcp_tools_routing(mock_client):
@@ -188,83 +215,26 @@ async def test_mcp_tools_routing(mock_client):
     # Only the condensed action-routed tools share the action/params_json calling
     # convention exercised below; other tools (e.g. the KG telemetry-ingest tool
     # registered by register_kg_tools) have their own distinct signature.
-    action_routed_tools = {
-        "owncast_internal",
-        "owncast_objects",
-        "owncast_external",
-        "owncast_chat",
+    tool_action_specs = {
+        "owncast_internal": (internal_actions, "unknown_internal_action"),
+        "owncast_objects": (objects_actions, "unknown_object_action"),
+        "owncast_external": (external_actions, "unknown_external_action"),
+        "owncast_chat": (chat_actions, "unknown_chat_action"),
     }
+    action_routed_tools = set(tool_action_specs)
 
     for tool in tools:
         # Test each possible action string to hit the individual routing branches
-        if tool.name == "owncast_internal":
-            for act in internal_actions:
-                res = await tool.fn(
-                    action=act, params_json='{"arg": 1}', client=mock_client, ctx=None
-                )
-                assert res.get("status") == "success"
-            with pytest.raises(ValueError):
-                await tool.fn(
-                    action="unknown_internal_action",
-                    params_json="{}",
-                    client=mock_client,
-                    ctx=None,
-                )
-
-        elif tool.name == "owncast_objects":
-            for act in objects_actions:
-                res = await tool.fn(
-                    action=act, params_json='{"arg": 1}', client=mock_client, ctx=None
-                )
-                assert res.get("status") == "success"
-            with pytest.raises(ValueError):
-                await tool.fn(
-                    action="unknown_object_action",
-                    params_json="{}",
-                    client=mock_client,
-                    ctx=None,
-                )
-
-        elif tool.name == "owncast_external":
-            for act in external_actions:
-                res = await tool.fn(
-                    action=act, params_json='{"arg": 1}', client=mock_client, ctx=None
-                )
-                assert res.get("status") == "success"
-            with pytest.raises(ValueError):
-                await tool.fn(
-                    action="unknown_external_action",
-                    params_json="{}",
-                    client=mock_client,
-                    ctx=None,
-                )
-
-        elif tool.name == "owncast_chat":
-            for act in chat_actions:
-                res = await tool.fn(
-                    action=act, params_json='{"arg": 1}', client=mock_client, ctx=None
-                )
-                assert res.get("status") == "success"
-            with pytest.raises(ValueError):
-                await tool.fn(
-                    action="unknown_chat_action",
-                    params_json="{}",
-                    client=mock_client,
-                    ctx=None,
-                )
+        spec = tool_action_specs.get(tool.name)
+        if spec is not None:
+            actions, unknown_action = spec
+            await _assert_tool_routes_actions(
+                tool, actions, unknown_action, mock_client
+            )
 
         # Test invalid JSON parsing error path (only applies to action-routed tools).
-        # The handler deliberately returns a generic message (not the raw exception
-        # text) so a malformed request never leaks internals back to the caller.
         if tool.name in action_routed_tools:
-            res_error = await tool.fn(
-                action="get_status",
-                params_json="{invalid-json",
-                client=mock_client,
-                ctx=None,
-            )
-            assert "error" in res_error
-            assert res_error["error"] == "Operation failed"
+            await _assert_invalid_json_is_rejected(tool, mock_client)
 
 
 @pytest.mark.asyncio

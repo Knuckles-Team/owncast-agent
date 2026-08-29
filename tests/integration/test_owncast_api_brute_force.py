@@ -1,5 +1,6 @@
 import inspect
 import os
+from collections.abc import Callable
 from typing import Any
 from unittest.mock import MagicMock, patch
 
@@ -111,6 +112,64 @@ def test_auth_client_initializer():
         assert client.token == ""
 
 
+def _looks_boolean(param_name: str, annotation: Any) -> bool:
+    return annotation is bool or any(
+        tok in param_name for tok in ("enabled", "moderator", "nsfw")
+    )
+
+
+def _looks_integer(param_name: str, annotation: Any) -> bool:
+    return annotation is int or param_name in ("port", "latency_level", "limit")
+
+
+def _looks_dict(param_name: str, annotation: Any) -> bool:
+    return annotation is dict or param_name in ("body", "data", "params")
+
+
+def _looks_list(param_name: str, annotation: Any) -> bool:
+    return annotation is list or param_name in ("variants", "block_domains")
+
+
+# Ordered (predicate, dummy_value) pairs -- first match wins, exactly like the
+# original if/elif chain it replaces.
+_ARGUMENT_SYNTHESIZERS: tuple[tuple[Callable[[str, Any], bool], Any], ...] = (
+    (_looks_boolean, True),
+    (_looks_integer, 8080),
+    (_looks_dict, {"key": "value"}),
+    (_looks_list, ["test"]),
+)
+
+
+def _synthesize_argument(param_name: str, annotation: Any) -> Any:
+    """Pick a plausible dummy value for one API-method parameter by name/annotation."""
+    for looks_like, value in _ARGUMENT_SYNTHESIZERS:
+        if looks_like(param_name, annotation):
+            return value
+    # Default fallback string parameter
+    return "test-string"
+
+
+def _synthesize_kwargs(method) -> dict:
+    """Build a plausible kwargs dict for every real parameter of an API method."""
+    kwargs: dict[str, Any] = {}
+    for p_name, p in inspect.signature(method).parameters.items():
+        if p_name in ("self", "args", "kwargs"):
+            continue
+        kwargs[p_name] = _synthesize_argument(p_name, p.annotation)
+    return kwargs
+
+
+def _brute_force_call(name: str, method) -> None:
+    """Invoke one API method with synthesized kwargs, tolerating any exception
+    (this is a coverage sweep, not an assertion about any single method)."""
+    print(f"Brute force testing method: OwncastApi.{name}")
+    kwargs = _synthesize_kwargs(method)
+    try:
+        method(**kwargs)
+    except Exception as e:
+        print(f"Operation failed: {type(e).__name__}")
+
+
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
 @pytest.mark.concept("AU-OS.governance.wasm-micro-agent-sandbox")
 def test_owncast_api_brute_force(mock_requests):
@@ -124,38 +183,7 @@ def test_owncast_api_brute_force(mock_requests):
     for name, method in inspect.getmembers(api, predicate=inspect.ismethod):
         if name.startswith("_") or name in ("request",):
             continue
-
-        print(f"Brute force testing method: OwncastApi.{name}")
-        sig = inspect.signature(method)
-        kwargs: dict[str, Any] = {}
-
-        for p_name, p in sig.parameters.items():
-            if p_name in ("self", "args", "kwargs"):
-                continue
-
-            # Check parameter annotations or names to synthesize reasonable arguments
-            if (
-                p.annotation is bool
-                or "enabled" in p_name
-                or "moderator" in p_name
-                or "nsfw" in p_name
-            ):
-                kwargs[p_name] = True
-            elif p.annotation is int or p_name in ("port", "latency_level", "limit"):
-                kwargs[p_name] = 8080
-            elif p.annotation is dict or p_name in ("body", "data", "params"):
-                kwargs[p_name] = {"key": "value"}
-            elif p.annotation is list or p_name in ("variants", "block_domains"):
-                kwargs[p_name] = ["test"]
-            else:
-                # Default fallback string parameter
-                kwargs[p_name] = "test-string"
-
-        # Invoke method and ignore exceptions to keep tests resilient
-        try:
-            method(**kwargs)
-        except Exception as e:
-            print(f"Operation failed: {type(e).__name__}")
+        _brute_force_call(name, method)
 
     # Robust assertion resolving the zero assertion finding
     assert mock_requests.called

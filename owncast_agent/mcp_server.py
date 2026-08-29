@@ -366,38 +366,9 @@ def register_kg_tools(mcp: FastMCP):
 
         instance = getattr(client, "base_url", None)
         wanted = {w.strip() for w in include.split(",") if w.strip()}
-        result: dict[str, Any] = {"instance": kg_ingest._instance_id(instance)}
-
-        async def _call(method, **kwargs):
-            return await run_blocking(method, **kwargs)
-
-        if "status" in wanted:
-            status = await _call(client.get_status)
-            result["status"] = kg_ingest.ingest_status(status, instance=instance)
-        if "viewers" in wanted:
-            viewers = await _call(client.get_active_viewers)
-            recs = viewers if isinstance(viewers, list) else viewers.get("data", [])
-            result["viewers"] = kg_ingest.ingest_active_viewers(recs, instance=instance)
-        if "viewers_over_time" in wanted:
-            vot = await _call(client.get_viewers_over_time)
-            recs = vot if isinstance(vot, list) else vot.get("data", [])
-            result["viewers_over_time"] = kg_ingest.ingest_viewers_over_time(
-                recs, instance=instance
-            )
-        if "hardware" in wanted:
-            hw = await _call(client.get_hardware_stats)
-            result["hardware"] = kg_ingest.ingest_hardware_stats(hw, instance=instance)
-        if "followers" in wanted:
-            followers = await _call(client.get_followers)
-            result["followers"] = kg_ingest.ingest_followers(
-                followers, instance=instance
-            )
-        if "chat" in wanted and access_token:
-            msgs = await _call(client.get_chat_messages, access_token=access_token)
-            recs = msgs if isinstance(msgs, list) else msgs.get("data", [])
-            result["chat"] = kg_ingest.ingest_chat_messages(recs, instance=instance)
-
-        return result
+        return await kg_ingest.ingest_selected_telemetry(
+            client, wanted, access_token=access_token, instance=instance
+        )
 
 
 def get_mcp_instance() -> tuple[Any, ...]:
