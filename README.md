@@ -61,12 +61,13 @@ This table is auto-generated from the live server — do not edit by hand.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
+#### Condensed action-routed tools (`MCP_TOOL_MODE=condensed`)
 
 | MCP Tool | Toggle Env Var | Description |
 |----------|----------------|-------------|
 | `owncast_chat` | `CHATTOOL` | Manage owncast chat operations. |
 | `owncast_external` | `EXTERNALTOOL` | Manage owncast external operations. |
+| `owncast_ingest_telemetry` | `KGTOOL` | Ingest live Owncast telemetry into epistemic-graph as typed nodes + timeseries. |
 | `owncast_internal` | `INTERNALTOOL` | Manage owncast internal operations. |
 | `owncast_objects` | `OBJECTSTOOL` | Manage owncast objects operations. |
 
@@ -202,7 +203,7 @@ This table is auto-generated from the live server — do not edit by hand.
 
 </details>
 
-_4 action-routed tool(s) (default) · 122 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_5 action-routed tool(s) · 122 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (**`intent` default** — the six verb-tools, granular set loaded on demand · `condensed` action-routed · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/usage.md](docs/usage.md).
@@ -252,8 +253,10 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
       "env": {
         "MCP_TOOL_MODE": "intent",
         "CHATTOOL": "True",
+        "CODE_ENHANCER_SCRIPTS_DIR": "/opt/owncast-agent/scripts",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
+        "KGTOOL": "True",
         "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
@@ -289,8 +292,10 @@ own runtime secret boundary.
         "PORT": "8000",
         "MCP_TOOL_MODE": "intent",
         "CHATTOOL": "True",
+        "CODE_ENHANCER_SCRIPTS_DIR": "/opt/owncast-agent/scripts",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
+        "KGTOOL": "True",
         "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
@@ -325,8 +330,10 @@ docker run -i --rm \
   -e TRANSPORT=stdio \
   -e MCP_TOOL_MODE=intent \
   -e CHATTOOL=True \
+  -e CODE_ENHANCER_SCRIPTS_DIR=/opt/owncast-agent/scripts \
   -e EXTERNALTOOL=True \
   -e INTERNALTOOL=True \
+  -e KGTOOL=True \
   -e OBJECTSTOOL=True \
   -e OWNCAST_TOKEN=your_owncast_admin_or_integration_token_here \
   -e OWNCAST_URL=http://localhost:9000 \
@@ -474,40 +481,44 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 | `TRANSPORT` | `stdio` | options: stdio, streamable-http, sse |
 | `ENABLE_OTEL` | `True` |  |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | `pk-...` |  |
-| `OTEL_EXPORTER_OTLP_SECRET_KEY` | `sk-...` |  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
 | `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
 | `EUNOMIA_REMOTE_URL` | `http://eunomia-server:8000` |  |
 | `OWNCAST_URL` | `http://localhost:9000` |  |
-| `OWNCAST_TOKEN` | `your_owncast_admin_or_integration_token_here` |  |
+| `OWNCAST_TOKEN` | secret-injected |  |
 | `DEFAULT_AGENT_NAME` | `Owncast Agent` |  |
 | `INTERNALTOOL` | `True` |  |
 | `OBJECTSTOOL` | `True` |  |
 | `EXTERNALTOOL` | `True` |  |
 | `CHATTOOL` | `True` |  |
+| `KGTOOL` | `True` |  |
+| `CODE_ENHANCER_SCRIPTS_DIR` | `/opt/owncast-agent/scripts` |  |
+| `OWNCAST_AGENT_MCP_IMAGE` | `registry.example.invalid/owncast-agent-mcp@sha256:<digest>` |  |
+| `OWNCAST_AGENT_AGENT_IMAGE` | `registry.example.invalid/owncast-agent@sha256:<digest>` |  |
 
 #### Inherited agent-utilities variables (apply to every connector)
 
 | Variable | Example | Description |
 |----------|---------|-------------|
-| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
+| `MCP_TOOL_MODE` | `intent` | Tool surface: `intent` \| `condensed` \| `verbose` \| `both` |
 | `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
 | `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
 | `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
 | `MCP_DISABLED_TAGS` | — | Comma-separated tag deny-list |
-| `MCP_CLIENT_AUTH` | — | Outbound MCP auth (`oidc-client-credentials` for fleet calls) |
+| `MCP_CLIENT_AUTH` | — | Outbound MCP child auth: `oidc-client-credentials` \| `basic` \| `none` |
 | `OIDC_CLIENT_ID` | — | OIDC client id (service-account auth) |
-| `OIDC_CLIENT_SECRET` | — | OIDC client secret (service-account auth) |
+| `OIDC_CLIENT_SECRET_REF` | `secret://identity/oidc-client-secret` | Runtime secret reference for the OIDC service account |
+| `MCP_BASIC_AUTH_USERNAME` | — | HTTP Basic username (`MCP_CLIENT_AUTH=basic`) |
+| `MCP_BASIC_AUTH_PASSWORD_REF` | `secret://identity/mcp-basic-password` | Runtime secret reference for HTTP Basic auth (`MCP_CLIENT_AUTH=basic`) |
 | `DEBUG` | `False` | Verbose logging |
 | `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
-| `PROVIDER` | `openai` | LLM provider for the agent |
-| `MODEL_ID` | `gpt-4o` | Model id for the agent |
+| `PROVIDER` | — | Operator-configured LLM provider for the agent |
+| `MODEL_ID` | — | Operator-configured model id for the agent |
 | `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
-_18 package + 14 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
+_20 package + 16 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
 
