@@ -140,7 +140,7 @@ sync:
   updated_field: timestamp
   pagination: null
   doc_type: owncast_follower
-  tool_schema_sha256: cdd5cf7e2ebb9fad36c8c81efb88341e14b31295e7ae9f825e09ad8b52273d36
+  tool_schema_sha256: c8b35b39e05cec5aa9a384ebc09c30dc9a1c506d971c1496dc511dc47c6e072a
   raw:
     server: owncast-mcp
     tool: owncast_internal
