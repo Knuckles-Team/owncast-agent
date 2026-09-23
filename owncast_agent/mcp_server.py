@@ -175,7 +175,18 @@ ALLOWED_CHAT_ACTIONS = {"get_user_details"}
 def register_internal_tools(mcp: FastMCP):
     """Register consolidated action-routed tools for internal operations."""
 
-    @mcp.tool(tags={"internal"})
+    @mcp.tool(
+        tags={"internal"},
+        annotations={
+            "readOnlyHint": False,
+            "destructiveHint": False,
+            "idempotentHint": False,
+            "openWorldHint": True,
+        },
+        meta={
+            "eg.annotations": {"modalities_in": ["text"], "modalities_out": ["text"]}
+        },
+    )
     async def owncast_internal(
         action: Literal[
             "approve_follower",
