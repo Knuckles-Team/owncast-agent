@@ -5,7 +5,7 @@ import sys
 import time
 from pathlib import Path
 
-from agent_utilities.security.persistence_privacy import sanitize_for_persistence
+from owncast_agent._persistence_privacy_compat import sanitize_for_persistence
 
 scripts_dir_value = os.getenv("CODE_ENHANCER_SCRIPTS_DIR")
 if not scripts_dir_value:

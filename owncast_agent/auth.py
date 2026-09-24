@@ -1,4 +1,4 @@
-from agent_utilities.core.config import setting
+from agent_connector_sdk.config import setting
 
 from .api_client import OwncastApi
 
