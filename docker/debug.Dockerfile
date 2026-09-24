@@ -26,7 +26,7 @@ WORKDIR /app
 COPY . /app
 
 # Compile and install package in-place
-RUN uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow .[agent]
+RUN uv pip install --system --upgrade --verbose --no-cache --break-system-packages --prerelease=allow .[mcp]
 
 
 # Debug tooling is installed at build time; the running service stays unprivileged.

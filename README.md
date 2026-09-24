@@ -234,8 +234,6 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
 
 > **Install the connector-focused `[mcp]` extra.** Examples use `owncast-agent[mcp]` to add
 > FastMCP / FastAPI through `agent-utilities[mcp]`; the required Agent Utilities core
-> still carries `epistemic-graph[full]`. The `[agent-runtime]` extra additionally
-> enables model orchestration.
 
 #### stdio Transport (local IDEs — Cursor, Claude Desktop, VS Code)
 
@@ -367,8 +365,6 @@ To start the interactive command-line agent:
 # Set credentials
 export OWNCAST_URL="your_value"
 
-# Run the agent server
-owncast-agent --provider openai --model-id gpt-4o
 ```
 
 ### Docker Compose Orchestration
@@ -510,7 +506,6 @@ Built directly upon the enterprise-ready [`agent-utilities`](https://github.com/
 _18 package + 14 inherited variable(s). Auto-generated from `.env.example` + the shared agent-utilities set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
 
-
 Every variable the server reads, grouped by purpose.
 
 ### Connection & Credentials
@@ -553,17 +548,6 @@ The names match the authoritative "Toggle Env Var" column in the
 | `EUNOMIA_POLICY_FILE` | Embedded policy file. | `mcp_policies.json` |
 | `EUNOMIA_REMOTE_URL` | Remote Eunomia server URL. | — |
 
-### Agent CLI (full `[agent]` runtime only)
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `MCP_URL` | URL of the MCP server the agent connects to. | `http://localhost:8000/mcp` |
-| `PROVIDER` | LLM provider (e.g. `openai`). | `openai` |
-| `MODEL_ID` | Model id (e.g. `gpt-4o`). | `gpt-4o` |
-| `ENABLE_WEB_UI` | Serve the AG-UI web interface. | `True` |
-| `DEFAULT_AGENT_NAME` | Display name for the Graph Agent. | `Owncast Agent` |
-
-See [`.env.example`](.env.example) for a copy-paste starting point.
-
 ---
 
 ## Installation
@@ -573,7 +557,6 @@ Pick the extra that matches what you want to run:
 | Extra | Installs | Use when |
 |-------|----------|----------|
 | `owncast-agent[mcp]` | Connector-focused MCP server (`agent-utilities[mcp]` — FastMCP/FastAPI + `epistemic-graph[full]`) | You only run the **MCP server** (smallest install / image) |
-| `owncast-agent[agent]` | Agent runtime (`agent-utilities[agent-runtime,logfire]` — model orchestration + `epistemic-graph[full]`) | You run the **integrated agent** |
 | `owncast-agent[all]` | Everything (`mcp` + `agent` + `logfire`) | Development / both surfaces |
 
 ```bash
@@ -581,24 +564,21 @@ Pick the extra that matches what you want to run:
 uv pip install "owncast-agent[mcp]"
 
 # Agent runtime (adds model orchestration to the shared graph engine)
-uv pip install "owncast-agent[agent]"
 
 # Everything (development)
 uv pip install "owncast-agent[all]"      # or: python -m pip install "owncast-agent[all]"
 ```
 
-### Container images (`:mcp` vs `:agent`)
+### Container image
 
-One multi-stage `docker/Dockerfile` builds two right-sized images, selected by `--target`:
+One multi-stage `docker/Dockerfile` builds a single, right-sized image:
 
 | Image tag | Build target | Contents | Entrypoint |
 |-----------|--------------|----------|------------|
 | `example/owncast-agent:mcp` | `--target mcp` | `owncast-agent[mcp]` — **connector-focused**, includes `epistemic-graph[full]`; no model-orchestration stack | `owncast-mcp` |
-| `example/owncast-agent@sha256:<digest>` | `--target agent` (default) | `owncast-agent[agent]` — **agent runtime**, model orchestration + `epistemic-graph[full]` | `owncast-agent` |
 
 ```bash
 docker build --target mcp   -t example/owncast-agent:mcp    docker/   # connector-focused MCP server
-docker build --target agent -t example/owncast-agent:agent-local docker/   # agent runtime
 ```
 
 `docker/mcp.compose.yml` runs the connector-focused `:mcp` server; `docker/agent.compose.yml` runs the
@@ -606,10 +586,8 @@ agent (`immutable agent digest`) with a co-located `:mcp` sidecar.
 
 ### Knowledge-graph database (`epistemic-graph`)
 
-Both `[mcp]` and `[agent]` carry the **epistemic-graph** engine through the required
-Agent Utilities core dependency (`epistemic-graph[full]`). The `[mcp]` extra keeps
-the server connector-focused; `[agent]` additionally enables model orchestration. Local
-deployments can use the bundled engine. For production or shared state, run
+`[mcp]` carries the **epistemic-graph** engine through the required Agent Utilities
+core dependency (`epistemic-graph[full]`). Local deployments can use the bundled engine. For production or shared state, run
 **epistemic-graph as a dedicated database service** and configure the runtime to use it.
 Deployment recipes (single-node + Raft HA), connection configuration, and architecture
 diagrams are documented in the
@@ -653,7 +631,6 @@ Contributions are welcome! Please ensure code quality by executing local checks 
 - Validate type-safety with `mypy .`
 - Execute test suites using `pytest`
 
-
 <!-- BEGIN agent-utilities-deployment (generated; do not edit between markers) -->
 
 ## Deploy with `agent-utilities-deployment`
@@ -667,7 +644,7 @@ to **"deploy `owncast-agent` with agent-utilities-deployment"**.
 | Install mode | Command |
 |------|---------|
 | Installed package | `uv tool install "owncast-agent[mcp]"`, then run `owncast-mcp` |
-| Editable source | `uv pip install -e ".[agent]"`, then run `owncast-mcp` |
+| Editable source | `uv pip install -e ".[mcp]"`, then run `owncast-mcp` |
 | Immutable container | deploy `registry.example.invalid/owncast-agent@sha256:<digest>` through the operator-selected orchestrator |
 
 The repository embeds no deployment profile, credential value, certificate path, or
