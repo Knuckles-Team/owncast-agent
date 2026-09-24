@@ -10,11 +10,10 @@ def test_server_startup():
 
     CONCEPT:AU-ORCH.adapter.kg-graph-materialization
     """
-    assert os.path.exists("owncast_agent/agent_server.py")
+    # agent_server.py (the standalone pydantic-ai A2A runtime) was retired
+    # (SDK-GAPS.md #11); only mcp_server.py is still a live entry point.
     assert os.path.exists("owncast_agent/mcp_server.py")
 
-    agent_server_mod = importlib.import_module("owncast_agent.agent_server")
     mcp_server_mod = importlib.import_module("owncast_agent.mcp_server")
 
-    assert callable(agent_server_mod.agent_server)
     assert callable(mcp_server_mod.mcp_server)

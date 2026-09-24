@@ -25,7 +25,7 @@ def test_getattr_mcp_agent_availability():
     CONCEPT:AU-ECO.mcp.fastmcp-middleware
     """
     assert owncast_agent._MCP_AVAILABLE is True
-    assert owncast_agent._AGENT_AVAILABLE is True
+    assert owncast_agent._AGENT_AVAILABLE is False
 
 
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
