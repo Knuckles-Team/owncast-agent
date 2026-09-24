@@ -13,6 +13,13 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    NativeIngestError,
+)
+from agent_utilities.knowledge_graph.memory.native_ingest import (
+    ingest_entities as _native_ingest_entities,
+)
+from agent_utilities.mcp.concurrency import run_blocking
 
 logger = logging.getLogger("owncast_agent.kg")
 
@@ -20,12 +27,24 @@ _SOURCE = "owncast-agent"
 _DOMAIN = "owncast"
 
 
-def ingest_entities(*args: object, **kwargs: object) -> object:
-    """Write canonical typed nodes and relationships in one native transaction.
-
-    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
-    """
-    _kg_unavailable("ingest_entities")
+def ingest_entities(
+    entities: list[dict[str, Any]],
+    relationships: list[dict[str, Any]] | None = None,
+    *,
+    source: str = _SOURCE,
+    domain: str = _DOMAIN,
+    client: Any | None = None,
+    graph: str | None = None,
+) -> dict[str, int]:
+    """Write canonical typed nodes and relationships in one native transaction."""
+    return _native_ingest_entities(
+        entities,
+        relationships,
+        source=source,
+        domain=domain,
+        client=client,
+        graph=graph,
+    )
 
 
 # --- record mappers ---------------------------------------------------------
@@ -44,12 +63,32 @@ def _stream_node_id(instance: str | None) -> str:
     return f"owncast:stream:{_instance_id(instance)}"
 
 
-def ingest_status(*args: object, **kwargs: object) -> object:
-    """Map an Owncast ``/status`` response → a single ``:Stream`` node.
-
-    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
-    """
-    _kg_unavailable("ingest_status")
+def ingest_status(
+    status: dict[str, Any] | None,
+    *,
+    instance: str | None = None,
+    client: Any | None = None,
+    graph: str | None = None,
+) -> dict[str, int]:
+    """Map an Owncast ``/status`` response → a single ``:Stream`` node."""
+    if not status:
+        raise NativeIngestError("Owncast status ingestion requires a status record")
+    sid = _stream_node_id(instance)
+    entity = {
+        "id": sid,
+        "node_type": "Stream",
+        "instance": _instance_id(instance),
+        "online": status.get("online"),
+        "streamTitle": status.get("streamTitle"),
+        "viewerCount": status.get("viewerCount"),
+        "overallMaxViewerCount": status.get("overallMaxViewerCount"),
+        "sessionMaxViewerCount": status.get("sessionMaxViewerCount"),
+        "lastConnectTime": status.get("lastConnectTime"),
+        "lastDisconnectTime": status.get("lastDisconnectTime"),
+        "versionNumber": status.get("versionNumber"),
+        "externalToolId": _instance_id(instance),
+    }
+    return ingest_entities([entity], client=client, graph=graph)
 
 
 def ingest_active_viewers(
@@ -119,12 +158,52 @@ def ingest_viewers_over_time(
     return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
-def ingest_hardware_stats(*args: object, **kwargs: object) -> object:
+def ingest_hardware_stats(
+    stats: dict[str, Any] | None,
+    *,
+    instance: str | None = None,
+    client: Any | None = None,
+    graph: str | None = None,
+) -> dict[str, int]:
     """Map ``/admin/hardwarestats`` cpu/memory/disk series → ``:HardwareSample`` nodes.
 
-    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
+    The three parallel timeseries are merged by timestamp into one sample per instant.
     """
-    _kg_unavailable("ingest_hardware_stats")
+    if not stats:
+        raise NativeIngestError("Owncast hardware ingestion requires statistics")
+    inst = _instance_id(instance)
+    sid = _stream_node_id(instance)
+
+    def _series(key: str) -> dict[str, Any]:
+        out: dict[str, Any] = {}
+        for pt in stats.get(key) or []:
+            if not isinstance(pt, dict):
+                continue
+            ts = pt.get("time") or pt.get("Time")
+            if ts:
+                out[ts] = pt.get("value", pt.get("Value"))
+        return out
+
+    cpu, mem, disk = _series("cpu"), _series("memory"), _series("disk")
+    times = sorted(set(cpu) | set(mem) | set(disk))
+    entities: list[dict[str, Any]] = []
+    relationships: list[dict[str, Any]] = []
+    for ts in times:
+        nid = f"owncast:hardwaresample:{inst}:{ts}"
+        entities.append(
+            {
+                "id": nid,
+                "node_type": "HardwareSample",
+                "sampledAt": ts,
+                "cpuUsage": cpu.get(ts),
+                "memoryUsage": mem.get(ts),
+                "diskUsage": disk.get(ts),
+                "instance": inst,
+                "externalToolId": f"{inst}:{ts}",
+            }
+        )
+        relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
+    return ingest_entities(entities, relationships, client=client, graph=graph)
 
 
 def ingest_followers(
@@ -254,12 +333,14 @@ def _extract_records(payload: Any) -> Any:
     return payload.get("data", [])
 
 
-async def _fetch_modality_payload(*args: object, **kwargs: object) -> object:
-    """Call the client method backing one modality, off the event loop.
-
-    SDK-GAP: Always raises now; see KnowledgeGraphIngestUnavailable.
-    """
-    _kg_unavailable("_fetch_modality_payload")
+async def _fetch_modality_payload(
+    modality: _TelemetryModality, client: Any, access_token: str | None
+) -> Any:
+    """Call the client method backing one modality, off the event loop."""
+    method = getattr(client, modality.method_name)
+    if modality.requires_token:
+        return await run_blocking(method, access_token=access_token)
+    return await run_blocking(method)
 
 
 async def _ingest_one_modality(
@@ -297,23 +378,3 @@ async def ingest_selected_telemetry(
         if value is not None:
             result[modality.name] = value
     return result
-
-
-class KnowledgeGraphIngestUnavailable(RuntimeError):
-    """Direct-to-graph ingestion is unavailable from this connector.
-
-    SDK-GAP (EH-48x, /var/tmp/l9/finish/au-decon-G4c/SDK-GAPS.md): raised in
-    place of the old ``agent_utilities.knowledge_graph`` native-ingest call --
-    agent-connector-sdk has no facade over EG's typed ingestion protocol yet,
-    and the fleet precedent (agents/world-reference-mcp) moves direct-to-graph
-    delivery to agent_connector_sdk.runner/sinks at the deployment layer, out
-    of connector scope.
-    """
-
-
-def _kg_unavailable(name: str) -> None:
-    raise KnowledgeGraphIngestUnavailable(
-        f"{name}: direct-to-graph ingestion moved out of connector code "
-        "(agent-utilities removed); no agent-connector-sdk facade exists yet "
-        "-- see SDK-GAPS.md"
-    )
