@@ -3,6 +3,7 @@ import ast
 import glob
 import os
 import sys
+from typing import TypeGuard
 
 BASELINES = {
     "adguard-home-agent": 89.2,
@@ -36,7 +37,9 @@ def _looks_like_api_client_class(node: ast.ClassDef) -> bool:
     return "api" in class_name or "client" in class_name or node.name == "Api"
 
 
-def _is_public_client_method(item: ast.stmt) -> bool:
+def _is_public_client_method(
+    item: ast.stmt,
+) -> TypeGuard[ast.FunctionDef | ast.AsyncFunctionDef]:
     """True for a public (non-private, non-``authenticate``) method definition."""
     if not isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
         return False

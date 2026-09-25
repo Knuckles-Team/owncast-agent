@@ -7,10 +7,12 @@
         "owncast-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
+        "MCP_TOOL_MODE": "intent",
         "CHATTOOL": "True",
+        "CODE_ENHANCER_SCRIPTS_DIR": "/opt/owncast-agent/scripts",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
+        "KGTOOL": "True",
         "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
