@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Replaced 122 independent tools with 4 tag-grouped dynamic routers
 - Standardized tool schemas and removed any underscored parameters
-- Refactored action routing in `mcp_server.py` to leverage dynamic method lookups based on strict sets of allowed actions, reducing module size by 64% and simplifying complexity
+- Refactored action routing in `mcp_server.py` to use dynamic method lookups based on strict sets of allowed actions, reducing module size by 64% and simplifying complexity
 - Restructured `tests/` directory into cleanly isolated `tests/unit/` and `tests/integration/` suites
 - Combined duplicate test client fixtures into a shared, reusable `tests/conftest.py`
 
