@@ -1,7 +1,7 @@
 # Usage — API / CLI / MCP
 
 `owncast-agent` exposes the same capability three ways: as **MCP tools** an agent
-calls, as a **Python API** (`OwncastApi`) you import, and as **CLI** entry points. The
+calls, as a **Python API** (`OwncastApi`) the operator import, and as **CLI** entry points. The
 tool surface and the underlying Owncast REST contract are summarized in
 [Architecture](overview.md).
 
