@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
-from agent_utilities.core.exceptions import ApiError, AuthError
+from agent_connector_sdk.exceptions import ApiError, AuthError
 
 from owncast_agent.api_client import OwncastApi
 from owncast_agent.auth import get_client
