@@ -1,50 +1,81 @@
-"""Native epistemic-graph ingestion for Owncast records and telemetry.
+"""Epistemic-graph ingestion for Owncast records and telemetry.
 
-All writes use the required ``agent_utilities.knowledge_graph.memory.native_ingest``
-primitive. Nodes use canonical ``node_type`` and edges use canonical ``relationship``;
-nodes and edges commit in one native transaction. Missing engine dependencies, rejected
-records, conflicts, and transaction failures propagate as ``NativeIngestError``.
+Writes go through ``agent_connector_sdk.ingest`` -- the generated ``SourceIngest``
+client, not a local ingestion helper. Nodes use canonical ``node_type`` and edges use
+canonical ``relationship``. A malformed change set or a refused commit surfaces as
+``IngestError``.
 """
 
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    NativeIngestError,
+from agent_connector_sdk.ingest import (
+    ChangeSet,
+    Entity,
+    IngestBinding,
+    IngestError,
+    KnowledgeIngest,
+    Relationship,
+    current_ingest,
 )
-from agent_utilities.knowledge_graph.memory.native_ingest import (
-    ingest_entities as _native_ingest_entities,
-)
-from agent_utilities.mcp.concurrency import run_blocking
+from agent_connector_sdk.mcp.concurrency import run_blocking
 
 logger = logging.getLogger("owncast_agent.kg")
 
-_SOURCE = "owncast-agent"
-_DOMAIN = "owncast"
+_BINDING = IngestBinding(connector="owncast-agent", stream="owncast")
+
+_ENTITY_RESERVED_KEYS = frozenset({"id", "node_type"})
+_RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})
 
 
-def ingest_entities(
+def _to_entity(record: dict[str, Any]) -> Entity:
+    return Entity(
+        id=record.get("id"),
+        node_type=record.get("node_type"),
+        properties={
+            key: value
+            for key, value in record.items()
+            if key not in _ENTITY_RESERVED_KEYS
+        },
+    )
+
+
+def _to_relationship(record: dict[str, Any]) -> Relationship:
+    properties = {
+        key: value
+        for key, value in record.items()
+        if key not in _RELATIONSHIP_RESERVED_KEYS
+    }
+    return Relationship(
+        source=record["source"],
+        target=record["target"],
+        relationship=record["relationship"],
+        properties=properties or None,
+    )
+
+
+async def ingest_entities(
     entities: list[dict[str, Any]],
     relationships: list[dict[str, Any]] | None = None,
     *,
-    source: str = _SOURCE,
-    domain: str = _DOMAIN,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write canonical typed nodes and relationships in one native transaction."""
-    return _native_ingest_entities(
-        entities,
-        relationships,
-        source=source,
-        domain=domain,
-        client=client,
-        graph=graph,
+    """Write typed OWL nodes (+ edges) into epistemic-graph via the SDK ingest facade."""
+    if not entities:
+        raise IngestError("ingest_entities needs at least one entity")
+    change_set = ChangeSet(
+        entities=tuple(_to_entity(entity) for entity in entities),
+        relationships=tuple(
+            _to_relationship(relationship) for relationship in relationships or ()
+        ),
     )
+    service = ingest or current_ingest()
+    receipt = await service.submit(_BINDING, change_set)
+    return {"nodes": receipt.affected_count, "edges": receipt.relationship_count}
 
 
 # --- record mappers ---------------------------------------------------------
@@ -63,16 +94,15 @@ def _stream_node_id(instance: str | None) -> str:
     return f"owncast:stream:{_instance_id(instance)}"
 
 
-def ingest_status(
+async def ingest_status(
     status: dict[str, Any] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map an Owncast ``/status`` response → a single ``:Stream`` node."""
     if not status:
-        raise NativeIngestError("Owncast status ingestion requires a status record")
+        raise IngestError("Owncast status ingestion requires a status record")
     sid = _stream_node_id(instance)
     entity = {
         "id": sid,
@@ -88,15 +118,14 @@ def ingest_status(
         "versionNumber": status.get("versionNumber"),
         "externalToolId": _instance_id(instance),
     }
-    return ingest_entities([entity], client=client, graph=graph)
+    return await ingest_entities([entity], ingest=ingest)
 
 
-def ingest_active_viewers(
+async def ingest_active_viewers(
     viewers: list[dict[str, Any]] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map ``/admin/viewers`` records → ``:Viewer`` nodes linked ``:onStream``."""
     sid = _stream_node_id(instance)
@@ -124,15 +153,14 @@ def ingest_active_viewers(
             }
         )
         relationships.append({"source": vid, "target": sid, "relationship": "onStream"})
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_viewers_over_time(
+async def ingest_viewers_over_time(
     samples: list[dict[str, Any]] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map ``/admin/viewersOverTime`` points → ``:ViewerSample`` timeseries nodes."""
     inst = _instance_id(instance)
@@ -155,22 +183,21 @@ def ingest_viewers_over_time(
             }
         )
         relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_hardware_stats(
+async def ingest_hardware_stats(
     stats: dict[str, Any] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map ``/admin/hardwarestats`` cpu/memory/disk series → ``:HardwareSample`` nodes.
 
     The three parallel timeseries are merged by timestamp into one sample per instant.
     """
     if not stats:
-        raise NativeIngestError("Owncast hardware ingestion requires statistics")
+        raise IngestError("Owncast hardware ingestion requires statistics")
     inst = _instance_id(instance)
     sid = _stream_node_id(instance)
 
@@ -203,15 +230,14 @@ def ingest_hardware_stats(
             }
         )
         relationships.append({"source": nid, "target": sid, "relationship": "onStream"})
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_followers(
+async def ingest_followers(
     followers: list[dict[str, Any]] | dict[str, Any] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map ``/followers`` fediverse actors → ``:Person`` nodes linked ``:follows``."""
     if isinstance(followers, dict):
@@ -237,15 +263,14 @@ def ingest_followers(
             }
         )
         relationships.append({"source": pid, "target": sid, "relationship": "follows"})
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
-def ingest_chat_messages(
+async def ingest_chat_messages(
     messages: list[dict[str, Any]] | None,
     *,
     instance: str | None = None,
-    client: Any | None = None,
-    graph: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
     """Map admin chat messages → ``:ChatMessage`` nodes + author ``:Person`` links."""
     sid = _stream_node_id(instance)
@@ -286,7 +311,7 @@ def ingest_chat_messages(
             relationships.append(
                 {"source": nid, "target": pid, "relationship": "sentBy"}
             )
-    return ingest_entities(entities, relationships, client=client, graph=graph)
+    return await ingest_entities(entities, relationships, ingest=ingest)
 
 
 # --- live telemetry fan-out ---------------------------------------------------
@@ -303,7 +328,7 @@ class _TelemetryModality:
 
     name: str
     method_name: str
-    ingest: Callable[..., dict[str, int]]
+    ingest: Callable[..., Awaitable[dict[str, int]]]
     extract_records: bool = True
     requires_token: bool = False
 
@@ -348,13 +373,14 @@ async def _ingest_one_modality(
     client: Any,
     instance: str | None,
     access_token: str | None,
+    ingest: KnowledgeIngest | None,
 ) -> dict[str, int] | None:
     """Fetch + ingest one telemetry modality; None if its precondition isn't met."""
     if modality.requires_token and not access_token:
         return None
     payload = await _fetch_modality_payload(modality, client, access_token)
     records = _extract_records(payload) if modality.extract_records else payload
-    return modality.ingest(records, instance=instance)
+    return await modality.ingest(records, instance=instance, ingest=ingest)
 
 
 async def ingest_selected_telemetry(
@@ -363,6 +389,7 @@ async def ingest_selected_telemetry(
     *,
     access_token: str | None = None,
     instance: str | None = None,
+    ingest: KnowledgeIngest | None = None,
 ) -> dict[str, Any]:
     """Fetch + ingest every requested live-telemetry modality as typed KG nodes.
 
@@ -374,7 +401,9 @@ async def ingest_selected_telemetry(
     for modality in _TELEMETRY_MODALITIES:
         if modality.name not in wanted:
             continue
-        value = await _ingest_one_modality(modality, client, instance, access_token)
+        value = await _ingest_one_modality(
+            modality, client, instance, access_token, ingest
+        )
         if value is not None:
             result[modality.name] = value
     return result

@@ -1,27 +1,20 @@
-"""Native epistemic-graph ingestion — Wire-First coverage for owncast-agent.
+"""Epistemic-graph ingestion -- Wire-First coverage for owncast-agent.
 
-Exercises the real ``ingest_entities`` seam and each record mapper with a fake
-ChangeEnvelope-capable engine client (no engine required), asserting the
-committed AddNode/AddEdge operations and the Owncast telemetry -> typed
-:Stream / :Viewer / :ViewerSample / :HardwareSample / :ChatMessage / :Person
-mappings. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
-
-The fake client mirrors the canonical fixture in agent-utilities'
-``tests/knowledge_graph/test_native_ingest.py`` — the shared native-ingest
-primitive requires a verified ambient ``GraphSession`` (``kg:write`` scope)
-plus a client exposing ``changes``/``nodes``/``rdf``/``supports()``.
+Exercises the real ``ingest_entities`` seam and each record mapper against a fake
+``agent_connector_sdk.ingest`` transport (no engine required). The real SDK request
+builder (``agent_connector_sdk.ingest.request.build_request``) still runs, so a
+malformed change set is still caught by the SDK's own contract, not re-derived here;
+only the final network commit is faked. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 """
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 from typing import Any
 
-import msgpack
 import pytest
-from agent_utilities.knowledge_graph.core.session import GraphSession, use_session
-from agent_utilities.knowledge_graph.memory.native_ingest import NativeIngestError
-from agent_utilities.security.actor_identity import ActorType
-from agent_utilities.security.brain_context import ActorContext, use_actor
+from agent_connector_sdk.ingest import IngestError, KnowledgeIngest
+from epistemic_graph.generated.source_ingestion import SourceIngestionRequest
 
 from owncast_agent.kg_ingest import (
     ingest_active_viewers,
@@ -34,134 +27,79 @@ from owncast_agent.kg_ingest import (
 )
 
 
-@pytest.fixture(autouse=True)
-def _governed_session():
-    """Provide the verified ambient GraphSession every native-ingest write requires."""
-    actor = ActorContext(
-        actor_id="subject:opaque:synthetic",
-        actor_type=ActorType.AUTOMATED_SERVICE,
-        roles=(),
-        tenant_id="tenant:opaque:synthetic",
-        authenticated=True,
-    )
-    session = GraphSession(
-        actor=actor,
-        tenant=actor.tenant_id,
-        scopes=frozenset({"kg:write"}),
-        graph="__commons__",
-        policy_version="policy:opaque:synthetic",
-        audience="epistemic-graph",
-    )
-    with use_actor(actor), use_session(session):
-        yield
+class _FakeTransport:
+    """Records every submitted request; no epistemic-graph engine required."""
 
-
-class _FakeNodes:
     def __init__(self) -> None:
-        self.values: dict[str, dict[str, Any]] = {}
+        self.requests: list[SourceIngestionRequest] = []
 
-    def properties(self, node_id: str) -> dict[str, Any] | None:
-        return self.values.get(node_id)
+    async def source_status(self, _connector: str, _stream: str) -> Any:
+        return SimpleNamespace(accepted_checkpoint=None)
 
-    def list(self) -> list[tuple[str, dict[str, Any]]]:
-        return list(self.values.items())
+    async def submit(self, request: SourceIngestionRequest) -> Any:
+        self.requests.append(request)
+        return SimpleNamespace(
+            affected_count=len(request.records),
+            relationship_count=len(request.relationships),
+        )
 
-
-class _FakeChanges:
-    def __init__(self, nodes: _FakeNodes) -> None:
-        self.nodes = nodes
-        self.edges: list[tuple[str, str, dict[str, Any]]] = []
-        self.applied: list[dict[str, Any]] = []
-        self.records: dict[str, dict[str, Any]] = {}
-        self.versions: dict[str, dict[str, Any]] = {}
-
-    def get(self, envelope_id: str) -> dict[str, Any] | None:
-        return self.records.get(envelope_id)
-
-    def content_version(self, object_id: str) -> dict[str, Any] | None:
-        return self.versions.get(object_id)
-
-    def cursor(self, _source: str, _partition: str = "") -> None:
-        return None
-
-    def apply(self, envelope: dict[str, Any]) -> dict[str, Any]:
-        self.applied.append(envelope)
-        mutation = envelope["mutation"]
-        for operation in mutation["operations"]:
-            method = operation["method"]
-            params = method["params"]
-            properties = msgpack.unpackb(params["properties_msgpack"], raw=False)
-            if method["method"] == "AddNode":
-                self.nodes.values[params["node_id"]] = properties
-            elif method["method"] == "AddEdge":
-                self.edges.append(
-                    (params["source_id"], params["target_id"], properties)
-                )
-        version = envelope["content_version"]
-        self.versions[version["object_id"]] = version
-        self.records[envelope["envelope_id"]] = envelope
-        return {
-            "batch_id": mutation["batch_id"],
-            "replayed": False,
-            "projection_pending": False,
-        }
+    async def store_blob(self, _data: bytes) -> str:
+        raise AssertionError("owncast-agent telemetry ingestion carries no media")
 
 
-class _FakeRdf:
-    def validate_shacl(self, _shapes: str, _data_graph: str) -> dict[str, Any]:
-        return {"conforms": True, "results": []}
+@pytest.fixture
+def ingest() -> tuple[KnowledgeIngest, _FakeTransport]:
+    transport = _FakeTransport()
+    return KnowledgeIngest(transport, loop=None), transport
 
 
-class _FakeClient:
-    def __init__(self) -> None:
-        self.nodes = _FakeNodes()
-        self.changes = _FakeChanges(self.nodes)
-        self.rdf = _FakeRdf()
-
-    @staticmethod
-    def supports(operation: str) -> bool:
-        return operation == "ApplyChangeEnvelope"
+def _relation_names(request: SourceIngestionRequest) -> set[str]:
+    return {rel.relation_reference.rsplit("/", 1)[-1] for rel in request.relationships}
 
 
-def test_ingest_entities_writes_nodes_and_edges():
-    c = _FakeClient()
-    res = ingest_entities(
+@pytest.mark.asyncio
+async def test_ingest_entities_writes_nodes_and_edges(ingest):
+    service, transport = ingest
+    res = await ingest_entities(
         [
             {"id": "a", "node_type": "Stream", "streamTitle": "live"},
             {"id": "b", "node_type": "Viewer"},
         ],
         [{"source": "b", "target": "a", "relationship": "onStream"}],
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 2, "edges": 1}
-    assert len(c.changes.applied) == 1
-    assert set(c.nodes.values) == {"a", "b"}
-    # provenance is stamped
-    assert c.nodes.values["a"]["source"] == "owncast-agent"
-    assert c.nodes.values["a"]["domain"] == "owncast"
-    assert c.changes.edges == [("b", "a", {"relationship": "onStream"})]
+    assert len(transport.requests) == 1
+    request = transport.requests[0]
+    record_ids = {record.record_id for record in request.records}
+    assert record_ids == {"a", "b"}
+    a_record = next(r for r in request.records if r.record_id == "a")
+    assert a_record.payload["streamTitle"] == "live"
+    assert _relation_names(request) == {"onStream"}
 
 
-def test_ingest_status_maps_stream():
-    c = _FakeClient()
-    res = ingest_status(
+@pytest.mark.asyncio
+async def test_ingest_status_maps_stream(ingest):
+    service, transport = ingest
+    res = await ingest_status(
         {"online": True, "streamTitle": "Demo", "viewerCount": 5},
         instance="https://cast.example.com/",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 1, "edges": 0}
-    node = c.nodes.values["owncast:stream:cast.example.com"]
-    assert node["node_type"] == "Stream"
-    assert node["online"] is True
-    assert node["streamTitle"] == "Demo"
-    assert node["viewerCount"] == 5
+    request = transport.requests[0]
+    record = next(
+        r for r in request.records if r.record_id == "owncast:stream:cast.example.com"
+    )
+    assert record.payload["online"] is True
+    assert record.payload["streamTitle"] == "Demo"
+    assert record.payload["viewerCount"] == 5
 
 
-def test_ingest_active_viewers_links_to_stream():
-    c = _FakeClient()
-    res = ingest_active_viewers(
+@pytest.mark.asyncio
+async def test_ingest_active_viewers_links_to_stream(ingest):
+    service, transport = ingest
+    res = await ingest_active_viewers(
         [
             {
                 "clientID": "cli-1",
@@ -170,64 +108,71 @@ def test_ingest_active_viewers_links_to_stream():
             }
         ],
         instance="cast.example.com",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 1, "edges": 1}
-    node = c.nodes.values["owncast:viewer:cli-1"]
-    assert node["node_type"] == "Viewer"
-    assert node["userAgent"] == "Firefox"
-    assert node["geoCountryCode"] == "US"
-    assert c.changes.edges == [
-        (
-            "owncast:viewer:cli-1",
-            "owncast:stream:cast.example.com",
-            {"relationship": "onStream"},
-        )
-    ]
+    request = transport.requests[0]
+    record = next(
+        r for r in request.records if r.record_id == "owncast:viewer:cli-1"
+    )
+    assert record.payload["userAgent"] == "Firefox"
+    assert record.payload["geoCountryCode"] == "US"
+    rel = request.relationships[0]
+    assert rel.source.record_id == "owncast:viewer:cli-1"
+    assert rel.target.record_id == "owncast:stream:cast.example.com"
+    assert _relation_names(request) == {"onStream"}
 
 
-def test_ingest_viewers_over_time_timeseries():
-    c = _FakeClient()
-    res = ingest_viewers_over_time(
+@pytest.mark.asyncio
+async def test_ingest_viewers_over_time_timeseries(ingest):
+    service, transport = ingest
+    res = await ingest_viewers_over_time(
         [{"time": "2026-07-04T10:00:00Z", "value": 3}],
         instance="cast.example.com",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 1, "edges": 1}
+    request = transport.requests[0]
     nid = "owncast:viewersample:cast.example.com:2026-07-04T10:00:00Z"
-    node = c.nodes.values[nid]
-    assert node["node_type"] == "ViewerSample"
-    assert node["viewerCount"] == 3
-    assert node["sampledAt"] == "2026-07-04T10:00:00Z"
+    record = next(r for r in request.records if r.record_id == nid)
+    assert record.payload["viewerCount"] == 3
+    assert record.payload["sampledAt"] == "2026-07-04T10:00:00Z"
 
 
-def test_ingest_hardware_stats_merges_series_by_time():
-    c = _FakeClient()
-    res = ingest_hardware_stats(
+@pytest.mark.asyncio
+async def test_ingest_hardware_stats_merges_series_by_time(ingest):
+    service, transport = ingest
+    res = await ingest_hardware_stats(
         {
             "cpu": [{"time": "t1", "value": 10.0}, {"time": "t2", "value": 20.0}],
             "memory": [{"time": "t1", "value": 40.0}],
             "disk": [{"time": "t2", "value": 55.0}],
         },
         instance="cast.example.com",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 2, "edges": 2}
-    n1 = c.nodes.values["owncast:hardwaresample:cast.example.com:t1"]
-    assert n1["node_type"] == "HardwareSample"
-    assert n1["cpuUsage"] == 10.0
-    assert n1["memoryUsage"] == 40.0
-    n2 = c.nodes.values["owncast:hardwaresample:cast.example.com:t2"]
-    assert n2["cpuUsage"] == 20.0
-    assert n2["diskUsage"] == 55.0
+    request = transport.requests[0]
+    n1 = next(
+        r
+        for r in request.records
+        if r.record_id == "owncast:hardwaresample:cast.example.com:t1"
+    )
+    assert n1.payload["cpuUsage"] == 10.0
+    assert n1.payload["memoryUsage"] == 40.0
+    n2 = next(
+        r
+        for r in request.records
+        if r.record_id == "owncast:hardwaresample:cast.example.com:t2"
+    )
+    assert n2.payload["cpuUsage"] == 20.0
+    assert n2.payload["diskUsage"] == 55.0
 
 
-def test_ingest_followers_unwraps_results_and_links():
-    c = _FakeClient()
-    res = ingest_followers(
+@pytest.mark.asyncio
+async def test_ingest_followers_unwraps_results_and_links(ingest):
+    service, transport = ingest
+    res = await ingest_followers(
         {
             "results": [
                 {
@@ -240,28 +185,29 @@ def test_ingest_followers_unwraps_results_and_links():
             "total": 1,
         },
         instance="cast.example.com",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 1, "edges": 1}
-    node = c.nodes.values["owncast:person:https://fed.example/@bob"]
-    assert node["node_type"] == "Person"
-    # native_ingest routes writes through envelope_ingest's PersistencePrivacyGuard,
-    # which redacts any "username" field before persistence (CONCEPT:AU-KG PII policy).
-    assert node["username"] == "[REDACTED_PERSON]"
-    assert node["actorIRI"] == "https://fed.example/@bob"
-    assert c.changes.edges == [
-        (
-            "owncast:person:https://fed.example/@bob",
-            "owncast:stream:cast.example.com",
-            {"relationship": "follows"},
-        )
-    ]
+    request = transport.requests[0]
+    record = next(
+        r
+        for r in request.records
+        if r.record_id == "owncast:person:https://fed.example/@bob"
+    )
+    # PersistencePrivacyGuard redacts any "username" field before persistence
+    # (CONCEPT:AU-KG PII policy); "name" alone, outside person-context, is kept.
+    assert record.payload["username"] == "[REDACTED_PERSON]"
+    assert record.payload["actorIRI"] == "https://fed.example/@bob"
+    rel = request.relationships[0]
+    assert rel.source.record_id == "owncast:person:https://fed.example/@bob"
+    assert rel.target.record_id == "owncast:stream:cast.example.com"
+    assert _relation_names(request) == {"follows"}
 
 
-def test_ingest_chat_messages_maps_message_and_author():
-    c = _FakeClient()
-    res = ingest_chat_messages(
+@pytest.mark.asyncio
+async def test_ingest_chat_messages_maps_message_and_author(ingest):
+    service, transport = ingest
+    res = await ingest_chat_messages(
         [
             {
                 "id": "msg-1",
@@ -272,36 +218,34 @@ def test_ingest_chat_messages_maps_message_and_author():
             }
         ],
         instance="cast.example.com",
-        client=c,
-        graph="__commons__",
+        ingest=service,
     )
     assert res == {"nodes": 2, "edges": 2}
-    msg = c.nodes.values["owncast:chatmessage:msg-1"]
-    assert msg["node_type"] == "ChatMessage"
-    assert msg["body"] == "hello"
-    # native_ingest routes writes through envelope_ingest's PersistencePrivacyGuard,
-    # which redacts any "author" field before persistence (CONCEPT:AU-KG PII policy).
-    assert msg["author"] == "[REDACTED_PERSON]"
-    person = c.nodes.values["owncast:person:u-9"]
-    assert person["node_type"] == "Person"
-    assert person["name"] == "Alice"
-    assert (
-        "owncast:chatmessage:msg-1",
-        "owncast:stream:cast.example.com",
-        {"relationship": "onStream"},
-    ) in c.changes.edges
-    assert (
-        "owncast:chatmessage:msg-1",
-        "owncast:person:u-9",
-        {"relationship": "sentBy"},
-    ) in c.changes.edges
+    request = transport.requests[0]
+    msg = next(r for r in request.records if r.record_id == "owncast:chatmessage:msg-1")
+    assert msg.payload["body"] == "hello"
+    # PersistencePrivacyGuard redacts any "author" field before persistence
+    # (CONCEPT:AU-KG PII policy).
+    assert msg.payload["author"] == "[REDACTED_PERSON]"
+    person = next(r for r in request.records if r.record_id == "owncast:person:u-9")
+    assert person.payload["name"] == "Alice"
+    relation_pairs = {
+        (rel.source.record_id, rel.target.record_id, rel.relation_reference.rsplit("/", 1)[-1])
+        for rel in request.relationships
+    }
+    assert ("owncast:chatmessage:msg-1", "owncast:stream:cast.example.com", "onStream") in relation_pairs
+    assert ("owncast:chatmessage:msg-1", "owncast:person:u-9", "sentBy") in relation_pairs
 
 
-def test_retired_structural_alias_is_rejected():
-    with pytest.raises(NativeIngestError, match="canonical node_type"):
-        ingest_entities([{"id": "a", "type": "Stream"}], client=_FakeClient())
+@pytest.mark.asyncio
+async def test_retired_structural_alias_is_rejected(ingest):
+    service, _transport = ingest
+    with pytest.raises(IngestError, match="node_type"):
+        await ingest_entities([{"id": "a", "type": "Stream"}], ingest=service)
 
 
-def test_empty_native_ingest_is_rejected():
-    with pytest.raises(NativeIngestError, match="at least one entity"):
-        ingest_entities([], client=_FakeClient())
+@pytest.mark.asyncio
+async def test_empty_native_ingest_is_rejected(ingest):
+    service, _transport = ingest
+    with pytest.raises(IngestError, match="at least one entity"):
+        await ingest_entities([], ingest=service)
