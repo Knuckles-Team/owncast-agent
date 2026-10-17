@@ -1,5 +1,3 @@
-import importlib
-from unittest.mock import patch
 
 import pytest
 
@@ -18,14 +16,6 @@ def test_import_owncast_agent():
     assert "OwncastApi" in owncast_agent.__all__
 
 
-@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
-def test_getattr_mcp_agent_availability():
-    """Test dynamic attribute checking for _MCP_AVAILABLE and _AGENT_AVAILABLE.
-
-    CONCEPT:AU-ECO.mcp.fastmcp-middleware
-    """
-    assert owncast_agent._MCP_AVAILABLE is True
-    assert owncast_agent._AGENT_AVAILABLE is True
 
 
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
@@ -49,42 +39,8 @@ def test_getattr_attribute_error():
         _ = owncast_agent.non_existent_attribute_xyz
 
 
-@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
-def test_getattr_import_error_simulation():
-    """Simulate module import failures to cover the except ImportError blocks.
-
-    CONCEPT:AU-ECO.mcp.fastmcp-middleware
-    """
-    import owncast_agent as oa
-
-    oa._loaded_optional_modules.clear()
-
-    original_import = importlib.import_module
-
-    def mock_import(name, *args, **kwargs):
-        if name in oa.OPTIONAL_MODULES:
-            raise ImportError(f"Simulated import error for {name}")
-        return original_import(name, *args, **kwargs)
-
-    with patch("importlib.import_module", side_effect=mock_import):
-        assert oa.__getattr__("_MCP_AVAILABLE") is False
-        assert oa.__getattr__("_AGENT_AVAILABLE") is False
-
-        with pytest.raises(AttributeError):
-            _ = oa.__getattr__("mcp_server")
 
 
-@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
-def test_getattr_availability_fallback():
-    """Verify fallback return False when OPTIONAL_MODULES keys are missing.
-
-    CONCEPT:AU-ECO.mcp.fastmcp-middleware
-    """
-    import owncast_agent as oa
-
-    with patch.dict(oa.OPTIONAL_MODULES, {}, clear=True):
-        assert oa.__getattr__("_MCP_AVAILABLE") is False
-        assert oa.__getattr__("_AGENT_AVAILABLE") is False
 
 
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")

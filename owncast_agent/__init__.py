@@ -9,7 +9,6 @@ __all__: list[str] = []
 CORE_MODULES: list[str] = ["owncast_agent.api_client"]
 
 OPTIONAL_MODULES = {
-    "owncast_agent.agent_server": "agent",
     "owncast_agent.mcp_server": "mcp",
 }
 
@@ -31,7 +30,7 @@ for module_name in CORE_MODULES:
         module = importlib.import_module(module_name)
         _expose_members(module)
 
-# Dynamic/lazy loading of optional modules (agent_server, mcp_server)
+# Dynamic/lazy loading of optional modules (mcp_server)
 _loaded_optional_modules: dict[str, Any] = {}
 
 
@@ -47,7 +46,6 @@ def _import_module_safely(module_name: str):
 # OPTIONAL_MODULES, keyed by the dunder-ish flag name callers probe for.
 _AVAILABILITY_FLAG_MARKERS = {
     "_MCP_AVAILABLE": "mcp_server",
-    "_AGENT_AVAILABLE": "agent_server",
 }
 
 

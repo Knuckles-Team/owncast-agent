@@ -1,6 +1,6 @@
 # owncast-agent
 
-Owncast **API + MCP Server + A2A Agent** for the agent-utilities ecosystem — the
+Owncast **API + MCP Server + A2A Agent** for the Graph OS ecosystem — the
 typed, deterministic control surface for an Owncast self-hosted live-streaming and
 chat server.
 

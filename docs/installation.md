@@ -22,7 +22,7 @@ for additional capabilities:
 
 | Extra | Install | Pulls in |
 |---|---|---|
-| (base) | `pip install owncast-agent` | MCP-server runtime + `OwncastApi` client (`agent-utilities[mcp]`) |
+| (base) | `pip install owncast-agent` | MCP-server runtime + `OwncastApi` client (`agent-connector-sdk[mcp]`) |
 | `agent` | `pip install "owncast-agent[agent]"` | Pydantic-AI agent server + Logfire tracing |
 | `all` | `pip install "owncast-agent[all]"` | MCP server, agent server, and tracing |
 | `test` | `pip install "owncast-agent[test]"` | The pytest test toolchain |

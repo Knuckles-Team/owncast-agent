@@ -4,7 +4,7 @@
   "schema_version": "1.0",
   "prompt_version": "0.1.0",
   "source": "owncast-agent",
-  "extends": "agent-utilities:base",
+  "extends": "agent-connector-sdk:base",
   "compose": "append",
   "description": "Owncast live-streaming operations specialist: broadcast health, viewer & hardware telemetry, chat moderation, and fediverse followers over the owncast-agent MCP server.",
   "metadata": {
