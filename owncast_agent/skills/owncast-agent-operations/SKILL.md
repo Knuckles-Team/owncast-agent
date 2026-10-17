@@ -2,12 +2,12 @@
 name: owncast-agent-operations
 skill_type: skill
 description: >-
-  Operate owncast-agent through its governed MCP and GraphOS capabilities, including owncast audience ingestion, owncast broadcast monitoring, owncast chat moderation. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
+  Operate owncast-agent through its governed MCP and Arbora capabilities, including owncast audience ingestion, owncast broadcast monitoring, owncast chat moderation. Use when a request requires this provider's read, change, automation, ingestion, troubleshooting, or evidence workflows.
 ---
 
 # Owncast Agent Operations
 
-Use the provider's governed MCP tools through GraphOS delegation.
+Use the provider's governed MCP tools through Arbora delegation.
 
 ## Workflow
 
