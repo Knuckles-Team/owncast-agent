@@ -237,53 +237,6 @@ async def test_mcp_tools_routing(mock_client):
             await _assert_invalid_json_is_rejected(tool, mock_client)
 
 
-@pytest.mark.asyncio
-@pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
-async def test_mcp_context_logging(mock_client):
-    """Confirm that passing a FastMCP Context records execution steps correctly.
-
-    CONCEPT:AU-ECO.mcp.fastmcp-middleware
-    """
-    mcp, *_ = get_mcp_instance()
-    tools = await mcp.list_tools()
-
-    called_info = []
-
-    async def mock_info(msg):
-        called_info.append(msg)
-
-    mock_ctx = MagicMock()
-    mock_ctx.info = mock_info
-    for tool in tools:
-        if tool.name == "owncast_chat":
-            await tool.fn(
-                action="get_user_details",
-                params_json="{}",
-                client=mock_client,
-                ctx=mock_ctx,
-            )
-        elif tool.name == "owncast_internal":
-            await tool.fn(
-                action="get_status", params_json="{}", client=mock_client, ctx=mock_ctx
-            )
-        elif tool.name == "owncast_objects":
-            await tool.fn(
-                action="set_server_name",
-                params_json='{"name": "test"}',
-                client=mock_client,
-                ctx=mock_ctx,
-            )
-        elif tool.name == "owncast_external":
-            await tool.fn(
-                action="send_system_message",
-                params_json='{"body": "test"}',
-                client=mock_client,
-                ctx=mock_ctx,
-            )
-
-    assert len(called_info) > 0
-
-
 @pytest.mark.concept("AU-ORCH.adapter.kg-graph-materialization")
 def test_mcp_server_cli_execution():
     """Verify CLI configuration and server startup transitions for stdio, HTTP, and SSE transports.

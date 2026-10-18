@@ -1,9 +1,9 @@
 {
   "api_version": "arbora.io/v1",
   "artifacts": {
-    "connector_manifest.yml": "e5b528386db6b6eeda8d0170aa2d85127e2d812dfb4bf25126a3f55e8918874f",
-    "owncast_agent/connectors/mcp_source_presets.json": "fde3a1d6f0c523651444ef31b6027c0e5642cdc092784eede6c34c735912f5b0",
-    "owncast_agent/connectors/tool_schema_fingerprints.json": "c5392fa9a1232fbcb05bc2dc61a7ccb789459cd6bb3df1a8d0411ea8b9db739b",
+    "connector_manifest.yml": "b64b5e9235781e6577e6dfd5221a5c0026a444aa20dc2a85c7631fd3bc7a492d",
+    "owncast_agent/connectors/mcp_source_presets.json": "a923363117142f7818486a2ce15db60e501e5bb29c1c5a431f48c5b89985acb1",
+    "owncast_agent/connectors/tool_schema_fingerprints.json": "c1114216bf17d09947efeea437beff4c85e21edd71e743d27e244990aa7bc8e3",
     "owncast_agent/ontology/fixtures/records.json": "a4e6e60944da12012f6d4ff7330da6c75ecbbef1a5ad5c21d8a940b9f0494d81",
     "owncast_agent/ontology/mappings/source.yaml": "4ddcafebd0a51174ac04ebb4d7cb1d40f265fb5a6029f0e02158b7b74835bcf9",
     "owncast_agent/ontology/migrations/manifest.json": "70e4e14937563ff2b2c8bc1a955d49903853482e82e1c4a4b60f297c7c6ac310",
