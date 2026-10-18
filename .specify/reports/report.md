@@ -43,7 +43,7 @@ xychart-beta
 `██████████████░░░░░░` 74/100
 
 > [!NOTE]
-> Detected ecosystem marker: agent-utilities → Agent-Utilities Ecosystem
+> Detected ecosystem marker: agent-connector-sdk → Agent-Utilities Ecosystem
 
 | Criterion | Points | Evidence | Reasoning |
 |-----------|--------|----------|-----------|
@@ -285,7 +285,7 @@ xychart-beta
 | # | Priority | Domain | Action | Impact | Risk |
 |---|----------|--------|--------|--------|------|
 | 1 | 🔴 High | Concept Traceability | Low traceability ratio: 17% concepts fully traced | High | Medium |
-| 2 | 🟡 Medium | Project Analysis | Detected ecosystem marker: agent-utilities → Agent-Utilities Ecosystem | Medium | Low |
+| 2 | 🟡 Medium | Project Analysis | Detected ecosystem marker: agent-connector-sdk → Agent-Utilities Ecosystem | Medium | Low |
 | 3 | 🟡 Medium | Project Analysis | Protocol support: MCP | Medium | Low |
 | 4 | 🟡 Medium | Codebase Optimization | 1 functions exceed 200 lines (actionable refactoring targets): test_mcp_tools_ro | Medium | Low |
 | 5 | 🟡 Medium | Codebase Optimization | 6 functions with nesting depth >4 | Medium | Low |

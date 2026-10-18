@@ -1,5 +1,5 @@
 site_name: "owncast-agent"
-site_description: "Owncast API + MCP Server + A2A Agent — the typed, deterministic control surface for an Owncast live-streaming and chat server in the agent-utilities ecosystem."
+site_description: "Owncast API + MCP Server + A2A Agent — the typed, deterministic control surface for an Owncast live-streaming and chat server in the Arbora ecosystem."
 site_url: "https://knuckles-team.github.io/owncast-agent/"
 repo_name: "Knuckles-Team/owncast-agent"
 repo_url: "https://github.com/Knuckles-Team/owncast-agent"
