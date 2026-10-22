@@ -26,7 +26,7 @@ from agent_connector_sdk.mcp.concurrency import run_blocking
 
 logger = logging.getLogger("owncast_agent.kg")
 
-_BINDING = IngestBinding(connector="owncast-agent", stream="owncast")
+_BINDING = IngestBinding(connector="owncast-mcp", stream="owncast")
 
 _ENTITY_RESERVED_KEYS = frozenset({"id", "node_type"})
 _RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})

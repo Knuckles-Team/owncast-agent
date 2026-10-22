@@ -1,4 +1,4 @@
-connector: owncast-agent
+connector: owncast-mcp
 ontology_source: owncast
 schema_version: '1'
 resources:
