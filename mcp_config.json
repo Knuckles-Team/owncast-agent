@@ -7,7 +7,6 @@
         "owncast-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "condensed",
         "CHATTOOL": "True",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",

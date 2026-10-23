@@ -194,9 +194,6 @@ services:
       - HOST=0.0.0.0
       - PORT=9004
       - MCP_URL=http://owncast-agent-mcp:8000/mcp
-      - PROVIDER=${PROVIDER:-openai}
-      - MODEL_ID=${MODEL_ID:-gpt-4o}
-      - ENABLE_WEB_UI=True
     ports: ["9004:9004"]
 ```
 

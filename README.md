@@ -20,7 +20,7 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/owncast-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/owncast-agent)
 
-*Version: 2.3.0*
+*Version: 2.3.1*
 
 > **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
 > interfaces, and guidance for provisioning the Owncast platform are maintained in
@@ -250,7 +250,6 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
         "owncast-mcp"
       ],
       "env": {
-        "MCP_TOOL_MODE": "intent",
         "CHATTOOL": "True",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
@@ -287,7 +286,6 @@ own runtime secret boundary.
         "TRANSPORT": "streamable-http",
         "HOST": "127.0.0.1",
         "PORT": "8000",
-        "MCP_TOOL_MODE": "intent",
         "CHATTOOL": "True",
         "EXTERNALTOOL": "True",
         "INTERNALTOOL": "True",
@@ -419,9 +417,6 @@ services:
       - HOST=0.0.0.0
       - PORT=9004
       - MCP_URL=http://owncast-agent-mcp:8000/mcp
-      - PROVIDER=${PROVIDER:-openai}
-      - MODEL_ID=${MODEL_ID:-gpt-4o}
-      - ENABLE_WEB_UI=True
       - ENABLE_OTEL=True
     ports:
       - "9004:9004"
@@ -474,15 +469,12 @@ Built directly upon the enterprise-ready [`agent-connector-sdk`](https://github.
 | `TRANSPORT` | `stdio` | options: stdio, streamable-http, sse |
 | `ENABLE_OTEL` | `True` |  |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:8080/api/public/otel` |  |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` | `pk-...` |  |
-| `OTEL_EXPORTER_OTLP_SECRET_KEY` | `sk-...` |  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | `http/protobuf` |  |
 | `EUNOMIA_TYPE` | `none` | options: none, embedded, remote |
 | `EUNOMIA_POLICY_FILE` | `mcp_policies.json` |  |
 | `EUNOMIA_REMOTE_URL` | `http://eunomia-server:8000` |  |
 | `OWNCAST_URL` | `http://localhost:9000` |  |
 | `OWNCAST_TOKEN` | `your_owncast_admin_or_integration_token_here` |  |
-| `DEFAULT_AGENT_NAME` | `Owncast Agent` |  |
 | `INTERNALTOOL` | `True` |  |
 | `OBJECTSTOOL` | `True` |  |
 | `EXTERNALTOOL` | `True` |  |
@@ -492,7 +484,6 @@ Built directly upon the enterprise-ready [`agent-connector-sdk`](https://github.
 
 | Variable | Example | Description |
 |----------|---------|-------------|
-| `MCP_TOOL_MODE` | `condensed` | Tool surface: `condensed` | `verbose` | `both` |
 | `MCP_ENABLED_TOOLS` | — | Comma-separated tool allow-list |
 | `MCP_DISABLED_TOOLS` | — | Comma-separated tool deny-list |
 | `MCP_ENABLED_TAGS` | — | Comma-separated tag allow-list |
@@ -503,9 +494,6 @@ Built directly upon the enterprise-ready [`agent-connector-sdk`](https://github.
 | `DEBUG` | `False` | Verbose logging |
 | `PYTHONUNBUFFERED` | `1` | Unbuffered stdout (recommended in containers) |
 | `MCP_URL` | `http://localhost:8000/mcp` | URL of the MCP server the agent connects to |
-| `PROVIDER` | `openai` | LLM provider for the agent |
-| `MODEL_ID` | `gpt-4o` | Model id for the agent |
-| `ENABLE_WEB_UI` | `True` | Serve the AG-UI web interface |
 
 _18 package + 14 inherited variable(s). Auto-generated from `.env.example` + the shared agent-connector-sdk set — do not edit._
 <!-- ENV-VARS-TABLE:END -->
@@ -525,7 +513,6 @@ Every variable the server reads, grouped by purpose.
 | `TRANSPORT` | `stdio`, `streamable-http`, or `sse`. | `stdio` |
 | `HOST` | Bind host (HTTP transports). | `0.0.0.0` |
 | `PORT` | Bind port (HTTP transports). | `8000` |
-| `MCP_TOOL_MODE` | Tool surface: `condensed`, `verbose`, or `both`. | `condensed` |
 | `MCP_ENABLED_TOOLS` / `MCP_DISABLED_TOOLS` | Comma-separated tool allow/deny list. | — |
 | `MCP_ENABLED_TAGS` / `MCP_DISABLED_TAGS` | Comma-separated tag allow/deny list. | — |
 | `PYTHONUNBUFFERED` | Unbuffered stdout (recommended in containers). | `1` |
@@ -547,7 +534,6 @@ The names match the authoritative "Toggle Env Var" column in the
 |----------|-------------|---------|
 | `ENABLE_OTEL` | Enable OpenTelemetry export. | `True` |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP collector endpoint. | — |
-| `OTEL_EXPORTER_OTLP_PUBLIC_KEY` / `OTEL_EXPORTER_OTLP_SECRET_KEY` | OTLP auth keys. | — |
 | `OTEL_EXPORTER_OTLP_PROTOCOL` | OTLP protocol (e.g. `http/protobuf`). | — |
 | `EUNOMIA_TYPE` | Authorization mode: `none`, `embedded`, `remote`. | `none` |
 | `EUNOMIA_POLICY_FILE` | Embedded policy file. | `mcp_policies.json` |
@@ -557,10 +543,6 @@ The names match the authoritative "Toggle Env Var" column in the
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `MCP_URL` | URL of the MCP server the agent connects to. | `http://localhost:8000/mcp` |
-| `PROVIDER` | LLM provider (e.g. `openai`). | `openai` |
-| `MODEL_ID` | Model id (e.g. `gpt-4o`). | `gpt-4o` |
-| `ENABLE_WEB_UI` | Serve the AG-UI web interface. | `True` |
-| `DEFAULT_AGENT_NAME` | Show name for the Graph Agent. | `Owncast Agent` |
 
 See [`.env.example`](.env.example) for a copy-paste starting point.
 
