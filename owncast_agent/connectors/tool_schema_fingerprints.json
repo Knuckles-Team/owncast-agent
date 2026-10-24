@@ -1,8 +1,0 @@
-{
-  "algorithm": "agent-connector-sdk:mcp-tool-contract-compat:v2",
-  "connector": "owncast-mcp",
-  "schema_version": "1",
-  "tools": {
-    "owncast_get_followers": "b668bdd0e5274d2bd03c1436d50c22a7b0e542b0bd587d646a7a578bda0c827b"
-  }
-}
