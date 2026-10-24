@@ -32,10 +32,21 @@ _ENTITY_RESERVED_KEYS = frozenset({"id", "node_type"})
 _RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})
 
 
+def _required_text(record: dict[str, Any], key: str) -> str:
+    value = record.get(key)
+    if not isinstance(value, str) or not value:
+        from agent_connector_sdk.ingest import IngestError
+
+        raise IngestError(
+            f"every entity needs an id and a node_type, got {key}={value!r}"
+        )
+    return value
+
+
 def _to_entity(record: dict[str, Any]) -> Entity:
     return Entity(
-        id=record.get("id"),
-        node_type=record.get("node_type"),
+        id=_required_text(record, "id"),
+        node_type=_required_text(record, "node_type"),
         properties={
             key: value
             for key, value in record.items()
