@@ -3,16 +3,12 @@
 import subprocess
 import sys
 
-import pytest
 
 
 def test_module_runnable():
     """Package module should be runnable with --help or similar."""
     pkg_name = (
-        __import__("pathlib")
-        .Path(__file__)
-        .resolve()
-        .parent.parent.name.replace("-", "_")
+        __import__("tomllib").loads(__import__("pathlib").Path(__file__).resolve().parent.parent.joinpath("pyproject.toml").read_text(encoding="utf-8"))["project"]["name"].replace("-", "_")
     )
     result = subprocess.run(
         [sys.executable, "-c", f"import {pkg_name}"],
