@@ -89,3 +89,21 @@ def __getattr__(name: str) -> Any:
 
 def __dir__() -> list[str]:
     return sorted(list(globals().keys()) + __all__)
+
+
+from agent_connector_sdk.connector import Connector
+from agent_connector_sdk.connector_hooks import RegistrationContext
+
+
+def _register_legacy_surface(context: RegistrationContext) -> None:
+    """Retain the legacy registrar result for its public startup tuple."""
+    from owncast_agent.mcp_server import register_server_surface
+
+    tags = register_server_surface(context.server)
+    vars(context.server)["_owncast_registered_tags"] = tags
+
+
+connector = Connector(
+    instructions="owncast-agent MCP Server — Condensed Action-Routed Tools.",
+    extra_registrations=(_register_legacy_surface,),
+)

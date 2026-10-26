@@ -12,10 +12,11 @@
       "title": "Fleet name",
       "delivery_state": "VERIFIED",
       "landed_in": [
+        "66d883771358",
         "cff3bc2835d2"
       ],
       "verified_by": [
-        "tests/test_fleet_name.py:35"
+        "tests/test_fleet_name.py:34"
       ]
     }
   ]

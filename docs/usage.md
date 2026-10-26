@@ -39,17 +39,18 @@ api = OwncastApi(
 )
 
 # Reads
-status = api.get_status()                 # server status
-viewers = api.get_active_viewers()        # current active viewers
-followers = api.get_followers(limit=50)   # the follower list
-hardware = api.get_hardware_stats()       # CPU / memory / disk
+status = api.get_status()  # server status
+viewers = api.get_active_viewers()  # current active viewers
+followers = api.get_followers(limit=50)  # the follower list
+hardware = api.get_hardware_stats()  # CPU / memory / disk
 ```
 
 Build a client straight from the environment:
 
 ```python
 from owncast_agent.auth import get_client
-api = get_client()        # reads OWNCAST_URL / OWNCAST_TOKEN from the environment / .env
+
+api = get_client()  # reads OWNCAST_URL / OWNCAST_TOKEN from the environment / .env
 ```
 
 ### Writes
