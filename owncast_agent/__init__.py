@@ -100,7 +100,7 @@ def _register_legacy_surface(context: RegistrationContext) -> None:
     from owncast_agent.mcp_server import register_server_surface
 
     tags = register_server_surface(context.server)
-    context.server._owncast_registered_tags = tags
+    vars(context.server)["_owncast_registered_tags"] = tags
 
 
 connector = Connector(
