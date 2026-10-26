@@ -12,6 +12,7 @@
       "title": "Fleet name",
       "delivery_state": "VERIFIED",
       "landed_in": [
+        "66d883771358",
         "cff3bc2835d2"
       ],
       "verified_by": [
