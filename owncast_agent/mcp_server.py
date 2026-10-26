@@ -24,9 +24,10 @@ import sys
 from typing import Any
 
 from agent_connector_sdk.config import load_config
+from agent_connector_sdk.connector import build_server
+from agent_connector_sdk.connector_identity import connector_version
 from agent_connector_sdk.mcp.action_dispatch import resolve_action
 from agent_connector_sdk.mcp.concurrency import run_blocking
-from agent_connector_sdk.mcp.server import create_mcp_server
 from agent_connector_sdk.mcp.tool_surface import register_tool_surface
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -34,7 +35,7 @@ from starlette.responses import JSONResponse
 from owncast_agent.api_client import OwncastApi
 from owncast_agent.auth import get_client
 
-__version__ = "2.3.3"
+__version__ = connector_version("owncast_agent")
 
 logger = get_logger(name="owncast-agent")
 logger.setLevel(logging.INFO)
@@ -371,20 +372,12 @@ def register_kg_tools(mcp: FastMCP):
         )
 
 
-def get_mcp_instance() -> tuple[Any, ...]:
-    """Initialize and return the MCP instance."""
-    load_config()
-    args, mcp, middlewares = create_mcp_server(
-        name="owncast-agent MCP",
-        version=__version__,
-        instructions="owncast-agent MCP Server — Condensed Action-Routed Tools.",
-    )
+def register_server_surface(mcp: FastMCP) -> list[str]:
+    """Reuse the existing health route and tool registrars in legacy order."""
 
     @mcp.custom_route("/health", methods=["GET"])
     async def health_check(request: Request) -> JSONResponse:
         return JSONResponse({"status": "OK"})
-
-    register_kg_tools(mcp)
 
     registered_tags = register_tool_surface(
         mcp,
@@ -394,9 +387,14 @@ def get_mcp_instance() -> tuple[Any, ...]:
         tools_module=sys.modules[__name__],
     )
 
-    for mw in middlewares:
-        mcp.add_middleware(mw)
-    return mcp, args, middlewares, registered_tags
+    return registered_tags
+
+
+def get_mcp_instance(*, command_args=None) -> tuple[Any, ...]:
+    """Preserve legacy configuration and the four-item startup tuple."""
+    load_config()
+    args, mcp = build_server("owncast_agent", command_args=command_args)
+    return mcp, args, list(mcp.middleware), mcp._owncast_registered_tags
 
 
 def mcp_server() -> None:

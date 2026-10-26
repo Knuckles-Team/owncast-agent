@@ -35,7 +35,7 @@ def _call_connectors(path: Path) -> list[str]:
 def test_connector_name_is_the_fleet_name() -> None:
     pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     assert pyproject["project"]["entry-points"]["agent_connector_sdk.connector"] == {
-        FLEET: "owncast_agent"
+        FLEET: "owncast_agent:connector"
     }
     assert connector_name("owncast_agent") == FLEET
     for module in sorted(PACKAGE.glob("*.py")):
