@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Packaged `owncast-agent-development` skill with the repository's rapid-delivery contract.
 - Action-Routed dynamic metaprogramming to drastically reduce tool limits while preserving 1:1 endpoint parity
 - Pytest concept markers (`@pytest.mark.concept`) and docstring traceability mapping to the master concepts registry
 - Full Environment Variables documentation section in README.md detailing 15 configuration settings
