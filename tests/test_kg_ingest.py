@@ -34,7 +34,9 @@ class _FakeTransport:
         self.requests: list[SourceIngestionRequest] = []
 
     async def source_status(self, _connector: str, _stream: str) -> Any:
-        return SimpleNamespace(accepted_checkpoint=None)
+        return SimpleNamespace(
+            connector=_connector, stream=_stream, accepted_checkpoint=None
+        )
 
     async def submit(self, request: SourceIngestionRequest) -> Any:
         self.requests.append(request)
@@ -112,9 +114,7 @@ async def test_ingest_active_viewers_links_to_stream(ingest):
     )
     assert res == {"nodes": 1, "edges": 1}
     request = transport.requests[0]
-    record = next(
-        r for r in request.records if r.record_id == "owncast:viewer:cli-1"
-    )
+    record = next(r for r in request.records if r.record_id == "owncast:viewer:cli-1")
     assert record.payload["userAgent"] == "Firefox"
     assert record.payload["geoCountryCode"] == "US"
     rel = request.relationships[0]
@@ -230,11 +230,23 @@ async def test_ingest_chat_messages_maps_message_and_author(ingest):
     person = next(r for r in request.records if r.record_id == "owncast:person:u-9")
     assert person.payload["name"] == "Alice"
     relation_pairs = {
-        (rel.source.record_id, rel.target.record_id, rel.relation_reference.rsplit("/", 1)[-1])
+        (
+            rel.source.record_id,
+            rel.target.record_id,
+            rel.relation_reference.rsplit("/", 1)[-1],
+        )
         for rel in request.relationships
     }
-    assert ("owncast:chatmessage:msg-1", "owncast:stream:cast.example.com", "onStream") in relation_pairs
-    assert ("owncast:chatmessage:msg-1", "owncast:person:u-9", "sentBy") in relation_pairs
+    assert (
+        "owncast:chatmessage:msg-1",
+        "owncast:stream:cast.example.com",
+        "onStream",
+    ) in relation_pairs
+    assert (
+        "owncast:chatmessage:msg-1",
+        "owncast:person:u-9",
+        "sentBy",
+    ) in relation_pairs
 
 
 @pytest.mark.asyncio
