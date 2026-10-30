@@ -12,7 +12,7 @@ description: >-
 license: MIT
 tags: [owncast, streaming, knowledge-graph, ingestion, timeseries, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Owncast Audience Ingestion

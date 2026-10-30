@@ -128,7 +128,7 @@
     rdfs:comment """Owncast self-hosted live-streaming model — broadcast Stream state, active
     Viewer sessions, viewer-count and hardware-utilisation timeseries samples, live ChatMessages,
     and fediverse follower Persons, with their :onStream / :sentBy / :follows relationships —
-    federated into the agent-connector-sdk knowledge-graph hub.""" .
+    federated into the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
 <http://knuckles.team/kg#ChatMessage> rdfs:subClassOf <http://knuckles.team/kg#Message> .

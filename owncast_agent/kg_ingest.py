@@ -1,6 +1,6 @@
 """Epistemic-graph ingestion for Owncast records and telemetry.
 
-Writes go through ``agent_connector_sdk.ingest`` -- the generated ``SourceIngest``
+Writes go through ``scion_sdk.ingest`` -- the generated ``SourceIngest``
 client, not a local ingestion helper. Nodes use canonical ``node_type`` and edges use
 canonical ``relationship``. A malformed change set or a refused commit surfaces as
 ``IngestError``.
@@ -13,7 +13,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Any
 
-from agent_connector_sdk.ingest import (
+from scion_sdk.ingest import (
     ChangeSet,
     Entity,
     IngestBinding,
@@ -22,7 +22,7 @@ from agent_connector_sdk.ingest import (
     Relationship,
     current_ingest,
 )
-from agent_connector_sdk.mcp.concurrency import run_blocking
+from scion_sdk.mcp.concurrency import run_blocking
 
 logger = logging.getLogger("owncast_agent.kg")
 
@@ -35,7 +35,7 @@ _RELATIONSHIP_RESERVED_KEYS = frozenset({"source", "target", "relationship"})
 def _required_text(record: dict[str, Any], key: str) -> str:
     value = record.get(key)
     if not isinstance(value, str) or not value:
-        from agent_connector_sdk.ingest import IngestError
+        from scion_sdk.ingest import IngestError
 
         raise IngestError(
             f"every entity needs an id and a node_type, got {key}={value!r}"

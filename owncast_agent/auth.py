@@ -1,4 +1,4 @@
-from agent_connector_sdk.config import setting
+from scion_sdk.config import setting
 
 from .api_client import OwncastApi
 

@@ -192,3 +192,6 @@ trace.txt
 # P0.2/P0.3 (arbora-completion-program): materialized, dev-machine-only
 # standalone against its own tracked lock instead of the ecosystem workspace.
 # Never tracked.
+
+# Spec status is computed at read time (pipelines-hook spec-status --write), never committed.
+specs/*/status.json
