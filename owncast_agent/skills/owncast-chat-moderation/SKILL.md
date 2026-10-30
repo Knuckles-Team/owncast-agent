@@ -11,7 +11,7 @@ description: >-
 license: MIT
 tags: [owncast, chat, moderation, streaming, mcp]
 metadata:
-  author: Genius
+  author: Knuckles-Team
   version: '0.1.0'
 ---
 # Owncast Chat Moderation

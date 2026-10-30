@@ -2,6 +2,6 @@
 
 Data-only subpackage: it carries ``owncast.ttl`` (the ``owl:Ontology``
 ``http://knuckles.team/kg/owncast`` module) which the Arbora hub federates in via
-the ``agent_connector_sdk.ontology_providers`` entry-point. It holds no business logic
+the ``scion_sdk.ontology_providers`` entry-point. It holds no business logic
 and no heavy imports so the hub can resolve it cheaply.
 """

@@ -9,7 +9,7 @@ description: Develop and deliver changes in the Owncast connector repository.
 Use this skill for work in the `owncast-agent` repository. The repository owns the
 Owncast API client, mappings, connector content, MCP tools, and the companion agent.
 The connector contract and generic MCP/A2A transports belong to
-[`agent-connector-sdk`](https://github.com/Knuckles-Team/agent-connector-sdk).
+[`scion-sdk`](https://github.com/Knuckles-Team/scion-sdk).
 
 ## Rapid delivery: the 5-minute contract
 
@@ -17,7 +17,7 @@ The connector contract and generic MCP/A2A transports belong to
 2. Find the owning row with `git grep -n "<term>" -- specs` and follow the spec standard.
    Add the row to the owning spec before changing behavior. Cite its ID in a `Spec:` trailer.
 3. Keep changes inside this connector. Do not change `agent-utilities`,
-   `agent-connector-sdk`, shared skills, runtime deployment, or service configuration.
+   `scion-sdk`, shared skills, runtime deployment, or service configuration.
 4. Work in a private real Git worktree on a distinct branch. Never use harness worktree
    isolation, `git stash`, `git add -A`, or `git add .` in this shared repository.
 5. Run focused checks for the changed behavior and the repository's normal pre-commit
