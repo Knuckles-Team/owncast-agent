@@ -13,3 +13,4 @@ Read the existing specs first. Extend the spec that owns the behavior. Create a 
 ## Local specifications
 
 This repository has no local spec yet.
+- [`CONN-OWNCAST-AGENT-COMPETENCY-OPERATIONS`](competency-operations/spec.md) — Broadcast history.
