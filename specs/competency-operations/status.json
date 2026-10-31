@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "spec_id": "CONN-OWNCAST-AGENT-COMPETENCY-OPERATIONS",
+  "owner_repo": "owncast-agent",
+  "delivery_state": "SPECIFIED",
+  "requirement_ids": [
+    "CONN-OWNCAST-AGENT-COMPETENCY-OPERATIONS-R001"
+  ],
+  "requirements": [
+    {
+      "id": "CONN-OWNCAST-AGENT-COMPETENCY-OPERATIONS-R001",
+      "title": "The connector must serve an `owncast_internal` stream-history action, or persist sessions, that returns each past broadcast with start, end and peak viewers. Proving test: `tests/test_stream_history.py`",
+      "delivery_state": "SPECIFIED",
+      "landed_in": [],
+      "verified_by": []
+    }
+  ]
+}
