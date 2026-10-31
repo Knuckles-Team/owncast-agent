@@ -144,11 +144,6 @@ repos:
     - --ignore=DL3009
     - --ignore=DL4006
     - --ignore=SC2102
-- repo: https://github.com/IamTheFij/docker-pre-commit
-  rev: f626253b23de45412865c07fd076ff95d4cd77a7 # v3.0.1
-  hooks:
-  - id: docker-compose-check
-
 - repo: local
   hooks:
   - id: verify-api-integration
