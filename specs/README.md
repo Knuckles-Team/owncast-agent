@@ -8,9 +8,11 @@ This repository owns the specs with the ID prefix `CONN-OWNCAST-AGENT`. The conn
 
 ## Add a spec
 
-Read the existing specs first. Extend the spec that owns the behavior. Create a spec only for a capability that no spec owns. Copy [`_template/`](_template/) to `specs/<area>/`, set the ID to `CONN-OWNCAST-AGENT` or `CONN-OWNCAST-AGENT-<AREA>`, and add one index line below.
+Read the existing specs first. Extend the spec that owns the behavior. Create a spec only for a capability that no spec owns. Copy the files of `.specify/templates/` to `specs/<area>/`, set the ID to `CONN-OWNCAST-AGENT` or `CONN-OWNCAST-AGENT-<AREA>`, and add one index line below.
 
 ## Local specifications
 
 This repository has no local spec yet.
 - [`CONN-OWNCAST-AGENT-COMPETENCY-OPERATIONS`](competency-operations/spec.md) — Broadcast history.
+- [`CONN-OWNCAST-AGENT-CONNECTOR-CONTENT`](connector-content/spec.md) — The connector serves its packaged content.
+- [`CONN-OWNCAST-AGENT-CONNECTOR-IDENTITY`](connector-identity/spec.md) — The connector is filed under its fleet name.
