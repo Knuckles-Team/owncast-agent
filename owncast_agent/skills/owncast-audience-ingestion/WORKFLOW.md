@@ -1,10 +1,10 @@
 # Owncast Audience Ingestion
 
-Natively push Owncast live-streaming telemetry into the epistemic-graph knowledge graph via the owncast-agent MCP server — mapping stream status, active viewers, viewers-over-time and hardware-stats timeseries, chat messages, and fediverse followers to typed :Stream / :Viewer / :ViewerSample / :HardwareSample / :ChatMessage / :Person nodes with :onStream / :sentBy / :follows links. Use when the agent must persist or analyse a stream's audience and health in the KG. Do NOT use for one-off live reads (owncast-broadcast-monitoring) or interactive moderation (owncast-chat-moderation); prefer those.
+Natively push Owncast live-streaming telemetry into the medulla knowledge graph via the owncast-agent MCP server — mapping stream status, active viewers, viewers-over-time and hardware-stats timeseries, chat messages, and fediverse followers to typed :Stream / :Viewer / :ViewerSample / :HardwareSample / :ChatMessage / :Person nodes with :onStream / :sentBy / :follows links. Use when the agent must persist or analyse a stream's audience and health in the KG. Do NOT use for one-off live reads (owncast-broadcast-monitoring) or interactive moderation (owncast-chat-moderation); prefer those.
 
 # Owncast Audience Ingestion
 
-Wire-First native ingestion of Owncast telemetry into the ONE epistemic-graph knowledge
+Wire-First native ingestion of Owncast telemetry into the ONE medulla knowledge
 graph as **typed OWL nodes + timeseries**. Backed by `owncast_agent.kg_ingest` (a thin
 mapper over the shared native-ingest primitive) and surfaced as the `owncast_ingest_telemetry`
 MCP tool. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
@@ -17,7 +17,7 @@ MCP tool. CONCEPT:AU-KG.ingest.enterprise-source-extractor.
 ## When NOT to use
 - One-off live reads without persistence → `owncast-broadcast-monitoring`.
 - Interactive chat moderation actions → `owncast-chat-moderation`.
-- Any modality with no reachable epistemic-graph engine — the tool safely no-ops
+- Any modality with no reachable medulla engine — the tool safely no-ops
   (returns `null` per modality) rather than erroring.
 
 ## Prerequisites & environment
@@ -28,7 +28,7 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 | `OWNCAST_URL` | ✅ | Base URL — also becomes the `:Stream` instance id |
 | `OWNCAST_TOKEN` | ✅ | Admin token (viewers / hardware / admin chat are admin-scoped) |
 
-A running epistemic-graph engine is optional: ingestion is best-effort and
+A running medulla engine is optional: ingestion is best-effort and
 engine-guarded. Chat ingestion additionally needs an `access_token`.
 
 ## Tools & actions

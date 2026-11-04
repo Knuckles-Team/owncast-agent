@@ -17,7 +17,7 @@
   "compatibility": {
     "scion_sdk": ">=2.5.0,<3",
     "bundle_schema": "2",
-    "epistemic_graph": ">=2.27.0,<3"
+    "medulla": ">=3.0.0,<4"
   },
   "connector": "owncast-mcp",
   "kind": "ConnectorSourceAttestation",

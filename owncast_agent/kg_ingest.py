@@ -75,7 +75,7 @@ async def ingest_entities(
     *,
     ingest: KnowledgeIngest | None = None,
 ) -> dict[str, int]:
-    """Write typed OWL nodes (+ edges) into epistemic-graph via the SDK ingest facade."""
+    """Write typed OWL nodes (+ edges) into medulla via the SDK ingest facade."""
     if not entities:
         raise IngestError("ingest_entities needs at least one entity")
     change_set = ChangeSet(
