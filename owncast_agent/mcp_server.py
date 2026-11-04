@@ -335,7 +335,7 @@ def register_kg_tools(mcp: FastMCP):
     """Register the Wire-First native KG ingestion tool.
 
     Lists live Owncast telemetry through the real client and pushes it into the ONE
-    epistemic-graph knowledge graph as typed :Stream / :Viewer / :ViewerSample /
+    medulla knowledge graph as typed :Stream / :Viewer / :ViewerSample /
     :HardwareSample / :ChatMessage / :Person nodes. Best-effort + engine-guarded:
     returns ``{"ingested": None}`` when no engine is reachable.
     CONCEPT:AU-KG.ingest.enterprise-source-extractor.
@@ -359,7 +359,7 @@ def register_kg_tools(mcp: FastMCP):
             default=None, description="MCP context for progress reporting"
         ),
     ) -> dict:
-        """Ingest live Owncast telemetry into epistemic-graph as typed nodes + timeseries."""
+        """Ingest live Owncast telemetry into medulla as typed nodes + timeseries."""
         if ctx:
             await ctx.info("Ingesting Owncast telemetry into the knowledge graph...")
 
