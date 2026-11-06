@@ -113,10 +113,6 @@ curl -s http://localhost:8000/health        # {"status":"OK"}
 | `TRANSPORT` | `stdio` | MCP transport: `stdio`, `streamable-http`, `sse` |
 | `HOST` | `0.0.0.0` | Bind address (HTTP transports) |
 | `PORT` | `8000` | Bind port (HTTP transports) |
-| `INTERNALTOOL` | `True` | Register the `internal` tool group |
-| `OBJECTSTOOL` | `True` | Register the `objects` tool group |
-| `EXTERNALTOOL` | `True` | Register the `external` tool group |
-| `CHATTOOL` | `True` | Register the `chat` tool group |
 
 Optional telemetry and access-governance settings (`ENABLE_OTEL`, `OTEL_*`,
 `EUNOMIA_*`, `DEFAULT_AGENT_NAME`) are documented in

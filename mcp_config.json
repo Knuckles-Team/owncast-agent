@@ -7,10 +7,6 @@
         "owncast-mcp"
       ],
       "env": {
-        "CHATTOOL": "True",
-        "EXTERNALTOOL": "True",
-        "INTERNALTOOL": "True",
-        "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
       }
