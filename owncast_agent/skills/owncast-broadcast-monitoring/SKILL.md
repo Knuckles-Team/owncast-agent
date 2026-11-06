@@ -18,7 +18,7 @@ metadata:
 # Owncast Broadcast Monitoring
 
 Domain-typed access to the Owncast **broadcast + telemetry** surface for live-stream
-health checks. Prefer the condensed `owncast_internal` action-routed tool over raw
+health checks. Prefer the typed `owncast_*` tools over raw
 HTTP — it carries the Owncast endpoint conventions and returns stream-shaped records.
 
 ## When to use
@@ -30,7 +30,7 @@ HTTP — it carries the Owncast endpoint conventions and returns stream-shaped r
 ## When NOT to use
 - Chat message moderation, bans, or moderators → `owncast-chat-moderation`.
 - Persisting telemetry as typed KG nodes / timeseries → `owncast-audience-ingestion`.
-- Follower / federation approval flows → use `owncast_internal` follower actions directly.
+- Follower / federation approval flows → use the typed `owncast_*` follower tools directly.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
@@ -40,40 +40,36 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 | `OWNCAST_URL` | ✅ | Base URL of the Owncast instance (e.g. `http://localhost:8080`) |
 | `OWNCAST_TOKEN` | ✅ | Admin / integration bearer token |
 
-`MCP_TOOL_MODE` (`condensed`|`verbose`|`both`) selects the condensed action-routed
-surface (used below) vs. the one-to-one verbose tools.
+## Tools
+Each operation is its own tool named `owncast_<operation>`; arguments are typed tool parameters.
 
-## Tools & actions
-Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string**.
-
-| Condensed tool | Actions (this skill) |
-|----------------|----------------------|
-| `owncast_internal` | `get_status`, `status_admin`, `get_active_viewers`, `get_viewers_over_time`, `get_hardware_stats`, `disconnect_inbound_connection` |
+| Typed tools |
+|-------------|
+| `owncast_get_status`, `owncast_status_admin`, `owncast_get_active_viewers`, `owncast_get_viewers_over_time`, `owncast_get_hardware_stats`, `owncast_disconnect_inbound_connection` |
 
 ### Key parameters
 - `get_viewers_over_time` accepts an optional `window_start` (ISO timestamp) to bound the series.
 - The other read actions take no parameters — pass `{}`.
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Check live status:
 ```json
-{"action": "get_status"}
+{"tool": "owncast_get_status", "arguments": {}}
 ```
 Read active viewers:
 ```json
-{"action": "get_active_viewers"}
+{"tool": "owncast_get_active_viewers", "arguments": {}}
 ```
 Viewers-over-time since a window start:
 ```json
-{"action": "get_viewers_over_time", "params_json": "{\"window_start\": \"2026-07-01T00:00:00Z\"}"}
+{"tool": "owncast_get_viewers_over_time", "arguments": {"window_start": "2026-07-01T00:00:00Z"}}
 ```
 Hardware stats (CPU / memory / disk series):
 ```json
-{"action": "get_hardware_stats"}
+{"tool": "owncast_get_hardware_stats", "arguments": {}}
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
 - `get_status` is public; `status_admin`, `get_active_viewers`, `get_hardware_stats`,
   and `disconnect_inbound_connection` are admin endpoints and need an admin token.
 - When `online` is `false`, viewer and hardware series may be empty or stale — gate

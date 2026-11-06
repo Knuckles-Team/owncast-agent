@@ -10,8 +10,9 @@
 # timeseries, chat, and fediverse followers. All classes and properties live in the shared
 # `:` (kg#) namespace; only the owl:Ontology node gets the per-package IRI. :Person is a
 # shared class (reused, never redefined) for fediverse followers and chat authors. Backs the
-# owncast-agent MCP tool surface (owncast_internal get_status / get_active_viewers /
-# get_viewers_over_time / get_hardware_stats / get_followers / get_chat_messages_admin).
+# owncast-agent MCP tool surface (owncast_get_status / owncast_get_active_viewers /
+# owncast_get_viewers_over_time / owncast_get_hardware_stats / owncast_get_followers /
+# owncast_get_chat_messages_admin).
 
 :Stream a owl:Class ;
     rdfs:label "Stream" ;

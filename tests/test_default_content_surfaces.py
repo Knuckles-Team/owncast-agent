@@ -163,7 +163,7 @@ def test_legacy_cli_configuration_file_still_controls_host_and_port(
         command_args=["--transport", "stdio", "--auth-type", "none"]
     )
     assert (args.host, args.port) == ("127.0.0.1", 9187)
-    assert tags == ["chat", "external", "internal", "kg", "objects"]
+    assert tags == ["kg"]
 
 
 def test_each_server_registers_kg_tools_once(monkeypatch):
