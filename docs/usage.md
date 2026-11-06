@@ -7,23 +7,16 @@ tool surface and the underlying Owncast REST contract are summarized in
 
 ## As an MCP server
 
-Once [deployed](deployment.md), the server registers four action-routed tool groups.
-Each tool takes an `action` name plus a `params_json` payload and dispatches to the
-matching `OwncastApi` method. The groups are individually togglable through
-`INTERNALTOOL`, `OBJECTSTOOL`, `EXTERNALTOOL`, and `CHATTOOL`.
-
-| Tool | Domain | Representative actions |
-|---|---|---|
-| `owncast_internal` | Server, chat moderation, configuration | `get_status`, `get_active_viewers`, `get_hardware_stats`, `get_followers`, `set_stream_title`, `get_logs` |
-| `owncast_objects` | Server identity objects | `set_server_name`, `set_server_summary`, `set_custom_offline_message` |
-| `owncast_external` | Integration / external messaging | `send_system_message`, `send_user_message`, `external_get_status`, `external_get_chat_messages` |
-| `owncast_chat` | Chat user details | `get_user_details` |
+Once [deployed](deployment.md), the server registers one typed tool per Owncast API
+operation, named `owncast_<operation>` (for example `owncast_get_status`,
+`owncast_get_active_viewers`, `owncast_set_stream_title`), plus `owncast_ingest_telemetry`.
+Arguments are typed tool parameters; there is no `action` router and no `params_json` string.
 
 Example agent prompts that map onto these tools:
 
-- *"What is the current server status and active viewer count?"* → `owncast_internal` (`get_status`, `get_active_viewers`)
-- *"Set the stream title to 'Live coding session'"* → `owncast_internal` (`set_stream_title`)
-- *"Send a system message to the chat"* → `owncast_external` (`send_system_message`)
+- *"What is the current server status and active viewer count?"* -> `owncast_get_status`, `owncast_get_active_viewers`
+- *"Set the stream title to 'Live coding session'"* -> `owncast_set_stream_title`
+- *"Send a system message to the chat"* -> `owncast_send_system_message`
 
 ## As a Python API
 

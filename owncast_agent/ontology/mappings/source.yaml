@@ -4,8 +4,7 @@ ontology_source: owncast
 sync:
 - preset: owncast-followers
   server: owncast-mcp
-  tool: owncast_internal
-  action: get_followers
+  tool: owncast_get_followers
   records_path: results
   id_field: link
   title_field: name

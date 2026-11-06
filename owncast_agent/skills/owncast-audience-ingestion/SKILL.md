@@ -44,7 +44,7 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 A running medulla engine is optional: ingestion is best-effort and
 engine-guarded. Chat ingestion additionally needs an `access_token`.
 
-## Tools & actions
+## Tools
 | Tool | Purpose |
 |------|---------|
 | `owncast_ingest_telemetry` | List live telemetry via the client and push typed nodes + timeseries into the KG |

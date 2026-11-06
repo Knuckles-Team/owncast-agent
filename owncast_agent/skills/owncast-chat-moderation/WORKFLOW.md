@@ -5,7 +5,7 @@ Moderate an Owncast live chat via the owncast-agent MCP server — read chat mes
 # Owncast Chat Moderation
 
 Domain-typed access to the Owncast **chat moderation** surface. Prefer the condensed
-`owncast_internal` action-routed tool over raw HTTP — it carries the moderation endpoint
+typed `owncast_*` tools over raw HTTP — it carries the moderation endpoint
 conventions and expects the Owncast field names.
 
 ## When to use
@@ -17,7 +17,7 @@ conventions and expects the Owncast field names.
 ## When NOT to use
 - Stream status, viewers, or hardware telemetry → `owncast-broadcast-monitoring`.
 - Pushing chat / audience data into the knowledge graph → `owncast-audience-ingestion`.
-- Sending outbound system / integration chat messages → the `owncast_external` tool.
+- Sending outbound system / integration chat messages → the typed `owncast_*` tools.
 
 ## Prerequisites & environment
 Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
@@ -30,12 +30,12 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 An `accessToken` parameter is required for the **non-admin** `get_chat_messages`
 read; the admin feed and moderation actions use the server token.
 
-## Tools & actions
-Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string**.
+## Tools
+Each operation is its own tool named `owncast_<operation>`; arguments are typed tool parameters.
 
-| Condensed tool | Actions (this skill) |
-|----------------|----------------------|
-| `owncast_internal` | `get_chat_messages`, `get_chat_messages_admin`, `update_message_visibility_admin`, `update_user_enabled_admin`, `update_user_moderator`, `get_moderators`, `get_disabled_users`, `get_connected_chat_clients`, `ban_ipaddress`, `unban_ipaddress`, `get_ipaddress_bans` |
+| Typed tools |
+|-------------|
+| `owncast_get_chat_messages`, `owncast_get_chat_messages_admin`, `owncast_update_message_visibility_admin`, `owncast_update_user_enabled_admin`, `owncast_update_user_moderator`, `owncast_get_moderators`, `owncast_get_disabled_users`, `owncast_get_connected_chat_clients`, `owncast_ban_ipaddress`, `owncast_unban_ipaddress`, `owncast_get_ipaddress_bans` |
 
 ### Key parameters
 - `update_message_visibility_admin` — `body`: `{"idArray": ["<messageId>"], "visible": false}`.
@@ -43,26 +43,25 @@ Prefer the **condensed** tool; it takes `action` + a `params_json` **JSON string
 - `update_user_moderator` — `userId`, `isModerator` (bool).
 - `ban_ipaddress` / `unban_ipaddress` — `body`: `{"value": "<ip>"}` (+ optional `note`).
 
-## Recipes (`params_json`)
+## Recipes (tool arguments)
 Read the unfiltered admin chat feed:
 ```json
-{"action": "get_chat_messages_admin"}
+{"tool": "owncast_get_chat_messages_admin", "arguments": {}}
 ```
 Hide two messages:
 ```json
-{"action": "update_message_visibility_admin", "params_json": "{\"body\": {\"idArray\": [\"m-1\", \"m-2\"], \"visible\": false}}"}
+{"tool": "owncast_update_message_visibility_admin", "arguments": {"body": {"idArray": ["m-1", "m-2"], "visible": false}}}
 ```
 Disable a user:
 ```json
-{"action": "update_user_enabled_admin", "params_json": "{\"user_id\": \"u-42\", \"enabled\": false}"}
+{"tool": "owncast_update_user_enabled_admin", "arguments": {"user_id": "u-42", "enabled": false}}
 ```
 Promote a moderator:
 ```json
-{"action": "update_user_moderator", "params_json": "{\"user_id\": \"u-42\", \"is_moderator\": true}"}
+{"tool": "owncast_update_user_moderator", "arguments": {"user_id": "u-42", "is_moderator": true}}
 ```
 
 ## Gotchas
-- `params_json` is a **string** of JSON, not an object — serialize it.
 - Client method params are snake_case (`user_id`, `is_moderator`); the underlying
   Owncast JSON body uses camelCase (`userId`, `isModerator`) — the client maps them.
 - `get_chat_messages` (public) needs an `access_token`; the admin feed does not.

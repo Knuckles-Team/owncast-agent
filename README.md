@@ -61,15 +61,6 @@ This table is auto-generated from the live server — do not edit by hand.
 
 <!-- MCP-TOOLS-TABLE:START -->
 
-#### Condensed action-routed tools (default — `MCP_TOOL_MODE=condensed`)
-
-| MCP Tool | Toggle Env Var | Description |
-|----------|----------------|-------------|
-| `owncast_chat` | `CHATTOOL` | Manage owncast chat operations. |
-| `owncast_external` | `EXTERNALTOOL` | Manage owncast external operations. |
-| `owncast_internal` | `INTERNALTOOL` | Manage owncast internal operations. |
-| `owncast_objects` | `OBJECTSTOOL` | Manage owncast objects operations. |
-
 #### Verbose 1:1 API-mapped tools (`MCP_TOOL_MODE=verbose` or `both`)
 
 <details>
@@ -202,7 +193,7 @@ This table is auto-generated from the live server — do not edit by hand.
 
 </details>
 
-_4 action-routed tool(s) (default) · 122 verbose 1:1 tool(s). Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
+_122 per-operation tool(s) + 1 ingest tool. Each is enabled unless its `<DOMAIN>TOOL` toggle is set false; `MCP_TOOL_MODE` selects the surface (`condensed` default · `verbose` 1:1 · `both`). Auto-generated — do not edit._
 <!-- MCP-TOOLS-TABLE:END -->
 
 Detailed tool schemas, parameter shapes, and validation constraints are preserved in [docs/usage.md](docs/usage.md).
@@ -250,10 +241,6 @@ When query strings or parameters are supplied, an LLM-free **Knowledge Graph res
         "owncast-mcp"
       ],
       "env": {
-        "CHATTOOL": "True",
-        "EXTERNALTOOL": "True",
-        "INTERNALTOOL": "True",
-        "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
       }
@@ -286,10 +273,6 @@ own runtime secret boundary.
         "TRANSPORT": "streamable-http",
         "HOST": "127.0.0.1",
         "PORT": "8000",
-        "CHATTOOL": "True",
-        "EXTERNALTOOL": "True",
-        "INTERNALTOOL": "True",
-        "OBJECTSTOOL": "True",
         "OWNCAST_TOKEN": "your_owncast_admin_or_integration_token_here",
         "OWNCAST_URL": "http://localhost:9000"
       }
@@ -322,10 +305,6 @@ docker run -i --rm \
   --tmpfs /tmp:rw,noexec,nosuid,nodev,size=64m \
   -e TRANSPORT=stdio \
   -e MCP_TOOL_MODE=intent \
-  -e CHATTOOL=True \
-  -e EXTERNALTOOL=True \
-  -e INTERNALTOOL=True \
-  -e OBJECTSTOOL=True \
   -e OWNCAST_TOKEN=your_owncast_admin_or_integration_token_here \
   -e OWNCAST_URL=http://localhost:9000 \
   registry.example.invalid/owncast-agent@sha256:<digest> owncast-mcp
@@ -475,10 +454,6 @@ Built directly upon the enterprise-ready [`scion-sdk`](https://github.com/Knuckl
 | `EUNOMIA_REMOTE_URL` | `http://eunomia-server:8000` |  |
 | `OWNCAST_URL` | `http://localhost:9000` |  |
 | `OWNCAST_TOKEN` | `your_owncast_admin_or_integration_token_here` |  |
-| `INTERNALTOOL` | `True` |  |
-| `OBJECTSTOOL` | `True` |  |
-| `EXTERNALTOOL` | `True` |  |
-| `CHATTOOL` | `True` |  |
 
 #### Inherited scion-sdk variables (apply to every connector)
 
@@ -524,10 +499,6 @@ The names match the authoritative "Toggle Env Var" column in the
 
 | Variable | Tool | Default |
 |----------|------|---------|
-| `INTERNALTOOL` | `owncast_internal` | `True` |
-| `OBJECTSTOOL` | `owncast_objects` | `True` |
-| `EXTERNALTOOL` | `owncast_external` | `True` |
-| `CHATTOOL` | `owncast_chat` | `True` |
 
 ### Telemetry & governance
 | Variable | Description | Default |
