@@ -904,7 +904,7 @@ wheels = [
 
 [[package]]
 name = "owncast-agent"
-version = "2.3.8"
+version = "2.3.9"
 source = { editable = "." }
 dependencies = [
     { name = "requests" },
