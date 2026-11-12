@@ -133,3 +133,7 @@
 
 # ontology-codemod R3
 <http://knuckles.team/kg#ChatMessage> rdfs:subClassOf <http://knuckles.team/kg#Message> .
+<http://knuckles.team/kg#Stream> rdfs:subClassOf <http://knuckles.team/kg#Event> .
+<http://knuckles.team/kg#Viewer> rdfs:subClassOf <http://knuckles.team/kg#Person> .
+<http://knuckles.team/kg#ViewerSample> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
+<http://knuckles.team/kg#HardwareSample> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
