@@ -16,34 +16,40 @@ CONTRACTS = (
             ToolStep(
                 "owncast_auto_update_force_quit",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_auto_update_options",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_auto_update_start",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -54,58 +60,60 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_status",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_ping",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_status_admin",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_disconnect_inbound_connection",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_stream_title",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -116,24 +124,22 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_active_viewers",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_viewers_over_time",
-                params=(
-                    "window_start",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("window_start",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -145,11 +151,11 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_hardware_stats",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -161,46 +167,51 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_logs",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_warnings",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_ypresponse",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_reset_ypregistration",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -211,49 +222,49 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_video_playback_metrics",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_video_stream_output_variants",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_report_playback_metrics",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_stream_output_variants",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -267,12 +278,14 @@ CONTRACTS = (
                     "access_token",
                     "include",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -283,38 +296,38 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_ipaddress_bans",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_ban_ipaddress",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_unban_ipaddress",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -325,11 +338,11 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_custom_emoji_list",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -339,12 +352,14 @@ CONTRACTS = (
                     "data",
                     "name",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -353,13 +368,18 @@ CONTRACTS = (
                     "confirm",
                     "name",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -370,88 +390,86 @@ CONTRACTS = (
             ToolStep(
                 "owncast_external_get_chat_messages",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_chat_messages",
-                params=(
-                    "access_token",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("access_token",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_chat_messages_admin",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_send_chat_action",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_send_federated_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_send_integration_chat_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_send_system_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -460,36 +478,40 @@ CONTRACTS = (
                     "body",
                     "client_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_send_user_message",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_external_update_message_visibility",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -498,25 +520,27 @@ CONTRACTS = (
                     "access_token",
                     "body",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_update_message_visibility_admin",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -527,57 +551,55 @@ CONTRACTS = (
             ToolStep(
                 "owncast_external_get_connected_chat_clients",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_external_get_user_details",
-                params=(
-                    "user_id",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("user_id",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_connected_chat_clients",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_disabled_users",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_moderators",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -587,11 +609,11 @@ CONTRACTS = (
                     "access_token",
                     "user_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -601,51 +623,53 @@ CONTRACTS = (
                     "display_name",
                     "x_forwarded_user",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_enable_established_chat_user_mode",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_forbidden_username_list",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_suggested_username_list",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -655,12 +679,14 @@ CONTRACTS = (
                     "enabled",
                     "user_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -669,12 +695,14 @@ CONTRACTS = (
                     "enabled",
                     "user_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -683,12 +711,14 @@ CONTRACTS = (
                     "is_moderator",
                     "user_id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -703,12 +733,14 @@ CONTRACTS = (
                     "channel",
                     "destination",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -718,67 +750,67 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_chat_disabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_chat_join_messages_enabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_chat_require_authentication",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_chat_slur_filter_enabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_chat_spam_protection_enabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -789,11 +821,11 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_blocked_and_rejected_followers",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -803,11 +835,11 @@ CONTRACTS = (
                     "limit",
                     "offset",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -817,22 +849,22 @@ CONTRACTS = (
                     "limit",
                     "offset",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_pending_follow_requests",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -842,25 +874,27 @@ CONTRACTS = (
                     "actor_iri",
                     "approved",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_remote_follow",
-                params=(
-                    "account",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("account",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -874,11 +908,11 @@ CONTRACTS = (
                     "limit",
                     "offset",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -893,25 +927,27 @@ CONTRACTS = (
                     "access_token",
                     "account",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_verify_fediverse_otprequest",
-                params=(
-                    "code",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("code",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -921,80 +957,80 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_federation_activity_private",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_federation_block_domains",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_federation_enabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_federation_go_live_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_federation_show_engagement",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_federation_username",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1005,11 +1041,11 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_external_apiusers",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -1019,12 +1055,14 @@ CONTRACTS = (
                     "name",
                     "scopes",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -1033,13 +1071,18 @@ CONTRACTS = (
                     "confirm",
                     "token",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -1050,11 +1093,11 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_webhooks",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -1064,12 +1107,14 @@ CONTRACTS = (
                     "events",
                     "url",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -1078,13 +1123,18 @@ CONTRACTS = (
                     "confirm",
                     "id",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -1095,48 +1145,55 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_prometheus_api",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_post_prometheus_api",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_put_prometheus_api",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_delete_prometheus_api",
-                params=(
-                    "confirm",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("confirm",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -1147,25 +1204,25 @@ CONTRACTS = (
             ToolStep(
                 "owncast_external_get_status",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_external_set_stream_title",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1179,12 +1236,14 @@ CONTRACTS = (
                     "access_token",
                     "auth_host",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
@@ -1195,36 +1254,40 @@ CONTRACTS = (
                     "redirect_uri",
                     "state",
                 ),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_handle_indie_auth_endpoint_post",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_handle_indie_auth_redirect",
-                params=(
-                    "state",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("state",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1235,33 +1298,33 @@ CONTRACTS = (
             ToolStep(
                 "owncast_get_all_social_platforms",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_server_config",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
             ToolStep(
                 "owncast_get_web_config",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
                     Refusal("NOT_FOUND", "the requested record does not exist"),
                 ),
             ),
@@ -1272,118 +1335,123 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_custom_color_variable_values",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_custom_javascript",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_custom_offline_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_custom_styles",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_external_actions",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_extra_page_content",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_favicon",
                 params=(),
-                result=(
-                    "result",
-                ),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_logo",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_reset_favicon",
-                params=(
-                    "confirm",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("confirm",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
-                    Refusal("CONFIRMATION_REQUIRED", "the caller has not confirmed the destructive call"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
+                    Refusal(
+                        "CONFIRMATION_REQUIRED",
+                        "the caller has not confirmed the destructive call",
+                    ),
                 ),
             ),
         ),
@@ -1393,132 +1461,132 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_admin_password",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_directory_enabled",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_disable_search_indexing",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_hide_viewer_count",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_nsfw",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_server_name",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_server_summary",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_server_url",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_server_welcome_message",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_social_handles",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1528,28 +1596,28 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_browser_notification_configuration",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_discord_notification_configuration",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1559,145 +1627,145 @@ CONTRACTS = (
         (
             ToolStep(
                 "owncast_set_ffmpeg_path",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_rtmpserver_port",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_s3_configuration",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_socket_host_override",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_stream_keys",
-                params=(
-                    "value",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("value",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_stream_latency_level",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_tags",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_video_codec",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_video_serving_endpoint",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_web_server_ip",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
             ToolStep(
                 "owncast_set_web_server_port",
-                params=(
-                    "body",
-                ),
-                result=(
-                    "result",
-                ),
+                params=("body",),
+                result=("result",),
                 refusals=(
-                    Refusal("ACCESS_DENIED", "the credential lacks access to the operation"),
-                    Refusal("INVALID_ARGUMENT", "the upstream system rejects the input"),
+                    Refusal(
+                        "ACCESS_DENIED", "the credential lacks access to the operation"
+                    ),
+                    Refusal(
+                        "INVALID_ARGUMENT", "the upstream system rejects the input"
+                    ),
                 ),
             ),
         ),
@@ -1716,9 +1784,7 @@ LINKS = (
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-manage-broadcast",
@@ -1733,9 +1799,7 @@ LINKS = (
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-inspect-viewers",
@@ -1747,22 +1811,16 @@ LINKS = (
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-inspect-hardware",
-        tools=(
-            "owncast_get_hardware_stats",
-        ),
+        tools=("owncast_get_hardware_stats",),
         prompts=(
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-manage-diagnostics",
@@ -1776,9 +1834,7 @@ LINKS = (
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-manage-playback",
@@ -1792,22 +1848,16 @@ LINKS = (
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-stream-health",
-        ),
+        skills=("owncast-stream-health",),
     ),
     SurfaceLink(
         "owncast-manage-telemetry",
-        tools=(
-            "owncast_ingest_telemetry",
-        ),
+        tools=("owncast_ingest_telemetry",),
         prompts=(
             "owncast-stream-operator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-audience-ingestion",
-        ),
+        skills=("owncast-audience-ingestion",),
     ),
     SurfaceLink(
         "owncast-manage-ban",
@@ -1820,9 +1870,7 @@ LINKS = (
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-emoji",
@@ -1835,9 +1883,7 @@ LINKS = (
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-message",
@@ -1859,9 +1905,7 @@ LINKS = (
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-user",
@@ -1884,22 +1928,16 @@ LINKS = (
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-notification",
-        tools=(
-            "owncast_register_for_live_notifications",
-        ),
+        tools=("owncast_register_for_live_notifications",),
         prompts=(
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-chat-settings",
@@ -1914,9 +1952,7 @@ LINKS = (
             "owncast-chat-moderator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-chat-administration",
-        ),
+        skills=("owncast-chat-administration",),
     ),
     SurfaceLink(
         "owncast-manage-follower",
@@ -1932,22 +1968,16 @@ LINKS = (
             "owncast-community-manager",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-federation",
-        ),
+        skills=("owncast-federation",),
     ),
     SurfaceLink(
         "owncast-inspect-federated-message",
-        tools=(
-            "owncast_get_federated_actions",
-        ),
+        tools=("owncast_get_federated_actions",),
         prompts=(
             "owncast-community-manager",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-federation",
-        ),
+        skills=("owncast-federation",),
     ),
     SurfaceLink(
         "owncast-manage-fediverse-auth",
@@ -1959,9 +1989,7 @@ LINKS = (
             "owncast-community-manager",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-federation",
-        ),
+        skills=("owncast-federation",),
     ),
     SurfaceLink(
         "owncast-manage-federation-settings",
@@ -1977,9 +2005,7 @@ LINKS = (
             "owncast-community-manager",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-federation",
-        ),
+        skills=("owncast-federation",),
     ),
     SurfaceLink(
         "owncast-manage-api-user",
@@ -1992,9 +2018,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-integrations",
-        ),
+        skills=("owncast-integrations",),
     ),
     SurfaceLink(
         "owncast-manage-webhook",
@@ -2007,9 +2031,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-integrations",
-        ),
+        skills=("owncast-integrations",),
     ),
     SurfaceLink(
         "owncast-manage-prometheus",
@@ -2023,9 +2045,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-integrations",
-        ),
+        skills=("owncast-integrations",),
     ),
     SurfaceLink(
         "owncast-manage-external-api",
@@ -2037,9 +2057,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-integrations",
-        ),
+        skills=("owncast-integrations",),
     ),
     SurfaceLink(
         "owncast-manage-indie-auth",
@@ -2053,9 +2071,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-integrations",
-        ),
+        skills=("owncast-integrations",),
     ),
     SurfaceLink(
         "owncast-inspect-config",
@@ -2068,9 +2084,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-server-settings",
-        ),
+        skills=("owncast-server-settings",),
     ),
     SurfaceLink(
         "owncast-manage-appearance",
@@ -2089,9 +2103,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-server-settings",
-        ),
+        skills=("owncast-server-settings",),
     ),
     SurfaceLink(
         "owncast-manage-identity",
@@ -2111,9 +2123,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-server-settings",
-        ),
+        skills=("owncast-server-settings",),
     ),
     SurfaceLink(
         "owncast-manage-notifications",
@@ -2125,9 +2135,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-server-settings",
-        ),
+        skills=("owncast-server-settings",),
     ),
     SurfaceLink(
         "owncast-manage-video",
@@ -2148,9 +2156,7 @@ LINKS = (
             "owncast-site-administrator",
             "streaming_specialist",
         ),
-        skills=(
-            "owncast-server-settings",
-        ),
+        skills=("owncast-server-settings",),
     ),
     SurfaceLink(
         "owncast-agent-operations",
@@ -2158,24 +2164,14 @@ LINKS = (
             "owncast_get_status",
             "owncast_ping",
         ),
-        prompts=(
-            "streaming_specialist",
-        ),
-        skills=(
-            "owncast-agent-operations",
-        ),
+        prompts=("streaming_specialist",),
+        skills=("owncast-agent-operations",),
     ),
     SurfaceLink(
         "owncast-audience-ingestion",
-        tools=(
-            "owncast_ingest_telemetry",
-        ),
-        prompts=(
-            "streaming_specialist",
-        ),
-        skills=(
-            "owncast-audience-ingestion",
-        ),
+        tools=("owncast_ingest_telemetry",),
+        prompts=("streaming_specialist",),
+        skills=("owncast-audience-ingestion",),
     ),
     SurfaceLink(
         "owncast-broadcast-monitoring",
@@ -2188,12 +2184,8 @@ LINKS = (
             "owncast_ingest_telemetry",
             "owncast_status_admin",
         ),
-        prompts=(
-            "streaming_specialist",
-        ),
-        skills=(
-            "owncast-broadcast-monitoring",
-        ),
+        prompts=("streaming_specialist",),
+        skills=("owncast-broadcast-monitoring",),
     ),
     SurfaceLink(
         "owncast-chat-moderation",
@@ -2210,53 +2202,39 @@ LINKS = (
             "owncast_update_user_enabled_admin",
             "owncast_update_user_moderator",
         ),
-        prompts=(
-            "streaming_specialist",
-        ),
-        skills=(
-            "owncast-chat-moderation",
-        ),
+        prompts=("streaming_specialist",),
+        skills=("owncast-chat-moderation",),
     ),
 )
 
 LOCATIONS = (
     DataLocation(
         "owncast-stream",
-        (
-            "Stream",
-        ),
+        ("Stream",),
         "OWNCAST_URL",
         "owncast_get_status",
     ),
     DataLocation(
         "owncast-viewers",
-        (
-            "Viewer",
-        ),
+        ("Viewer",),
         "OWNCAST_URL",
         "owncast_get_active_viewers",
     ),
     DataLocation(
         "owncast-hardware",
-        (
-            "HardwareSample",
-        ),
+        ("HardwareSample",),
         "OWNCAST_URL",
         "owncast_get_hardware_stats",
     ),
     DataLocation(
         "owncast-chat",
-        (
-            "ChatMessage",
-        ),
+        ("ChatMessage",),
         "OWNCAST_URL",
         "owncast_get_chat_messages_admin",
     ),
     DataLocation(
         "owncast-followers",
-        (
-            "Person",
-        ),
+        ("Person",),
         "OWNCAST_URL",
         "owncast_get_followers",
     ),
