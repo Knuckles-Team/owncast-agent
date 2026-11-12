@@ -1,4 +1,4 @@
-"""Epistemic-graph ingestion -- Wire-First coverage for owncast-agent.
+"""Medulla ingestion -- Wire-First coverage for owncast-agent.
 
 Exercises the real ``ingest_entities`` seam and each record mapper against a fake
 ``scion_sdk.ingest`` transport (no engine required). The real SDK request
