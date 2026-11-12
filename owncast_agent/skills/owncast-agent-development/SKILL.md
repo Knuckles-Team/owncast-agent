@@ -16,7 +16,7 @@ The connector contract and generic MCP/A2A transports belong to
 1. Read this repository's `AGENTS.md` and inspect `git status --short` before editing.
 2. Find the owning row with `git grep -n "<term>" -- specs` and follow the spec standard.
    Add the row to the owning spec before changing behavior. Cite its ID in a `Spec:` trailer.
-3. Keep changes inside this connector. Do not change `agent-utilities`,
+3. Keep changes inside this connector. Do not change `meristem`,
    `scion-sdk`, shared skills, runtime deployment, or service configuration.
 4. Work in a private real Git worktree on a distinct branch. Never use harness worktree
    isolation, `git stash`, `git add -A`, or `git add .` in this shared repository.
