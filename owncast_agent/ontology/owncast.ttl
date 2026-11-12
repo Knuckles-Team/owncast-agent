@@ -1,7 +1,8 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix core: <https://knuckles-team.github.io/ontology/core#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix : <http://knuckles.team/kg#> .
+@prefix : <https://knuckles-team.github.io/ontology/connector/owncast#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -45,12 +46,12 @@
     rdfs:label "sent by" ;
     rdfs:comment "Links a ChatMessage to the Person who authored it." ;
     rdfs:domain :ChatMessage ;
-    rdfs:range :Person .
+    rdfs:range core:Person .
 
 :follows a owl:ObjectProperty ;
     rdfs:label "follows" ;
     rdfs:comment "Links a Person (fediverse actor) to the Stream they follow." ;
-    rdfs:domain :Person ;
+    rdfs:domain core:Person ;
     rdfs:range :Stream .
 
 # --- fields (owl:DatatypeProperty) ---
@@ -110,7 +111,7 @@
 :actorIRI a owl:DatatypeProperty ;
     rdfs:label "actor IRI" ;
     rdfs:comment "ActivityPub actor IRI of a fediverse follower Person." ;
-    rdfs:domain :Person ;
+    rdfs:domain core:Person ;
     rdfs:range xsd:string .
 
 :body a owl:DatatypeProperty ;
@@ -124,7 +125,7 @@
     rdfs:comment "Native external identifier of the source record (for cross-source dedup)." ;
     rdfs:range xsd:string .
 
-<http://knuckles.team/kg/owncast> a owl:Ontology ;
+<https://knuckles-team.github.io/ontology/connector/owncast> a owl:Ontology ;
     rdfs:label "Owncast Live-Streaming Ontology" ;
     rdfs:comment """Owncast self-hosted live-streaming model — broadcast Stream state, active
     Viewer sessions, viewer-count and hardware-utilisation timeseries samples, live ChatMessages,
@@ -132,8 +133,8 @@
     federated into the scion-sdk knowledge-graph hub.""" .
 
 # ontology-codemod R3
-<http://knuckles.team/kg#ChatMessage> rdfs:subClassOf <http://knuckles.team/kg#Message> .
-<http://knuckles.team/kg#Stream> rdfs:subClassOf <http://knuckles.team/kg#Event> .
-<http://knuckles.team/kg#Viewer> rdfs:subClassOf <http://knuckles.team/kg#Person> .
-<http://knuckles.team/kg#ViewerSample> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
-<http://knuckles.team/kg#HardwareSample> rdfs:subClassOf <http://knuckles.team/kg#Observation> .
+<https://knuckles-team.github.io/ontology/connector/owncast#ChatMessage> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Message> .
+<https://knuckles-team.github.io/ontology/connector/owncast#Stream> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Event> .
+<https://knuckles-team.github.io/ontology/connector/owncast#Viewer> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Person> .
+<https://knuckles-team.github.io/ontology/connector/owncast#ViewerSample> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Observation> .
+<https://knuckles-team.github.io/ontology/connector/owncast#HardwareSample> rdfs:subClassOf <https://knuckles-team.github.io/ontology/core#Observation> .
