@@ -1,4 +1,4 @@
-"""Epistemic-graph ingestion for Owncast records and telemetry.
+"""Medulla ingestion for Owncast records and telemetry.
 
 Writes go through ``scion_sdk.ingest`` -- the generated ``SourceIngest``
 client, not a local ingestion helper. Nodes use canonical ``node_type`` and edges use
