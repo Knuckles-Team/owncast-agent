@@ -1,4 +1,3 @@
-
 import pytest
 
 import owncast_agent
@@ -14,8 +13,6 @@ def test_import_owncast_agent():
     """
     assert owncast_agent.__all__ is not None
     assert "OwncastApi" in owncast_agent.__all__
-
-
 
 
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")
@@ -37,10 +34,6 @@ def test_getattr_attribute_error():
     """
     with pytest.raises(AttributeError):
         _ = owncast_agent.non_existent_attribute_xyz
-
-
-
-
 
 
 @pytest.mark.concept("AU-ECO.mcp.fastmcp-middleware")

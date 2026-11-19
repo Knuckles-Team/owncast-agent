@@ -13,7 +13,9 @@ def _get_pkg_name():
     import tomllib
 
     project_dir = pathlib.Path(__file__).resolve().parent.parent
-    pyproject = tomllib.loads((project_dir / "pyproject.toml").read_text(encoding="utf-8"))
+    pyproject = tomllib.loads(
+        (project_dir / "pyproject.toml").read_text(encoding="utf-8")
+    )
     return pyproject["project"]["name"].replace("-", "_")
 
 
