@@ -6,6 +6,7 @@ Governing spec: [spec.md](spec.md).
 |---|---|---|---|
 | T-001 | `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R001` | `tests/test_default_content_surfaces.py::test_default_content_surfaces` | `resources/list` includes `skill://` and `ontology://`; `prompts/list` includes each packaged prompt. |
 | T-002 | `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R002` | `tests/test_tool_surface.py::test_every_tool_is_typed_and_no_router_is_served` | No served tool takes an `action` or `params_json` argument and no router tool exists. |
+| T-003 | `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003` | `tests/test_pack_extends_core.py` | No core term is redeclared and no retired IRI base remains. |
 
 ## Negative and boundary cases
 
