@@ -25,19 +25,23 @@ The fleet operator and the engine rely on this behaviour of `owncast-agent`: `py
 **Acceptance Scenarios**:
 
 1. **Given** the `owncast-agent` connector built from the default branch, **When** `tests/test_default_content_surfaces.py::test_default_content_surfaces` runs, **Then** `resources/list` includes `skill://` and `ontology://`; `prompts/list` includes each packaged prompt.
+2. **Given** the connector is configured, **When** the behaviour of row `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003` (pack extends only the core ontology) is exercised, **Then** no core class or property is redeclared and no retired IRI base remains. Test: `tests/test_pack_extends_core.py::test_pack_declares_no_core_term`.
 
 ### Edge Cases
 
 - The vendor service is unreachable or rejects the credential: the connector returns the SDK typed error and never a partial result.
 - An argument outside the documented inputs is refused with the SDK typed refusal and causes no effect on the vendor service.
+- If `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003` is not met, its proving test fails: pack extends only the core ontology.
 
 ## Requirements
 
 - **FR-001**: Default content. Rows: `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R001`.
+- **FR-002**: Pack extends only the core ontology. Rows: `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003`.
 
 ## Success Criteria
 
 - **SC-001**: `resources/list` includes `skill://` and `ontology://`; `prompts/list` includes each packaged prompt. Rows: `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R001`.
+- **SC-002**: No pack term redeclares a core term and no retired IRI base remains. Rows: `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003`.
 
 ## Assumptions
 
@@ -49,3 +53,4 @@ The fleet operator and the engine rely on this behaviour of `owncast-agent`: `py
 | Label | Rows | Design section | Test ID | Evidence |
 |---|---|---|---|---|
 | FR-001 | `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R001` | plan.md Production caller chain | T-001 | tests/test_default_content_surfaces.py::test_default_content_surfaces |
+| FR-002 | `CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003` | [plan.md](plan.md) | T-003 | [test-spec.md](test-spec.md) |

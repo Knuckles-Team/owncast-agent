@@ -6,3 +6,4 @@ Each task line reads `- [ ] T001 [P] [US1] <ID>-R012.4 description`. Tasks run p
 
 - [x] T001 [US1] CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R001 Default content.
 - [x] T002 [US1] CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R002 One typed tool per operation.
+- [x] T003 [US1] CONN-OWNCAST-AGENT-CONNECTOR-CONTENT-R003 Pack extends only the core ontology.
