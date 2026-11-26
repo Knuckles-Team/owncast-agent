@@ -83,3 +83,18 @@ Each workflow is a tool-use contract in the connector ontology. Run the steps in
 - Read before you write: every change starts from the read steps of its contract.
 - Confirm the stream is online before acting on live-only signals.
 - Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.
+
+## Steps
+
+1. Read the current state with `owncast_get_server_config` and verify the response lists the current settings.
+2. Name the exact change to the person and verify explicit approval for `owncast_set_server_name` when it is an admin password change, a stream key change or a favicon reset.
+3. Apply the change with `owncast_set_server_name` and verify the response reports success.
+4. Read the state back with `owncast_get_server_config` and verify the changed setting holds the new value.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Setting not applied | A restart-only setting such as a port was changed | Read `owncast_get_server_config` to confirm the stored value and ask the operator to restart the server |
+| Reset refused | `confirm=true` was not passed to `owncast_reset_favicon` | Ask the operator first, then repeat with `confirm=true` |

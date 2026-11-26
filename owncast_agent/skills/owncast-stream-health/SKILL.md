@@ -71,3 +71,18 @@ Each workflow is a tool-use contract in the connector ontology. Run the steps in
 - Read before you write: every change starts from the read steps of its contract.
 - Confirm the stream is online before acting on live-only signals.
 - Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.
+
+## Steps
+
+1. Read the current state with `owncast_get_status` and verify the online flag, title and viewer count are shown.
+2. Name the exact change to the person and verify explicit approval for `owncast_set_stream_title` when it is a forced auto-update or a directory registration reset.
+3. Apply the change with `owncast_set_stream_title` and verify the response reports success.
+4. Read the state back with `owncast_get_status` and verify the title holds the new value.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Stream offline | The encoder is not connected | Read `owncast_status_admin`, and with approval call `owncast_disconnect_inbound_connection` so the encoder reconnects |
+| Logs or warnings empty | The window is quiet | Call `owncast_get_warnings` and `owncast_get_logs` again after the event you are chasing |

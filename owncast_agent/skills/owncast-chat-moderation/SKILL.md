@@ -2,12 +2,7 @@
 name: owncast-chat-moderation
 skill_type: skill
 description: >-
-  Moderate an Owncast live chat via the owncast-agent MCP server — read chat messages,
-  toggle message visibility, enable/disable users, grant/revoke moderator status, list
-  connected clients, and manage IP bans. Use when the agent must remove abusive messages,
-  silence or ban a user, promote a moderator, or audit connected chat clients. Do NOT use
-  for reading stream/viewer telemetry (owncast-broadcast-monitoring) or KG ingestion
-  (owncast-audience-ingestion); prefer those.
+  Moderate an Owncast live chat via the owncast-agent MCP server — read chat messages, toggle message visibility, enable/disable users, grant/revoke moderator status, list connected clients, and manage IP bans. Use when the agent must remove abusive messages, silence or ban a user, promote a moderator, or audit connected chat clients.
 license: MIT
 tags: [owncast, chat, moderation, streaming, mcp]
 metadata:
@@ -15,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Owncast Chat Moderation
+
+Scope: Moderate an Owncast live chat via the owncast-agent MCP server — read chat messages, toggle message visibility, enable/disable users, grant/revoke moderator status, list connected clients, and manage IP bans. Use when the agent must remove abusive messages, silence or ban a user, promote a moderator, or audit connected chat clients. Do NOT use for reading stream/viewer telemetry (owncast-broadcast-monitoring) or KG ingestion (owncast-audience-ingestion); prefer those.
 
 Domain-typed access to the Owncast **chat moderation** surface. Prefer the condensed
 typed `owncast_*` tools over raw HTTP — it carries the moderation endpoint
@@ -41,6 +38,23 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 
 An `accessToken` parameter is required for the **non-admin** `get_chat_messages`
 read; the admin feed and moderation actions use the server token.
+
+## Steps
+
+1. Call `owncast_get_chat_messages_admin` and verify the response lists the messages with their ids and user ids.
+2. Pick the offending message or user from the `owncast_get_chat_messages_admin` output and verify the id matches a listed entry before acting.
+3. Hide the message with `owncast_update_message_visibility_admin` and verify the message no longer appears in a fresh `owncast_get_chat_messages_admin` read.
+4. For a repeat offender, disable the user with `owncast_update_user_enabled_admin` and verify the id appears in `owncast_get_disabled_users`.
+5. For network abuse, ban with `owncast_ban_ipaddress` after approval and verify the address appears in `owncast_get_ipaddress_bans`.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Message id not found | The message was already removed or the id came from the wrong feed | Reread `owncast_get_chat_messages_admin` and use the id it returns |
+| Non-admin chat read rejected | `owncast_get_chat_messages` needs an `access_token` | Use `owncast_get_chat_messages_admin`, which uses the server token |
+| Ban hits the wrong address | The address was not confirmed | Call `owncast_unban_ipaddress` with the same body, then confirm the address with the person and ban again |
 
 ## Tools
 Each operation is its own tool named `owncast_<operation>`; arguments are typed tool parameters.

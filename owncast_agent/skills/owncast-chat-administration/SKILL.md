@@ -89,3 +89,18 @@ Each workflow is a tool-use contract in the connector ontology. Run the steps in
 - Read before you write: every change starts from the read steps of its contract.
 - Confirm the stream is online before acting on live-only signals.
 - Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.
+
+## Steps
+
+1. Read the current state with `owncast_get_chat_messages_admin` and verify the response lists messages with ids.
+2. Name the exact change to the person and verify explicit approval for `owncast_update_message_visibility_admin` when it is a ban, a user disable or an emoji delete.
+3. Apply the change with `owncast_update_message_visibility_admin` and verify the response reports success for the message id.
+4. Read the state back with `owncast_get_chat_messages_admin` and verify the message shows its new visibility.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Destructive call refused | `confirm=true` was not passed to `owncast_delete_custom_emoji` | Ask the operator first, then repeat the call with `confirm=true` |
+| Unknown user or message id | The id came from memory | Reread with `owncast_get_chat_messages_admin` or `owncast_get_disabled_users` and use the id returned |
