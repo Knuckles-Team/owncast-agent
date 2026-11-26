@@ -64,3 +64,18 @@ Each workflow is a tool-use contract in the connector ontology. Run the steps in
 - Read before you write: every change starts from the read steps of its contract.
 - Confirm the stream is online before acting on live-only signals.
 - Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.
+
+## Steps
+
+1. Read the current state with `owncast_get_webhooks` and verify the list shows each webhook id and its events.
+2. Name the exact change to the person and verify explicit approval for `owncast_create_webhook` when it is a delete of a webhook, an external API user or the Prometheus endpoint.
+3. Apply the change with `owncast_create_webhook` and verify the response returns a webhook id.
+4. Read the state back with `owncast_get_webhooks` and verify the new id and url appear in the list.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Delete refused | `confirm=true` was not passed to `owncast_delete_webhook` | Ask the operator first, then repeat with `confirm=true` |
+| Webhook never fires | The events list was empty or the url is unreachable | Read `owncast_get_webhooks`, correct the events or url, and recreate with `owncast_create_webhook` |

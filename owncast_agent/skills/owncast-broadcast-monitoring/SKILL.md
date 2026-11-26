@@ -2,13 +2,7 @@
 name: owncast-broadcast-monitoring
 skill_type: skill
 description: >-
-  Monitor an Owncast live broadcast via the owncast-agent MCP server — read stream
-  status (online state, title, viewer counts), active viewers, viewers-over-time and
-  hardware-utilisation timeseries, and the admin broadcaster status. Use when the agent
-  must check whether a stream is live, inspect concurrent audience, diagnose CPU / memory /
-  disk pressure, or disconnect a stuck inbound stream. Do NOT use for chat moderation
-  (owncast-chat-moderation) or pushing telemetry into the knowledge graph
-  (owncast-audience-ingestion); prefer those.
+  Monitor an Owncast live broadcast via the owncast-agent MCP server — read stream status (online state, title, viewer counts), active viewers, viewers-over-time and hardware-utilisation timeseries, and the admin broadcaster status. Use when the agent must check whether a stream is live, inspect concurrent audience, diagnose CPU / memory / disk pressure, or disconnect a stuck inbound stream.
 license: MIT
 tags: [owncast, streaming, monitoring, telemetry, mcp]
 metadata:
@@ -16,6 +10,8 @@ metadata:
   version: '0.1.0'
 ---
 # Owncast Broadcast Monitoring
+
+Scope: Monitor an Owncast live broadcast via the owncast-agent MCP server — read stream status (online state, title, viewer counts), active viewers, viewers-over-time and hardware-utilisation timeseries, and the admin broadcaster status. Use when the agent must check whether a stream is live, inspect concurrent audience, diagnose CPU / memory / disk pressure, or disconnect a stuck inbound stream. Do NOT use for chat moderation (owncast-chat-moderation) or pushing telemetry into the knowledge graph (owncast-audience-ingestion); prefer those.
 
 Domain-typed access to the Owncast **broadcast + telemetry** surface for live-stream
 health checks. Prefer the typed `owncast_*` tools over raw
@@ -39,6 +35,22 @@ Connect via the `mcp-client` skill against the **`owncast-agent`** MCP server.
 |----------|----------|-------|
 | `OWNCAST_URL` | ✅ | Base URL of the Owncast instance (e.g. `http://localhost:8080`) |
 | `OWNCAST_TOKEN` | ✅ | Admin / integration bearer token |
+
+## Steps
+
+1. Call `owncast_get_status` and verify the response shows whether the stream is online and its title and viewer count.
+2. Call `owncast_status_admin` and verify the broadcaster block shows the inbound connection state.
+3. Call `owncast_get_active_viewers` and verify each viewer row carries a client id and user agent.
+4. Call `owncast_get_viewers_over_time` and `owncast_get_hardware_stats` and verify both return a non-empty timeseries before judging drop-offs or resource pressure.
+5. Only when the person asks to cut a stuck inbound stream, call `owncast_disconnect_inbound_connection` and verify `owncast_status_admin` shows no inbound connection afterwards.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Status shows offline but the encoder is running | The inbound stream is stuck or the ingest key is wrong | Call `owncast_status_admin` to read the broadcaster state, and with approval call `owncast_disconnect_inbound_connection` so the encoder reconnects |
+| Timeseries empty | The stream has not been online long enough | Wait for samples and call `owncast_get_viewers_over_time` again with an earlier window |
 
 ## Tools
 Each operation is its own tool named `owncast_<operation>`; arguments are typed tool parameters.

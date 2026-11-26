@@ -60,3 +60,18 @@ Each workflow is a tool-use contract in the connector ontology. Run the steps in
 - Read before you write: every change starts from the read steps of its contract.
 - Confirm the stream is online before acting on live-only signals.
 - Report a tool refusal or HTTP error as it is; never retry past a refusal or invent a result.
+
+## Steps
+
+1. Read the current state with `owncast_get_pending_follow_requests` and verify each pending request shows an actor IRI.
+2. Name the exact change to the person and verify explicit approval for `owncast_approve_follower` when it is an approval or a federation setting change.
+3. Apply the change with `owncast_approve_follower` and verify the response reports success for the actor IRI.
+4. Read the state back with `owncast_get_followers_admin` and verify the actor is listed with the new approval state.
+
+## Failure recovery
+
+| Failure | Cause | Recovery |
+|---|---|---|
+| 401 or 403 response | `OWNCAST_TOKEN` is missing or lacks admin scope, or `OWNCAST_URL` points at the wrong instance | Set `OWNCAST_URL` and an admin `OWNCAST_TOKEN` in the environment, restart the server, and repeat the first read call |
+| Follower not listed | The actor IRI is mistyped or the request was already handled | Reread `owncast_get_blocked_and_rejected_followers` and `owncast_get_pending_follow_requests` and use the IRI returned |
+| Federation setting change has no effect | Federation is disabled on the server | Call `owncast_set_federation_enabled` after approval, then repeat the setting call |
