@@ -20,11 +20,9 @@
 ![PyPI - Wheel](https://img.shields.io/pypi/wheel/owncast-agent)
 ![PyPI - Implementation](https://img.shields.io/pypi/implementation/owncast-agent)
 
-*Version: 2.3.10*
-
-> **Documentation** — Installation, deployment, usage across the API, CLI, and MCP
-> interfaces, and guidance for provisioning the Owncast platform are maintained in
-> the [official documentation](https://knuckles-team.github.io/owncast-agent/).
+> **Documentation** — Installation, deployment, and usage across the API, CLI, MCP,
+> and A2A agent interfaces are maintained in the
+> [official documentation](https://knuckles-team.github.io/owncast-agent/).
 
 ---
 
@@ -333,6 +331,8 @@ the detailed transport contract.
   `MCP_ALLOWED_HOSTS` in `AgentConfig`.
 <!-- END GENERATED: additional-deployment-options -->
 
+---
+
 ## Agent
 
 This repository features a fully integrated Pydantic AI Graph Agent. It communicates over the **Agent Control Protocol (ACP)** and interacts smoothly with the **Agent Web UI (AG-UI)** and Terminal interface.
@@ -605,7 +605,6 @@ Contributions are welcome! Please ensure code quality by running local checks be
 - Lint code using `ruff check .`
 - Validate type-safety with `mypy .`
 - Run test suites using `pytest`
-
 
 <!-- BEGIN scion-sdk-deployment (generated; do not edit between markers) -->
 
